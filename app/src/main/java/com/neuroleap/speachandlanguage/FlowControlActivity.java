@@ -27,25 +27,34 @@ public class FlowControlActivity extends ActionBarActivity {
         String[] columns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME, QuestionCategoriesEntry.FRAGMENT_NAME};
         String[] columns2 = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
                 QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH};
+        String[] columns3 = new String[] {"_ID", PicturesEntry.QUESTION_ID, PicturesEntry.FILENAME};
         Cursor cursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, columns, null,null,null,null,null);
-        int id;
+        int categoryId, questionId;
         String category;
         String fragName;
         while (cursor.moveToNext()) {
-            id = cursor.getInt(0);
+            categoryId = cursor.getInt(0);
             category = cursor.getString((1));
             fragName = cursor.getString(2);
-            Log.i(TAG, "id= " + id + "  category= " + category + "  Fragment name = " + fragName);
-            Cursor cursor2 = mDb.query(QuestionsEntry.TABLE_NAME, columns2, QuestionsEntry.CATEGORY_ID + "=" + id, null, null, null, null);
+            Log.i(TAG, "id= " + categoryId + "  category= " + category + "  Fragment name = " + fragName);
+            Log.i(TAG, "########################################################");
+            Cursor cursor2 = mDb.query(QuestionsEntry.TABLE_NAME, columns2, QuestionsEntry.CATEGORY_ID + "=" + categoryId, null, null, null, null);
             while (cursor2.moveToNext()){
-                id = cursor2.getInt(0);
-                int Category_id = cursor2.getInt(1);
+                questionId = cursor2.getInt(0);
+                int category_id = cursor2.getInt(1);
                 String text_english = cursor2.getString(2);
                 String text_spanish = cursor2.getString(3);
                 String audio_english = cursor2.getString(4);
                 String audio_spanish = cursor2.getString(5);
-                Log.i(TAG, "id= " + id +" category id= " + Category_id + " Text English= " + text_english +
+                Log.i(TAG, "questionId= " + questionId +" category id= " + category_id + " Text English= " + text_english +
                     " text Spanish= " + text_spanish + " audio english= " + audio_english +" audio spanish= " + audio_spanish);
+                Cursor cursor3 = mDb.query(PicturesEntry.TABLE_NAME, columns3, PicturesEntry.QUESTION_ID  + "=" + questionId, null, null, null,null);
+                while (cursor3.moveToNext()) {
+                    int answerId = cursor3.getInt(0);
+                    int questionsId = cursor3.getInt(1);
+                    String text = cursor3.getString(2);
+                    Log.d(TAG, "picture id= " + answerId + "    question id= " + questionsId +"   filename: " + text);
+                }
             }
         }
     }
