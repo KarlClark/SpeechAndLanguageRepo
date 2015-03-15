@@ -59,13 +59,20 @@ public class ScreeningContract {
         public static final String AUDIO_SPANISH = "audio_spanish";
     }
 
-    public static final class ValidAnswersEntry implements BaseColumns {
+    public static final class ValidAnswersEgEntry implements BaseColumns {
 
-        public static final String TABLE_NAME ="valid_answers";
+        public static final String TABLE_NAME ="valid_answers_eg";
 
         public static final String QUESTION_ID ="question_id";
-        public static final String TEXT_ENGLISH ="text_english";
-        public static final String TEXT_SPANISH = "text_spanish";
+        public static final String TEXT ="text";
+    }
+
+    public static final class ValidAnswersSpEntry implements BaseColumns {
+
+        public static final String TABLE_NAME ="valid_answers_sp";
+
+        public static final String QUESTION_ID ="question_id";
+        public static final String TEXT ="text";
     }
 
     public static final class PicturesEntry implements BaseColumns {

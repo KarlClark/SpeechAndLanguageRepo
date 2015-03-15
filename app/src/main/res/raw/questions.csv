@@ -1,35 +1,45 @@
 %Question categories start in column A followed by Questions starting in column B.  Each question is followed by valid answers in coloum C which are followed by picture filenames in column  D.,,,,
 Semantics/Body parts,SemanticsFragment,,,
 ,Name the body part.,spanish,audio EN,audio SP
-,,nose,ans sp,
-,,,nose,
+,,nose,,ans sp
+,,,nariz,
+,,,,nose
 ,Name the body part.,,,
 ,,knee,,
-,,,knee,
+,,,rodilla,
+,,,,knee
 ,Name the body part.,,,
 ,,chin,,
-,,,chin,
+,,,barbilla,
+,,,,chin
 ,Name the body part.,,,
 ,,wrist,,
-,,,wrist,
+,,,muneca,
+,,,,wrist
 ,Name the body part.,,,
 ,,elbow,,
-,,,elbow,
+,,,codo,
+,,,,elbow
 ,Name the body part.,,,
 ,,shoulder,,
-,,,shoulder,
+,,,hombro,
+,,,,shoulder
 ,Name the body part.,,,
 ,,mouth,,
-,,,mouth,
+,,,boca,
+,,,,mouth
 ,Name the body part.,,,
 ,,thumb,,
-,,,thumb,
+,,,pulgar,
+,,,,thumb
 ,Name the body part.,,,
 ,,ankle,,
-,,,ankle,
+,,,tobillo,
+,,,,ankle
 ,Name the body part.,,,
 ,,foot,,
-,,,foot,
+,,,pie,
+,,,,foot
 Semantics/Categories,CategoriesFragment,,,
 ,Tell me 2 kinds of shapes.,,,
 ,,triangle,,
@@ -183,45 +193,45 @@ Semantics/Comprehension,ComprehensionFragment,,,
 Semantics/Prepositions,PrepositionsFragment,,,
 ,Tell me where the duck is?,,,
 ,,on a table,,
-,,,duck_on_top_table,
+,,,,duck_on_top_table
 ,Tell me where the duck is?,,,
 ,,behind chair,,
-,,,duck_behind_chair,
+,,,,duck_behind_chair
 ,Tell me where the duck is?,,,
 ,,over table,,
-,,,duck_over_the_table,
+,,,,duck_over_the_table
 ,Tell me where the duck is?,,,
 ,,under table,,
 ,,on floor,,
-,,,duck_under_the_table,
+,,,,duck_under_the_table
 ,tell me where the man is?,,,
 ,,between desk chair,,
 ,,inbetween desk chair,,
 ,,between chair desk,,
 ,,inbetween desk chair,,
-,,,man_between_chair_desk,
+,,,,man_between_chair_desk
 ,Tell me where the duck is?,,,
 ,,beside books,,
-,,,dusk_besides_books,
+,,,,dusk_besides_books
 Semantics/Associations,AssociationsFragment,,,
 ,Which one does not belong? Car/Bus/Hamburger/Plane,,,
 ,,hamburger,,
-,,,car,
-,,,bus,
-,,,hamburger,
-,,,airplane,
+,,,,car
+,,,,bus
+,,,,hamburger
+,,,,airplane
 ,Which does not belong? Baseball/Cat/Tennis/Golf,,,
 ,,cat,,
-,,,baseball,
-,,,cat,
-,,,tennis,
-,,,golf,
+,,,,baseball
+,,,,cat
+,,,,tennis
+,,,,golf
 ,Which does not belong? Cat/Dog/Tircycle/Fish,,,
 ,,Tricycle,,
-,,,cat,
-,,,dog,
-,,,tricycle,
-,,,fish,
+,,,,cat
+,,,,dog
+,,,,tricycle
+,,,,fish
 ,How are bananas and oranges alike?,,,
 ,,yummy,,
 ,,taste good,,
