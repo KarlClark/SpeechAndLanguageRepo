@@ -3,14 +3,21 @@ package com.neuroleap.speachandlanguage.Data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersEntry;
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersEntry;
+import com.neuroleap.speachandlanguage.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by Karl on 3/5/2015.
@@ -20,8 +27,10 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "screening.db";
     private static final String TAG = "## My Info ##";
+    private Context context;
     public ScreeningDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -100,11 +109,50 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_VALID_ANSWERS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_PICTURES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_STUDENT_ANSWERS_TABLE);
+
+        InitializeDatabase(sqLiteDatabase);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + StudentsEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
+    }
+
+    private void InitializeDatabase(SQLiteDatabase db){
+        //Read data from the CVS file and put it in the database.
+        Log.d(TAG, "InitializeDatabase called");
+        InputStream inputStream = context.getResources().openRawResource(R.raw.questions);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String cvsLine;
+        try {
+            while((cvsLine = reader.readLine()) != null){
+                if ( ! cvsLine.substring(0,1).equals("%")) {
+                    String[] row = cvsLine.split(",");
+                    Log.d(TAG, "row length = " + row.length);
+                    switch (row.length) {
+                        case 1:
+                            Log.d(TAG, row[0]);
+                            break;
+                        case 2:
+                            Log.d(TAG, row[0] + "/" + row[1] );
+                            break;
+                        case 3:
+                            Log.d(TAG, row[0] + "/" + row[1] + "/" + row[2]);
+                            break;
+                        case 4:
+                            Log.d(TAG, row[0] + "/" + row[1] + "/" + row[2] + "/" + row[3] );
+                            break;
+                        case 5:
+                            Log.d(TAG, row[0] + "/" + row[1] + "/" + row[2] + "/" + row[3] + "/" + row[4]);
+                    }
+
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Error reading csv file: " + e);
+            throw new RuntimeException("Error in reading csv file: " + e);
+
+        }
     }
 }

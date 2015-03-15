@@ -57,13 +57,13 @@ public class Utilities {
         id=db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
         cv.clear();
         cv.put(QuestionsEntry.CATEGORY_ID, id);
-        cv.put (QuestionsEntry.TEXT_ENGLISH, "Function & Questions question 1");
+        cv.put (QuestionsEntry.TEXT_ENGLISH, "Function & questions question 1");
         cv.put (QuestionsEntry.TEXT_SPANISH ,"spanish 1");
         cv.put ( QuestionsEntry.AUDIO_ENGLISH, "audio english 1");
         cv.put (QuestionsEntry.AUDIO_SPANISH, "audio spanish 1");
         db.insert(QuestionsEntry.TABLE_NAME, null, cv);
         cv.put(QuestionsEntry.CATEGORY_ID, id);
-        cv.put (QuestionsEntry.TEXT_ENGLISH, "Functions & Questions question 2");
+        cv.put (QuestionsEntry.TEXT_ENGLISH, "Functions & questions question 2");
         cv.put (QuestionsEntry.TEXT_SPANISH ,"spanish 2");
         cv.put ( QuestionsEntry.AUDIO_ENGLISH, "audio english 2");
         cv.put (QuestionsEntry.AUDIO_SPANISH, "audio spanish 2");
