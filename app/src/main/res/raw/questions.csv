@@ -1,4 +1,4 @@
-%Question categories start in column A followed by Questions starting in column B.  Each question is followed by valid answers in coloum C which are followed by picture filenames in column  D.,,,,
+%Question categories start in column A followed by Questions starting in column B.  Each question is followed by English answers in coloum C  followed by Spanish answers in column D which are followed by picture filenames in column  E.,,,,
 Semantics/Body parts,SemanticsFragment,,,
 ,Name the body part.,spanish,audio EN,audio SP
 ,,nose,,ans sp

@@ -121,7 +121,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_PICTURES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_STUDENT_ANSWERS_TABLE);
 
-        //InitializeDatabase(sqLiteDatabase);
+        InitializeDatabase(sqLiteDatabase);
     }
 
     @Override
@@ -139,38 +139,57 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         long categoryId=0;
         long quetionId=0;
         String cvsLine;
+        int i=0;
         try {
             whileLoop:
                 while((cvsLine = reader.readLine()) != null){
+                    Log.d(TAG, "Loop= " + ++i);
                     if ( ! cvsLine.substring(0,1).equals("%")) {
 
                         String[] row = cvsLine.split(",");
                         cv.clear();
 
-                        if ( ! row[0].equals("")) {
+                        if ( ! row[0].equals("")) {  // First column has something in it so this must be question category row
                             cv.put(QuestionCategoriesEntry.CATEGORY_NAME , row[0]);
                             cv.put(QuestionCategoriesEntry.FRAGMENT_NAME , row[1]);
                             categoryId = db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
                             continue whileLoop;
                         }
 
-                        if ( ! row[1].equals("")) {
+                        if ( ! row[1].equals("")) { // First column was null but 2nd column has something so this must be a question row.
                             cv.put(QuestionsEntry.CATEGORY_ID , categoryId);
                             cv.put(QuestionsEntry.TEXT_ENGLISH , row[1]);
                             if (row.length > 2) {
                                 cv.put(QuestionsEntry.TEXT_SPANISH , row[2]);
-                            }else{
-                                continue whileLoop;
                             }
                             if (row.length > 3){
                                 cv.put(QuestionsEntry.AUDIO_ENGLISH , row[3]);
-                            } else {
-                                continue whileLoop;
                             }
                             if (row.length > 4) {
                                 cv.put(QuestionsEntry.AUDIO_SPANISH , row[4]);
                             }
+                            quetionId = db.insert(QuestionsEntry.TABLE_NAME, null, cv);
                             continue whileLoop;
+                        }
+
+                        if ( ! row[2].equals("")){ // First two columns are null but 3rd columns has something so this must be an English answer.
+                            cv.put(ValidAnswersEgEntry.QUESTION_ID , quetionId);
+                            cv.put(ValidAnswersEgEntry.TEXT , row[2]);
+                            db.insert(ValidAnswersEgEntry.TABLE_NAME, null, cv);
+                            continue whileLoop;
+                        }
+
+                        if ( row.length > 3 && ! row[3].equals("")){// First 3 columns null so this is a Spanish answer.
+                            cv.put(ValidAnswersSpEntry.QUESTION_ID, quetionId);
+                            cv.put(ValidAnswersSpEntry.TEXT , row [3]);
+                            db.insert(ValidAnswersSpEntry.TABLE_NAME, null, cv);
+                            continue whileLoop;
+                        }
+
+                        if (row.length > 4) { // first 4 columns null so this must be picture filename
+                            cv.put(PicturesEntry.QUESTION_ID , quetionId);
+                            cv.put(PicturesEntry.FILENAME , row[4]);
+                            db.insert(PicturesEntry.TABLE_NAME, null, cv);
                         }
                     }
                 }
