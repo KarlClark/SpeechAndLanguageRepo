@@ -25,19 +25,21 @@ public class FlowControlActivity extends ActionBarActivity {
         setContentView(R.layout.activity_flow_control);
         mDbHelper = new ScreeningDbHelper(this);
         mDb = mDbHelper.getWritableDatabase();
-        String[] columns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME, QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT};
+        String[] columns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME, QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT,QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT};
         String[] columns2 = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
                 QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH, QuestionsEntry.PROMPT_ENGLISH, QuestionsEntry.PROMPT_SPANISH};
         String[] columns3 = new String[] {"_ID", PicturesEntry.QUESTION_ID, PicturesEntry.FILENAME};
         Cursor cursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, columns, null,null,null,null,null);
         int categoryId, questionId;
         String category;
-        String fragName;
+        String fragName_fm;
+        String fragname_sm;
         while (cursor.moveToNext()) {
             categoryId = cursor.getInt(0);
             category = cursor.getString((1));
-            fragName = cursor.getString(2);
-            Log.i(TAG, "id= " + categoryId + "  category= " + category + "  Fragment name = " + fragName);
+            fragName_fm = cursor.getString(2);
+            fragname_sm = cursor.getString(3);
+            Log.i(TAG, "id= " + categoryId + "  category= " + category + "  Facilitator Fragment name= " + fragName_fm +"  Student Fragment Name= " + fragname_sm);
             Log.i(TAG, "########################################################");
             Cursor cursor2 = mDb.query(QuestionsEntry.TABLE_NAME, columns2, QuestionsEntry.CATEGORY_ID + "=" + categoryId, null, null, null, null);
             while (cursor2.moveToNext()){

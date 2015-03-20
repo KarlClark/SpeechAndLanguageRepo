@@ -5,5 +5,5 @@ package com.neuroleap.speachandlanguage.Utility;
  */
 public class Utilities {
 
-   
+
 }
