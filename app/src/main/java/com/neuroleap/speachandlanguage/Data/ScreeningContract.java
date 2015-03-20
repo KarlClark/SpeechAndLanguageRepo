@@ -57,6 +57,8 @@ public class ScreeningContract {
         public static final String TEXT_SPANISH = "test_spanish";
         public static final String AUDIO_ENGLISH = "audio_english";
         public static final String AUDIO_SPANISH = "audio_spanish";
+        public static final String PROMPT_ENGLISH = "prompt_english";
+        public static final String PROMPT_SPANISH = "prompt_spanish";
     }
 
     public static final class ValidAnswersEgEntry implements BaseColumns {

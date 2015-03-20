@@ -71,6 +71,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 QuestionsEntry.TEXT_SPANISH + " TEXT, " +
                 QuestionsEntry.AUDIO_ENGLISH + " TEXT, " +
                 QuestionsEntry.AUDIO_SPANISH + " TEXT, " +
+                QuestionsEntry.PROMPT_ENGLISH + " TEXT NOT NULL, " +
+                QuestionsEntry.PROMPT_SPANISH + " TEXT, " +
                 " FOREIGN KEY (" + QuestionsEntry.CATEGORY_ID +") REFERENCES " +
                 QuestionCategoriesEntry.TABLE_NAME + " (" + QuestionCategoriesEntry._ID + ")" +
                 " );";
