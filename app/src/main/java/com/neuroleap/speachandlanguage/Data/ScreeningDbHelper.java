@@ -161,15 +161,23 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                         if ( ! row[1].equals("")) { // First column was null but 2nd column has something so this must be a question row.
                             cv.put(QuestionsEntry.CATEGORY_ID , categoryId);
                             cv.put(QuestionsEntry.TEXT_ENGLISH , row[1]);
-                            if (row.length > 2) {
+                            Log.i(TAG,"question = " + row[1]);
+                            if ( ! row[2].equals("")  ) {
                                 cv.put(QuestionsEntry.TEXT_SPANISH , row[2]);
                             }
-                            if (row.length > 3){
+                            if (! row[3].equals("")){
                                 cv.put(QuestionsEntry.AUDIO_ENGLISH , row[3]);
                             }
-                            if (row.length > 4) {
+                            if (! row[4].equals("")) {
                                 cv.put(QuestionsEntry.AUDIO_SPANISH , row[4]);
                             }
+
+                            cv.put(QuestionsEntry.PROMPT_ENGLISH, row[5]);
+
+                            if (row.length > 6) {
+                                cv.put(QuestionsEntry.PROMPT_SPANISH, row[6]);
+                            }
+
                             quetionId = db.insert(QuestionsEntry.TABLE_NAME, null, cv);
                             continue whileLoop;
                         }

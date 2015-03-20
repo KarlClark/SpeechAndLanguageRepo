@@ -27,7 +27,7 @@ public class FlowControlActivity extends ActionBarActivity {
         mDb = mDbHelper.getWritableDatabase();
         String[] columns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME, QuestionCategoriesEntry.FRAGMENT_NAME};
         String[] columns2 = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
-                QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH};
+                QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH, QuestionsEntry.PROMPT_ENGLISH, QuestionsEntry.PROMPT_SPANISH};
         String[] columns3 = new String[] {"_ID", PicturesEntry.QUESTION_ID, PicturesEntry.FILENAME};
         Cursor cursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, columns, null,null,null,null,null);
         int categoryId, questionId;
@@ -47,8 +47,11 @@ public class FlowControlActivity extends ActionBarActivity {
                 String text_spanish = cursor2.getString(3);
                 String audio_english = cursor2.getString(4);
                 String audio_spanish = cursor2.getString(5);
+                String prompt_english = cursor2.getString(6);
+                String prompt_spanish = cursor2.getString(7);
                 Log.i(TAG, "questionId= " + questionId +" category id= " + category_id + " Text English= " + text_english +
-                    " text Spanish= " + text_spanish + " audio english= " + audio_english +" audio spanish= " + audio_spanish);
+                    " text Spanish= " + text_spanish + " audio english= " + audio_english +" audio spanish= " + audio_spanish
+                    + " prompt english= " + prompt_english + " prompt spanish= " + prompt_spanish);
                 Cursor cursor3 = mDb.query(PicturesEntry.TABLE_NAME, columns3, PicturesEntry.QUESTION_ID  + "=" + questionId, null, null, null,null);
                 while (cursor3.moveToNext()) {
                     int answerId = cursor3.getInt(0);
