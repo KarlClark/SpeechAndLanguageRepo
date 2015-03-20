@@ -25,7 +25,7 @@ public class FlowControlActivity extends ActionBarActivity {
         setContentView(R.layout.activity_flow_control);
         mDbHelper = new ScreeningDbHelper(this);
         mDb = mDbHelper.getWritableDatabase();
-        String[] columns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME, QuestionCategoriesEntry.FRAGMENT_NAME};
+        String[] columns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME, QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT};
         String[] columns2 = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
                 QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH, QuestionsEntry.PROMPT_ENGLISH, QuestionsEntry.PROMPT_SPANISH};
         String[] columns3 = new String[] {"_ID", PicturesEntry.QUESTION_ID, PicturesEntry.FILENAME};

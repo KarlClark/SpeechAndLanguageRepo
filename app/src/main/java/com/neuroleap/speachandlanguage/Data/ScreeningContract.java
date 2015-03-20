@@ -45,7 +45,8 @@ public class ScreeningContract {
         public static final String TABLE_NAME = "question_categories";
 
         public static final String CATEGORY_NAME = "category_name";
-        public static final String FRAGMENT_NAME ="fragment_name";
+        public static final String FACILITATOR_MODE_FRAGMENT ="facilitator_mode_fragment";
+        public static final String STUDENT_MODE_FRAGMENT ="student_mode_fragment";
     }
 
     public static final class QuestionsEntry implements BaseColumns {
