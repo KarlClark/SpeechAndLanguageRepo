@@ -7,16 +7,28 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
+import com.neuroleap.speachandlanguage.Models.Question;
+import com.neuroleap.speachandlanguage.Models.QuestionCategory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FlowControlActivity extends ActionBarActivity {
 
-    ScreeningDbHelper mDbHelper;
-    SQLiteDatabase mDb;
+    private ScreeningDbHelper mDbHelper;
+    private SQLiteDatabase mDb;
+    private List<QuestionCategory> mQuestionCategories = new ArrayList<QuestionCategory>();
+    private List<Question> mQuestions = new ArrayList<Question>();
+    private int mLangage = ENGLISH;
+
+    private static final int ENGLISH = 0;
+    private static final int SPANISH = 1;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -25,6 +37,37 @@ public class FlowControlActivity extends ActionBarActivity {
         setContentView(R.layout.activity_flow_control);
         mDbHelper = new ScreeningDbHelper(this);
         mDb = mDbHelper.getWritableDatabase();
+        loadLists();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_flow_control, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void loadLists(){
+        String[] CategoryColumns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME};
+    }
+
+    private void checkDB(){
         String[] columns = new String[] {"_ID", QuestionCategoriesEntry.CATEGORY_NAME, QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT,QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT};
         String[] columns2 = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
                 QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH, QuestionsEntry.PROMPT_ENGLISH, QuestionsEntry.PROMPT_SPANISH};
@@ -52,8 +95,8 @@ public class FlowControlActivity extends ActionBarActivity {
                 String prompt_english = cursor2.getString(6);
                 String prompt_spanish = cursor2.getString(7);
                 Log.i(TAG, "questionId= " + questionId +" category id= " + category_id + " Text English= " + text_english +
-                    " text Spanish= " + text_spanish + " audio english= " + audio_english +" audio spanish= " + audio_spanish
-                    + " prompt english= " + prompt_english + " prompt spanish= " + prompt_spanish);
+                        " text Spanish= " + text_spanish + " audio english= " + audio_english +" audio spanish= " + audio_spanish
+                        + " prompt english= " + prompt_english + " prompt spanish= " + prompt_spanish);
                 Cursor cursor3 = mDb.query(PicturesEntry.TABLE_NAME, columns3, PicturesEntry.QUESTION_ID  + "=" + questionId, null, null, null,null);
                 while (cursor3.moveToNext()) {
                     int answerId = cursor3.getInt(0);
@@ -63,32 +106,5 @@ public class FlowControlActivity extends ActionBarActivity {
                 }
             }
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_flow_control, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void on_1_ButtonClicked(View view) {
-
     }
 }
