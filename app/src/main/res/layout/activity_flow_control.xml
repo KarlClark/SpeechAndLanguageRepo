@@ -12,7 +12,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/button_1" />
+        android:background="@drawable/button_1"
+        android:onClick="on_1_ButtonClicked" />
 
     <Button
         android:layout_width="100dp"

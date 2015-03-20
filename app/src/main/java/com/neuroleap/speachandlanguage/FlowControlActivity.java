@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
@@ -80,5 +81,9 @@ public class FlowControlActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void on_1_ButtonClicked(View view) {
+
     }
 }
