@@ -60,7 +60,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_QUESTION_CATEGORIES_TABLE = "CREATE TABLE " + QuestionCategoriesEntry.TABLE_NAME + " (" +
                 QuestionCategoriesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                QuestionCategoriesEntry.CATEGORY_NAME + " TEXT NOT NULL, " +
+                QuestionCategoriesEntry.CATEGORY_NAME_EG + " TEXT NOT NULL, " +
+                QuestionCategoriesEntry.CATEGORY_NAME_SP + " TEXT, " +
                 QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT + " TEXT NOT NULL, " +
                 QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT + " TEXT NOT NULL " +
                 " );";
@@ -153,9 +154,12 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                         cv.clear();
 
                         if ( ! row[0].equals("")) {  // First column has something in it so this must be question category row
-                            cv.put(QuestionCategoriesEntry.CATEGORY_NAME , row[0]);
-                            cv.put(QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT , row[1]);
-                            cv.put(QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT , row[2]);
+                            cv.put(QuestionCategoriesEntry.CATEGORY_NAME_EG , row[0]);
+                            if ( ! row[1].equals("")){
+                                cv.put(QuestionCategoriesEntry.CATEGORY_NAME_SP , row[1]);
+                            }
+                            cv.put(QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT , row[2]);
+                            cv.put(QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT , row[3]);
                             categoryId = db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
                             continue whileLoop;
                         }

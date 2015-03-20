@@ -7,6 +7,15 @@ public class Question {
     private int mId;
     private int mCategoryId;
     private String mText;
+    private boolean mDone = false;
+
+    public boolean isDone() {
+        return mDone;
+    }
+
+    public void setDone(boolean done) {
+        mDone = done;
+    }
 
     public int getId() {
         return mId;
