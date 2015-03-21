@@ -3,10 +3,14 @@ package com.neuroleap.speachandlanguage;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ExpandableListView;
 
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
@@ -24,8 +28,12 @@ public class FlowControlActivity extends ActionBarActivity {
     private ScreeningDbHelper mDbHelper;
     private SQLiteDatabase mDb;
     private List<QuestionCategory> mQuestionCategories = new ArrayList<QuestionCategory>();
-    private List<Question> mQuestions = new ArrayList<Question>();
+    private List<ArrayList<Question>> mQuestions = new ArrayList<ArrayList<Question>>();
     private int mLangage = ENGLISH;
+    private DrawerLayout mDrawerLayout;
+    private ExpandableListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    DrawerListAdapter drawerListAdapter;
 
     private static final int ENGLISH = 0;
     private static final int SPANISH = 1;
@@ -38,9 +46,15 @@ public class FlowControlActivity extends ActionBarActivity {
         mDbHelper = new ScreeningDbHelper(this);
         mDb = mDbHelper.getWritableDatabase();
         loadLists();
+        setUpDrawer();
         //checkDB();
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,18 +75,68 @@ public class FlowControlActivity extends ActionBarActivity {
             return true;
         }
 
+        if (mDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     private void loadLists(){
+        String[] categoryColumns;
+        String[] questionColumns;
         if (mLangage == ENGLISH) {
-            String[] CategoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG};
-            String[] QuestionColumns = new String[] {"-ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_ENGLISH};
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG};
+            questionColumns = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_ENGLISH};
         }else{
-            String[] CategoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP};
-            String[] QuestionColumns = new String[] {"-ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_SPANISH};
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP};
+            questionColumns = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_SPANISH};
         }
 
+        Cursor categoryCursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, categoryColumns, null, null, null, null, null);
+        int categoryId;
+        int categoryCount = 0;
+        while (categoryCursor.moveToNext()){
+            Log.i(TAG, "categoryCursor . movetoNext");
+            categoryId = categoryCursor.getInt(0);
+            QuestionCategory qc = new QuestionCategory(categoryId, categoryCursor.getString(1));
+            mQuestionCategories.add(qc);
+            Cursor questionCursor = mDb.query(QuestionsEntry.TABLE_NAME, questionColumns, QuestionsEntry.CATEGORY_ID + "=" + categoryId, null, null, null, null);
+            mQuestions.add(new ArrayList<Question>());
+            while (questionCursor.moveToNext()) {
+                Question q = new Question(questionCursor.getInt(0), questionCursor.getInt(1), questionCursor.getString(2));
+                mQuestions.get(categoryCount).add(q);
+            }
+            categoryCount++;
+        }
+    }
+
+    private void setUpDrawer(){
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setStatusBarBackground(R.drawable.ic_launcher);
+        mDrawerList = (ExpandableListView) findViewById(R.id.left_drawer);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.test_1,R.string.test_2){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Set the adapter for the list view
+        drawerListAdapter = new DrawerListAdapter(this,mQuestionCategories, mQuestions);
+        mDrawerList.setAdapter(drawerListAdapter);
     }
 
     private void checkDB(){
