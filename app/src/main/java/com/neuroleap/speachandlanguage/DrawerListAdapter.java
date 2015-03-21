@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.neuroleap.speachandlanguage.Models.Question;
@@ -77,6 +78,16 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
         Log.i(TAG,"here 1");
         TextView tvGroupItem = (TextView)convertView.findViewById(R.id.tvGroupItem);
         tvGroupItem.setText(mCategories.get(groupPosition).getText());
+        ImageView ivSelector = (ImageView)convertView.findViewById(R.id.ivSelector);
+        String drawableFileName;
+
+            if(isExpanded){
+                drawableFileName = "down_arrow";
+            }else{
+                drawableFileName = "right_arrow";
+            }
+        int resId = mContext.getResources().getIdentifier(drawableFileName, "drawable", mContext.getPackageName());
+        ivSelector.setImageResource(resId);
 
         return convertView;
     }
