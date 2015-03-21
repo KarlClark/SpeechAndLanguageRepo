@@ -1,7 +1,6 @@
 package com.neuroleap.speachandlanguage;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,18 +27,15 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
         mContext = context;
         mCategories = categories;
         mQuestions = questions;
-        Log.i(TAG,"categories size= " + categories.size());
     }
 
     @Override
     public int getGroupCount() {
-        Log.i(TAG, "group count= " + mCategories.size());
         return mCategories.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        Log.i(TAG, "Child count = " + mQuestions.get(groupPosition).size());
         return mQuestions.get(groupPosition).size();
     }
 
@@ -75,7 +71,6 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
-        Log.i(TAG,"here 1");
         TextView tvGroupItem = (TextView)convertView.findViewById(R.id.tvGroupItem);
         tvGroupItem.setText(mCategories.get(groupPosition).getText());
         ImageView ivSelector = (ImageView)convertView.findViewById(R.id.ivSelector);
@@ -99,9 +94,7 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_item, parent, false);
         }
-        Log.i(TAG, "here 2");
         TextView tvListItem = (TextView)convertView.findViewById(R.id.tvListItem);
-        Log.i(TAG ,"text = " +mQuestions.get(groupPosition).get(childPosition).getText() );
         tvListItem.setText(mQuestions.get(groupPosition).get(childPosition).getText());
 
         return convertView;

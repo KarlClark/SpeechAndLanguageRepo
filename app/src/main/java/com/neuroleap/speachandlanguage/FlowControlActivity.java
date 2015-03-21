@@ -137,6 +137,23 @@ public class FlowControlActivity extends ActionBarActivity {
         // Set the adapter for the list view
         drawerListAdapter = new DrawerListAdapter(this,mQuestionCategories, mQuestions);
         mDrawerList.setAdapter(drawerListAdapter);
+
+        mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                Log.i (TAG ,"Group click category= " + mQuestionCategories.get(groupPosition).getText());
+                return false;
+            }
+        });
+
+        mDrawerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Log.i(TAG, "Child clicked, category= " + mQuestionCategories.get(groupPosition).getText()+
+                        "  prompt=  " + mQuestions.get(groupPosition).get(childPosition).getText());
+                return true;
+            }
+        });
     }
 
     private void checkDB(){
