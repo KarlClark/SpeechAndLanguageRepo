@@ -3,6 +3,7 @@ package com.neuroleap.speachandlanguage;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +17,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
+import com.neuroleap.speachandlanguage.Fragments.PrepositionsFragment_fm;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
 
@@ -33,7 +35,8 @@ public class FlowControlActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ExpandableListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    DrawerListAdapter drawerListAdapter;
+    DrawerListAdapter mDrawerListAdapter;
+    private FragmentManager mFragmentManager=getSupportFragmentManager();
 
     private static final int ENGLISH = 0;
     private static final int SPANISH = 1;
@@ -135,13 +138,21 @@ public class FlowControlActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set the adapter for the list view
-        drawerListAdapter = new DrawerListAdapter(this,mQuestionCategories, mQuestions);
-        mDrawerList.setAdapter(drawerListAdapter);
+        mDrawerListAdapter = new DrawerListAdapter(this,mQuestionCategories, mQuestions);
+        mDrawerList.setAdapter(mDrawerListAdapter);
 
         mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 Log.i (TAG ,"Group click category= " + mQuestionCategories.get(groupPosition).getText());
+                String[] columns = new String[] {QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT, QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT};
+                Cursor categoryCursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, columns, "_ID="+id, null, null, null, null);
+                categoryCursor.moveToNext();
+                Log.i(TAG, "Facilitator fragment= " + categoryCursor.getString(0) + "   Student Fragment= " + categoryCursor.getString(1));
+                if (mFragmentManager.findFragmentById(R.id.fragmentContainer) == null ) {
+                    PrepositionsFragment_fm frag = new PrepositionsFragment_fm();
+                    mFragmentManager.beginTransaction().add(R.id.fragmentContainer, frag, "TAG").commit();
+                }
                 return false;
             }
         });
