@@ -3,6 +3,7 @@ package com.neuroleap.speachandlanguage;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -17,10 +18,11 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
-import com.neuroleap.speachandlanguage.Fragments.PrepositionsFragment_fm;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,9 +151,25 @@ public class FlowControlActivity extends ActionBarActivity {
                 Cursor categoryCursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, columns, "_ID="+id, null, null, null, null);
                 categoryCursor.moveToNext();
                 Log.i(TAG, "Facilitator fragment= " + categoryCursor.getString(0) + "   Student Fragment= " + categoryCursor.getString(1));
-                if (mFragmentManager.findFragmentById(R.id.fragmentContainer) == null ) {
-                    PrepositionsFragment_fm frag = new PrepositionsFragment_fm();
+                Class myClass;
+                Constructor constructor;
+                try {
+                    myClass = Class.forName("com.neuroleap.speachandlanguage.Fragments." +categoryCursor.getString(0));
+                    constructor = myClass.getConstructor(null);
+                    Fragment frag =(Fragment) constructor.newInstance();
                     mFragmentManager.beginTransaction().add(R.id.fragmentContainer, frag, "TAG").commit();
+                } catch (ClassNotFoundException e) {
+                    Log.i(TAG, "Class not found= "+ categoryCursor.getString(0));
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    Log.i(TAG, "bad constructor");
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
                 return false;
             }
