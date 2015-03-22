@@ -153,8 +153,9 @@ public class FlowControlActivity extends ActionBarActivity {
                 Log.i(TAG, "Facilitator fragment= " + categoryCursor.getString(0) + "   Student Fragment= " + categoryCursor.getString(1));
                 Class myClass;
                 Constructor constructor;
+                Log.i(TAG, " package name=" + getPackageName());
                 try {
-                    myClass = Class.forName("com.neuroleap.speachandlanguage.Fragments." +categoryCursor.getString(0));
+                    myClass = Class.forName(getPackageName() + ".Fragments." +categoryCursor.getString(0));
                     constructor = myClass.getConstructor(null);
                     Fragment frag =(Fragment) constructor.newInstance();
                     mFragmentManager.beginTransaction().add(R.id.fragmentContainer, frag, "TAG").commit();
