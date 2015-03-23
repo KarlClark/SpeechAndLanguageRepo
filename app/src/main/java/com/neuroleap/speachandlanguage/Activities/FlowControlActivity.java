@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +24,7 @@ import com.neuroleap.speachandlanguage.DrawerListAdapter;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
 import com.neuroleap.speachandlanguage.R;
+import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 import java.lang.reflect.Constructor;
@@ -35,8 +35,6 @@ import java.util.List;
 
 public class FlowControlActivity extends ActionBarActivity {
 
-    private ScreeningDbHelper mDbHelper;
-    private SQLiteDatabase mDb;
     private List<QuestionCategory> mQuestionCategories = new ArrayList<QuestionCategory>();
     private List<ArrayList<Question>> mQuestions = new ArrayList<ArrayList<Question>>();
     private DrawerLayout mDrawerLayout;
@@ -53,8 +51,8 @@ public class FlowControlActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_control);
-        mDbHelper = new ScreeningDbHelper(this);
-        mDb = mDbHelper.getWritableDatabase();
+        ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
+        Utilities.setDatabase(dbHelper.getWritableDatabase());
         checkLanguagePreference();
         loadLists();
         setUpDrawer();
@@ -106,17 +104,8 @@ public class FlowControlActivity extends ActionBarActivity {
     }
 
     private void loadLists(){
-        String[] categoryColumns;
-        String[] questionColumns;
-        if (Utilities.getLanguage() == Utilities.ENGLISH) {
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG};
-            questionColumns = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_ENGLISH};
-        }else{
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP};
-            questionColumns = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_SPANISH};
-        }
 
-        Cursor categoryCursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, categoryColumns, null, null, null, null, null);
+        Cursor categoryCursor = DbCRUD.getQuestionCategories();
         int categoryId;
         int categoryCount = 0;
         while (categoryCursor.moveToNext()){
@@ -124,7 +113,7 @@ public class FlowControlActivity extends ActionBarActivity {
             categoryId = categoryCursor.getInt(0);
             QuestionCategory qc = new QuestionCategory(categoryId, categoryCursor.getString(1));
             mQuestionCategories.add(qc);
-            Cursor questionCursor = mDb.query(QuestionsEntry.TABLE_NAME, questionColumns, QuestionsEntry.CATEGORY_ID + "=" + categoryId, null, null, null, null);
+            Cursor questionCursor = DbCRUD.getQuestionsPrompts(categoryId);
             mQuestions.add(new ArrayList<Question>());
             while (questionCursor.moveToNext()) {
                 Question q = new Question(questionCursor.getInt(0), questionCursor.getInt(1), questionCursor.getString(2));
@@ -166,7 +155,7 @@ public class FlowControlActivity extends ActionBarActivity {
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 Log.i (TAG ,"Group click category= " + mQuestionCategories.get(groupPosition).getText());
                 String[] columns = new String[] {QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT, QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT};
-                Cursor categoryCursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, columns, "_ID="+id, null, null, null, null);
+                Cursor categoryCursor = Utilities.getDatabase().query(QuestionCategoriesEntry.TABLE_NAME, columns, "_ID=" + id, null, null, null, null);
                 categoryCursor.moveToNext();
                 Log.i(TAG, "Facilitator fragment= " + categoryCursor.getString(0) + "   Student Fragment= " + categoryCursor.getString(1));
                 Class myClass;
@@ -210,7 +199,7 @@ public class FlowControlActivity extends ActionBarActivity {
         String[] columns2 = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
                 QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH, QuestionsEntry.PROMPT_ENGLISH, QuestionsEntry.PROMPT_SPANISH};
         String[] columns3 = new String[] {"_ID", PicturesEntry.QUESTION_ID, PicturesEntry.FILENAME};
-        Cursor cursor = mDb.query(QuestionCategoriesEntry.TABLE_NAME, columns, null,null,null,null,null);
+        Cursor cursor = Utilities.getDatabase().query(QuestionCategoriesEntry.TABLE_NAME, columns, null, null, null, null, null);
         int categoryId, questionId;
         String category_eg;
         String category_sp;
@@ -224,7 +213,7 @@ public class FlowControlActivity extends ActionBarActivity {
             fragname_sm = cursor.getString(4);
             Log.i(TAG, "id= " + categoryId + "  category EG = " + category_eg +"  category SP= " + category_sp + "  Facilitator Fragment name= " + fragName_fm +"  Student Fragment Name= " + fragname_sm);
             Log.i(TAG, "########################################################");
-            Cursor cursor2 = mDb.query(QuestionsEntry.TABLE_NAME, columns2, QuestionsEntry.CATEGORY_ID + "=" + categoryId, null, null, null, null);
+            Cursor cursor2 = Utilities.getDatabase().query(QuestionsEntry.TABLE_NAME, columns2, QuestionsEntry.CATEGORY_ID + "=" + categoryId, null, null, null, null);
             while (cursor2.moveToNext()){
                 questionId = cursor2.getInt(0);
                 int category_id = cursor2.getInt(1);
@@ -237,7 +226,7 @@ public class FlowControlActivity extends ActionBarActivity {
                 Log.i(TAG, "questionId= " + questionId +" category id= " + category_id + " Text English= " + text_english +
                         " text Spanish= " + text_spanish + " audio english= " + audio_english +" audio spanish= " + audio_spanish
                         + " prompt english= " + prompt_english + " prompt spanish= " + prompt_spanish);
-                Cursor cursor3 = mDb.query(PicturesEntry.TABLE_NAME, columns3, PicturesEntry.QUESTION_ID  + "=" + questionId, null, null, null,null);
+                Cursor cursor3 = Utilities.getDatabase().query(PicturesEntry.TABLE_NAME, columns3, PicturesEntry.QUESTION_ID + "=" + questionId, null, null, null, null);
                 while (cursor3.moveToNext()) {
                     int answerId = cursor3.getInt(0);
                     int questionsId = cursor3.getInt(1);
