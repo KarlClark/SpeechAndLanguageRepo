@@ -6,5 +6,18 @@
     <string name="action_settings">Settings</string>
     <string name="test_1">test 1</string>
     <string name="test_2">test 2</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="language_eg">Language:</string>
+    <string name="language_sp">Idioma:</string>
+
+    <string-array name="language_eg">
+        <item>English</item>
+        <item>Spanish</item>
+    </string-array>
+
+    <string-array name="language_sp">
+        <item>Ingles</item>
+        <item>Espanol</item>
+    </string-array>
 
 </resources>
