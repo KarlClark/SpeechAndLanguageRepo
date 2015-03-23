@@ -39,7 +39,6 @@ public class FlowControlActivity extends ActionBarActivity {
     private SQLiteDatabase mDb;
     private List<QuestionCategory> mQuestionCategories = new ArrayList<QuestionCategory>();
     private List<ArrayList<Question>> mQuestions = new ArrayList<ArrayList<Question>>();
-    private int mLanguage;
     private DrawerLayout mDrawerLayout;
     private ExpandableListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -103,13 +102,13 @@ public class FlowControlActivity extends ActionBarActivity {
 
     private void checkLanguagePreference() {
         mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
-        mLanguage = mPrefs.getInt(Utilities.PREFS_LANGUAGE, Utilities.ENGLISH);
+        Utilities.setLanguage( mPrefs.getInt(Utilities.PREFS_LANGUAGE, Utilities.ENGLISH));
     }
 
     private void loadLists(){
         String[] categoryColumns;
         String[] questionColumns;
-        if (mLanguage == Utilities.ENGLISH) {
+        if (Utilities.getLanguage() == Utilities.ENGLISH) {
             categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG};
             questionColumns = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_ENGLISH};
         }else{

@@ -9,4 +9,13 @@ public class Utilities {
     public static final String PREFS_LANGUAGE = "prefs_language";
     public static final int ENGLISH = 0;
     public static final int SPANISH = 1;
+    private static int mLanguage= ENGLISH;
+
+    public static int getLanguage() {
+        return mLanguage;
+    }
+
+    public static void setLanguage(int Language) {
+        mLanguage = Language;
+    }
 }

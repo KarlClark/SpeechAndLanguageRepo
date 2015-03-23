@@ -47,7 +47,7 @@ public class SettingsActivity extends ActionBarActivity {
         }
 
         mSpnLanguage= (Spinner)findViewById(R.id.spnLanguage);
-        mLanguageAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner_layout, mChoices);
+        mLanguageAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner, mChoices);
         mLanguageAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
         mSpnLanguage.setAdapter(mLanguageAdapter);
         mSpnLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -69,10 +69,12 @@ public class SettingsActivity extends ActionBarActivity {
                     s = getResources().getStringArray(R.array.language_eg);
                     mTvLanguage.setText(getResources().getString(R.string.language_eg));
                     prefsEditor.putInt(Utilities.PREFS_LANGUAGE , Utilities.ENGLISH).commit();
+                    Utilities.setLanguage(Utilities.ENGLISH);
                 }else{
                     s = getResources().getStringArray(R.array.language_sp);
                     mTvLanguage.setText(getResources().getString(R.string.language_sp));
                     prefsEditor.putInt(Utilities.PREFS_LANGUAGE , Utilities.SPANISH).commit();
+                    Utilities.setLanguage(Utilities.SPANISH);
                 }
                 mChoices[0] = s[0];
                 mChoices[1] = s[1];
