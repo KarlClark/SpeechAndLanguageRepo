@@ -21,8 +21,12 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategories
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
 import com.neuroleap.speachandlanguage.DrawerListAdapter;
+import com.neuroleap.speachandlanguage.Fragments.NewOrContinuingFragment;
+import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
+import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
+import com.neuroleap.speachandlanguage.OnFragmentInteractionListener;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
@@ -34,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class FlowControlActivity extends ActionBarActivity {
+public class FlowControlActivity extends ActionBarActivity implements OnFragmentInteractionListener{
 
     private List<QuestionCategory> mQuestionCategories = new ArrayList<QuestionCategory>();
     private List<ArrayList<Question>> mQuestions = new ArrayList<ArrayList<Question>>();
@@ -44,6 +48,12 @@ public class FlowControlActivity extends ActionBarActivity {
     private DrawerListAdapter mDrawerListAdapter;
     private FragmentManager mFragmentManager=getSupportFragmentManager();
     private SharedPreferences mPrefs;
+    private SplashFragment_1 mSplashFragment_1;
+    private SplashFragment_2 mSplashFragment_2;
+    private NewOrContinuingFragment mNewOrContinuingFragment;
+    private static final int SPLASH_FRAGMENT_1_ID = 1000;
+    private static final int SPLASH_FRAGMENT_2_ID = 1001;
+    private static final int NEW_OR_CONTINUING_FRAGMENT_ID = 1002;
 
 
     private static final String TAG = "## My Info ##";
@@ -59,6 +69,9 @@ public class FlowControlActivity extends ActionBarActivity {
         loadLists();
         setUpDrawer();
         //checkDB();
+        if(savedInstanceState == null) {
+            displayFirstSplashScreen();
+        }
         Log.i(TAG,"end onCreate");
     }
 
@@ -106,6 +119,27 @@ public class FlowControlActivity extends ActionBarActivity {
         mDrawerListAdapter.notifyDataSetChanged();
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         invalidateOptionsMenu();
+    }
+
+    private void displayFirstSplashScreen(){
+        mSplashFragment_1= new SplashFragment_1();
+        mSplashFragment_1.setId(SPLASH_FRAGMENT_1_ID);
+        mFragmentManager.beginTransaction().add(R.id.fragmentContainer, mSplashFragment_1, "TAG").commit();
+    }
+
+    private void displaySecondSplashScreen(){
+        mSplashFragment_2= new SplashFragment_2();
+        mSplashFragment_2.setId(SPLASH_FRAGMENT_2_ID);
+        mFragmentManager.beginTransaction().replace(R.id.fragmentContainer, mSplashFragment_2, "TAG").commit();
+        mSplashFragment_1 = null;
+    }
+
+    private void displayNewOrContinuingScreen(){
+        mNewOrContinuingFragment = new NewOrContinuingFragment();
+        mNewOrContinuingFragment.setId(NEW_OR_CONTINUING_FRAGMENT_ID);
+        mFragmentManager.beginTransaction().replace(R.id.fragmentContainer, mNewOrContinuingFragment, "TAG").commit();
+        mSplashFragment_2 = null;
+
     }
 
     private void checkLanguagePreference() {
@@ -213,6 +247,20 @@ public class FlowControlActivity extends ActionBarActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onFragmentInteraction(int id, Object ... args){
+        switch (id){
+            case SPLASH_FRAGMENT_1_ID:
+                displaySecondSplashScreen();
+                break;
+            case SPLASH_FRAGMENT_2_ID:
+                displayNewOrContinuingScreen();
+                break;
+            case NEW_OR_CONTINUING_FRAGMENT_ID:
+                Log.i(TAG, "NewOrContinuingFragment returned " + (Boolean)args[0]);
+        }
     }
 
     private void checkDB(){

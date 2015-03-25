@@ -8,6 +8,25 @@
     <string name="test_2">test 2</string>
     <string name="title_activity_settings">Settings</string>
     <string name="language">Language:</string>
+    <string name="neuro_leap">Neuro Leap</string>
+    <string name="bridge_to">Bridge to Empowerment!</string>
+    <string name="win3">WIN 3 System - SLP</string>
+    <string name="SpcAndLang"><![CDATA[Speach & Language]]></string>
+    <string name="screening">Screening</string>
+    <string name="continuing">Continuing</string>
+    <string name="newbtn">New</string>
+    <string name="student_info">Student Information</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="teacher">Teacher</string>
+    <string name="age">Age</string>
+    <string name="grade">Grade</string>
+    <string name="room">Room</string>
+    <string name="screenings">Date of Screenings</string>
+    <string name="hearing">Hearing</string>
+    <string name="vision">Visiion</string>
+    <string name="speach"><![CDATA[Speach & Language]]></string>
 
     <string-array name="languages">
         <item>English</item>
