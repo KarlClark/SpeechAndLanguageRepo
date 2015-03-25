@@ -29,6 +29,7 @@ public class ScreeningContract {
         public static final String STUDENT_ID = "student_id";
         public static final String TEST_DATE = "test_date";
         public static final String TEST_MODE = "test_mode";
+        public static final String LANGUAGE = "language";
     }
 
     public static final class StudentAnswersEntry implements BaseColumns {
