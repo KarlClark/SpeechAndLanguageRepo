@@ -31,6 +31,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class FlowControlActivity extends ActionBarActivity {
@@ -49,6 +50,7 @@ public class FlowControlActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG,"start onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_control);
         ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
@@ -57,6 +59,7 @@ public class FlowControlActivity extends ActionBarActivity {
         loadLists();
         setUpDrawer();
         //checkDB();
+        Log.i(TAG,"end onCreate");
     }
 
     @Override
@@ -68,7 +71,9 @@ public class FlowControlActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        Log.i(TAG,"onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.menu_flow_control, menu);
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         return true;
     }
 
@@ -95,16 +100,36 @@ public class FlowControlActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         Log.i(TAG, "onActivityResult called");
+        loadLists();
+        mDrawerListAdapter.notifyDataSetChanged();
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        invalidateOptionsMenu();
     }
 
     private void checkLanguagePreference() {
         mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
-        Utilities.setLanguage( mPrefs.getInt(Utilities.PREFS_LANGUAGE, Utilities.ENGLISH));
+        int language = mPrefs.getInt(Utilities.PREFS_LANGUAGE, -1);
+        if (language == -1) {
+            Log.i (TAG, "locale language= " + Locale.getDefault().getLanguage());
+            if(Locale.getDefault().getLanguage().equals("es")){
+                language = Utilities.SPANISH;
+            }else{
+                language = Utilities.ENGLISH;
+            }
+        }
+        Utilities.setLanguage(language);
+        if (language == Utilities.ENGLISH){
+            Utilities.setLocale(getBaseContext(), "en");
+        }else{
+            Utilities.setLocale(getBaseContext(), "es");
+        }
     }
 
     private void loadLists(){
-
+        mQuestionCategories.clear();
+        mQuestions.clear();
         Cursor categoryCursor = DbCRUD.getQuestionCategories();
         int categoryId;
         int categoryCount = 0;

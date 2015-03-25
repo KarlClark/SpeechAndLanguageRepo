@@ -10,7 +10,7 @@
         android:layout_width="120sp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/language_eg"
+        android:text="@string/language"
         android:id="@+id/tvLanguage"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

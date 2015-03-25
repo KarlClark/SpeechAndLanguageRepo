@@ -15,6 +15,7 @@ import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SettingsActivity extends ActionBarActivity {
 
@@ -34,19 +35,12 @@ public class SettingsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_settings);
 
         mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
-
         mLanguage = mPrefs.getInt(Utilities.PREFS_LANGUAGE, Utilities.ENGLISH);
 
         mTvLanguage = (TextView)findViewById(R.id.tvLanguage);
-        if (mLanguage == Utilities.ENGLISH){
-            mTvLanguage.setText(getResources().getString(R.string.language_eg));
-            mChoices = getResources().getStringArray(R.array.language_eg);
-        }else{
-            mTvLanguage.setText(getResources().getString(R.string.language_sp));
-            mChoices = getResources().getStringArray(R.array.language_sp);
-        }
-
         mSpnLanguage= (Spinner)findViewById(R.id.spnLanguage);
+        mTvLanguage.setText(getResources().getString(R.string.language));
+        mChoices = getResources().getStringArray(R.array.languages);
         mLanguageAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner, mChoices);
         mLanguageAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
         mSpnLanguage.setAdapter(mLanguageAdapter);
@@ -54,6 +48,7 @@ public class SettingsActivity extends ActionBarActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG ,  "onItemSelected called call count= " + mCallCount + "  Position= " + position);
+                Locale locale;
                 if (mCallCount == 0) {
                     if (mLanguage == Utilities.SPANISH){
                         mSpnLanguage.setSelection(1);
@@ -62,23 +57,24 @@ public class SettingsActivity extends ActionBarActivity {
                     return;
                 }
                 Log.i(TAG, "Didn't return");
-                String[] s;
                 SharedPreferences.Editor prefsEditor = mPrefs.edit();
 
                 if (position == 0) {
-                    s = getResources().getStringArray(R.array.language_eg);
-                    mTvLanguage.setText(getResources().getString(R.string.language_eg));
                     prefsEditor.putInt(Utilities.PREFS_LANGUAGE , Utilities.ENGLISH).commit();
                     Utilities.setLanguage(Utilities.ENGLISH);
+                    Utilities.setLocale(getBaseContext(),"en");
                 }else{
-                    s = getResources().getStringArray(R.array.language_sp);
-                    mTvLanguage.setText(getResources().getString(R.string.language_sp));
                     prefsEditor.putInt(Utilities.PREFS_LANGUAGE , Utilities.SPANISH).commit();
                     Utilities.setLanguage(Utilities.SPANISH);
+                    Utilities.setLocale(getBaseContext(),"es");
                 }
+
+                String[] s = getResources().getStringArray(R.array.languages);
                 mChoices[0] = s[0];
                 mChoices[1] = s[1];
                 mLanguageAdapter.notifyDataSetChanged();
+                mTvLanguage.setText(getResources().getString(R.string.language));
+                getSupportActionBar().setTitle(getResources().getString(R.string.action_settings));
             }
 
             @Override
@@ -87,4 +83,6 @@ public class SettingsActivity extends ActionBarActivity {
             }
         });
     }
+
+
 }
