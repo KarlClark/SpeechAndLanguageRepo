@@ -5,4 +5,7 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="TextColor">
+        <item name="android:textColor">@color/dark_grey</item>
+    </style>
 </resources>

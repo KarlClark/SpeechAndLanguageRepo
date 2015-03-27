@@ -12,6 +12,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/language"
         android:id="@+id/tvLanguage"
+        style = "@style/TextColor"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

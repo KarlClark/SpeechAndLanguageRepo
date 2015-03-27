@@ -6,5 +6,5 @@
          android:layout_width="match_parent"
          android:textAppearance="?android:attr/textAppearanceLarge"
          android:ellipsize="marquee"
-    android:layout_height="50dp"
-    android:textColor="@android:color/black" />
+        android:layout_height="50dp"
+        android:textColor="@color/dark_grey" />

@@ -24,6 +24,7 @@ import com.neuroleap.speachandlanguage.DrawerListAdapter;
 import com.neuroleap.speachandlanguage.Fragments.NewOrContinuingFragment;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
+import com.neuroleap.speachandlanguage.Fragments.StudentInfoFragment;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
 import com.neuroleap.speachandlanguage.OnFragmentInteractionListener;
@@ -51,10 +52,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private SplashFragment_1 mSplashFragment_1;
     private SplashFragment_2 mSplashFragment_2;
     private NewOrContinuingFragment mNewOrContinuingFragment;
+    private StudentInfoFragment mStudentInfoFragment;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
     private static final int SPLASH_FRAGMENT_2_ID = 1001;
     private static final int NEW_OR_CONTINUING_FRAGMENT_ID = 1002;
-
+    private static final int STUDENT_INFO_FRAGMENT_ID = 1003;
 
     private static final String TAG = "## My Info ##";
 
@@ -139,7 +141,13 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mNewOrContinuingFragment.setId(NEW_OR_CONTINUING_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(R.id.fragmentContainer, mNewOrContinuingFragment, "TAG").commit();
         mSplashFragment_2 = null;
+    }
 
+    private void displayStudentInfoScreen() {
+        mStudentInfoFragment = new StudentInfoFragment();
+        mStudentInfoFragment.setId(STUDENT_INFO_FRAGMENT_ID);
+        mFragmentManager.beginTransaction().replace(R.id.fragmentContainer, mStudentInfoFragment, "TAG").commit();
+        mNewOrContinuingFragment = null;
     }
 
     private void checkLanguagePreference() {
@@ -260,6 +268,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 break;
             case NEW_OR_CONTINUING_FRAGMENT_ID:
                 Log.i(TAG, "NewOrContinuingFragment returned " + (Boolean)args[0]);
+                if((Boolean)args[0]){
+
+                }else{
+                    displayStudentInfoScreen();
+                }
         }
     }
 

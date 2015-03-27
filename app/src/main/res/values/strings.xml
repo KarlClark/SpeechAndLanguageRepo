@@ -15,7 +15,7 @@
     <string name="screening">Screening</string>
     <string name="continuing">Continuing</string>
     <string name="newbtn">New</string>
-    <string name="student_info">Student Information</string>
+    <string name="student_info">Student Information:</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="date_of_birth">Date of birth</string>
@@ -23,16 +23,20 @@
     <string name="age">Age</string>
     <string name="grade">Grade</string>
     <string name="room">Room</string>
-    <string name="screenings">Date of Screenings</string>
+    <string name="screenings">Dates of Screenings:</string>
     <string name="hearing">Hearing</string>
-    <string name="vision">Visiion</string>
+    <string name="vision">Vision</string>
     <string name="speach"><![CDATA[Speach & Language]]></string>
+    <string name="next">Next</string>
 
     <string-array name="languages">
         <item>English</item>
         <item>Spanish</item>
     </string-array>
 
-
+    <string-array name="pass_fail">
+        <item>pass</item>
+        <item>fail</item>
+    </string-array>
 
 </resources>

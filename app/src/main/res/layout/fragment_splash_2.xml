@@ -12,8 +12,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
-        android:layout_marginBottom="15dp"
-        android:textColor="@android:color/black"/>
+        style = "@style/TextColor"
+        android:layout_marginBottom="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,8 +22,8 @@
         android:text="@string/SpcAndLang"
         android:id="@+id/textView4"
         android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/black"/>
+        style = "@style/TextColor"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,6 +32,6 @@
         android:text="@string/screening"
         android:id="@+id/textView5"
         android:layout_below="@+id/textView4"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/black"/>
+        style = "@style/TextColor"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
