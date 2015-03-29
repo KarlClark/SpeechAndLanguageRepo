@@ -27,7 +27,7 @@ import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
 import com.neuroleap.speachandlanguage.Fragments.StudentInfoFragment;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
-import com.neuroleap.speachandlanguage.OnFragmentInteractionListener;
+import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
@@ -65,11 +65,13 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         Log.i(TAG,"start onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_control);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
         DbCRUD.setDatabase(dbHelper.getWritableDatabase());
         checkLanguagePreference();
         loadLists();
-        setUpDrawer();
+
         //checkDB();
         if(savedInstanceState == null) {
             displayFirstSplashScreen();
@@ -80,7 +82,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+        //mDrawerToggle.syncState();
     }
 
     @Override
@@ -191,7 +193,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private void setUpDrawer(){
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         mDrawerLayout.setStatusBarBackground(R.drawable.ic_launcher);
         mDrawerList = (ExpandableListView) findViewById(R.id.left_drawer);
 
@@ -273,6 +275,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 }else{
                     displayStudentInfoScreen();
                 }
+                break;
+            case STUDENT_INFO_FRAGMENT_ID:
+                setUpDrawer();
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                mDrawerToggle.syncState();
+                break;
         }
     }
 

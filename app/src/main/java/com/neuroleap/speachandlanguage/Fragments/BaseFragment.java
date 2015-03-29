@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 
-import com.neuroleap.speachandlanguage.OnFragmentInteractionListener;
+import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
 
 /**
  * Created by Karl on 3/24/2015.

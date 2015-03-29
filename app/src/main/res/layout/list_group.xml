@@ -16,8 +16,6 @@
         android:minHeight="50dp"
         style = "@style/TextColor"
         android:gravity="center_vertical"
-
-        android:textColor="@android:color/black"
         android:paddingLeft="15dp"
         android:layout_toLeftOf="@+id/ivSelector"
         android:layout_toStartOf="@+id/ivSelector"

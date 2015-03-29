@@ -1,7 +1,7 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,22 +12,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.neuroleap.speachandlanguage.Listeners.OnCustomDateDialogClickedListener;
 import com.neuroleap.speachandlanguage.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 /**
  * Created by Karl on 3/25/2015.
  */
-public class StudentInfoFragment extends BaseFragment {
+public class StudentInfoFragment extends BaseFragment implements OnCustomDateDialogClickedListener{
     EditText mEtFirstName, mEtLastName, mEtDateOfBirth, mEtAge, mEtTeacher, mEtGrade, mEtRoom,
              mEtHearingDate, mEtVisionDate, mEtScreeningDate, mCurrentEditText;
     View nextView;
@@ -37,7 +36,7 @@ public class StudentInfoFragment extends BaseFragment {
     ScrollView mSvStudentInfo;
     private DatePickerDialog mDatePickerDialog;
     private SimpleDateFormat mDateFormatter;
-    private int mSaveColor;
+    private CustomDatePickerDialogFragment mCustomDatePickerDialogFragment;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -57,6 +56,7 @@ public class StudentInfoFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Log.i(TAG , "Next button clicked");
+                mOnFragmentInteractionListener.onFragmentInteraction(mId);
             }
         });
     }
@@ -94,7 +94,9 @@ public class StudentInfoFragment extends BaseFragment {
         mSpnHearing.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.dark_grey));
+                if ((TextView)parent.getChildAt(0) != null) {
+                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.dark_grey));
+                }
 
             }
 
@@ -110,7 +112,9 @@ public class StudentInfoFragment extends BaseFragment {
         mSpnVision.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.dark_grey));
+                if ((TextView)parent.getChildAt(0) != null) {
+                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.dark_grey));
+                }
 
             }
 
@@ -121,41 +125,35 @@ public class StudentInfoFragment extends BaseFragment {
         });
     }
 
+    private void showDatePickerDialog(String title, EditText et){
+        mCustomDatePickerDialogFragment = CustomDatePickerDialogFragment.newInstance(title);
+        mCustomDatePickerDialogFragment.setTargetFragment(this, 0);
+        mCustomDatePickerDialogFragment.setCancelable(false);
+        mCustomDatePickerDialogFragment.setField(et);
+        mCustomDatePickerDialogFragment.show(getFragmentManager(), "tag");
+    }
+
+    public void onCustomDateDialogClicked() {
+        Log.i(TAG, "onCustomDateDialogClickedListener called");
+        nextView.requestFocus();
+        if (nextView == mEtRoom){
+            InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(mEtRoom.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            Log.i(TAG,"Scrolling");
+            mSvStudentInfo.scrollTo(0,mSvStudentInfo.getBottom());
+        }
+    }
+
     private void setupDatePickers() {
 
         mDateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
-        Calendar calendar = Calendar.getInstance();
-
-        mDatePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day){
-                Calendar pickedDate = Calendar.getInstance();
-                pickedDate.set(year, month, day);
-                mCurrentEditText.setText(mDateFormatter.format(pickedDate.getTime()));
-
-            }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
-        mDatePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Log.i(TAG,"onDismiss called");
-                mCurrentTextView.setTextColor(mSaveColor);
-                nextView.requestFocus();
-
-            }
-        });
 
         mEtDateOfBirth.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    mCurrentEditText = (EditText) v;
                     nextView = mEtAge;
-                    mCurrentTextView = mTvDateOfBirth;
-                    mSaveColor = mCurrentTextView.getCurrentTextColor();
-                    mCurrentTextView.setTextColor(getResources().getColor(R.color.red));
-                    mDatePickerDialog.show();
+                    showDatePickerDialog(getResources().getString(R.string.date_of_birth_title), mEtDateOfBirth);
                 }
             }
         });
@@ -165,12 +163,8 @@ public class StudentInfoFragment extends BaseFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    mCurrentEditText = (EditText) v;
                     nextView = mEtVisionDate;
-                    mCurrentTextView = mTvHearing;
-                    mSaveColor = mCurrentTextView.getCurrentTextColor();
-                    mCurrentTextView.setTextColor(getResources().getColor(R.color.red));
-                    mDatePickerDialog.show();
+                    showDatePickerDialog(getResources().getString(R.string.hearing_title),mEtHearingDate);
                 }
             }
         });
@@ -179,13 +173,9 @@ public class StudentInfoFragment extends BaseFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    mCurrentEditText = (EditText) v;
                     nextView = mEtRoom;
-                    mCurrentTextView = mTvSpeachAndLanguage;
-                    mSaveColor = mCurrentTextView.getCurrentTextColor();
-                    mCurrentTextView.setTextColor(getResources().getColor(R.color.red));
-                    mDatePickerDialog.show();
-                    mSvStudentInfo.scrollTo(0,mSvStudentInfo.getBottom());
+                    showDatePickerDialog(getResources().getString(R.string.speach_and_language_title),mEtScreeningDate);
+                    mSvStudentInfo.scrollTo(0, mSvStudentInfo.getBottom());
                 }
             }
         });
@@ -196,13 +186,8 @@ public class StudentInfoFragment extends BaseFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 Log.i(TAG,"etVision onFocusChange called hasFocus=  " +hasFocus);
                 if (hasFocus) {
-                    mCurrentEditText = (EditText) v;
                     nextView = mEtScreeningDate;
-                    mCurrentTextView = mTvVision;
-                    mSaveColor = mCurrentTextView.getCurrentTextColor();
-                    mCurrentTextView.setTextColor(getResources().getColor(R.color.red));
-                    Log.i(TAG, "Showing datepicker");
-                    mDatePickerDialog.show();
+                    showDatePickerDialog(getResources().getString(R.string.vision_title),mEtVisionDate);
                 }
             }
         });
