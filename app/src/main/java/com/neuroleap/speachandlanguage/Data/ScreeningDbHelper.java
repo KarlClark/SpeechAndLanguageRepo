@@ -44,6 +44,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 StudentsEntry.LAST_NAME + " TEXT NOT NULL, " +
                 StudentsEntry.TEACHER + " TEXT, " +
                 StudentsEntry.BIRTHDAY + " TEXT, " +
+                StudentsEntry.AGE + " INTEGER NOT NULL, " +
                 StudentsEntry.HEARING_TEST_DATE + " TEXT, " +
                 StudentsEntry.VISION_TEST_DATE + " TEXT, " +
                 StudentsEntry.HEARING_PASS + " BOOLEAN, " +
@@ -54,6 +55,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 ScreeningsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ScreeningsEntry.STUDENT_ID  + " INTEGER NOT NULL, " +
                 ScreeningsEntry.TEST_DATE + " TEXT NOT NULL, " +
+                ScreeningsEntry.AGE +" INTEGER NOT NULL, " +
                 ScreeningsEntry.TEST_MODE + " INTEGER NOT NULL, " +
                 ScreeningsEntry.LANGUAGE + " INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + ScreeningsEntry.STUDENT_ID + ") REFERENCES " +
