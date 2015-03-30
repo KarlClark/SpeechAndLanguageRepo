@@ -7,5 +7,7 @@
 
     <style name="TextColor">
         <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textColorHint">@color/red</item>
+        <item name="android:privateImeOptions">nm</item>
     </style>
 </resources>

@@ -27,10 +27,20 @@ public class CustomDatePickerDialogFragment extends DialogFragment {
     private String mTitle = "";
     private EditText mField;
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
-    OnCustomDateDialogClickedListener mOnCustomDateDialogClickedListener;
+    private OnCustomDateDialogClickedListener mOnCustomDateDialogClickedListener;
+    private int mTitleColor;
+    private boolean mChangeColor = false;
+
+
+
     public static final String TITLE_TAG ="title=";
     public static final String FIELD_TAG ="field";
     private static final String TAG = "## My Info ##";
+
+    public void setTitleColor(int titleColor) {
+        mTitleColor = titleColor;
+        mChangeColor=true;
+    }
 
     public CustomDatePickerDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -68,6 +78,10 @@ public class CustomDatePickerDialogFragment extends DialogFragment {
         View titleView = getActivity().getLayoutInflater().inflate(R.layout.custom_title, null);
         TextView tvTitle = (TextView)titleView.findViewById(R.id.tvCustomTitle);
         tvTitle.setText(mTitle);
+        if(mChangeColor){
+            Log.i(TAG, "date picker change color");
+            tvTitle.setTextColor(mTitleColor);
+        }
         mDatePicker=(DatePicker)v.findViewById(R.id.datePicker);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setView(v);

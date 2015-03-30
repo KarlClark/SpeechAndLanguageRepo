@@ -1,18 +1,20 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -20,23 +22,31 @@ import android.widget.TextView;
 import com.neuroleap.speachandlanguage.Listeners.OnCustomDateDialogClickedListener;
 import com.neuroleap.speachandlanguage.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
  * Created by Karl on 3/25/2015.
  */
 public class StudentInfoFragment extends BaseFragment implements OnCustomDateDialogClickedListener{
-    EditText mEtFirstName, mEtLastName, mEtDateOfBirth, mEtAge, mEtTeacher, mEtGrade, mEtRoom,
-             mEtHearingDate, mEtVisionDate, mEtScreeningDate, mCurrentEditText;
-    View nextView;
-    TextView mTvDateOfBirth, mTvHearing, mTvVision, mTvSpeachAndLanguage, mCurrentTextView;
-    Spinner mSpnHearing, mSpnVision;
-    Button mBtnNext;
-    ScrollView mSvStudentInfo;
+    private EditText mEtFirstName, mEtLastName, mEtDateOfBirth, mEtAge, mEtTeacher, mEtGrade, mEtRoom,
+                     mEtHearingDate, mEtVisionDate, mEtScreeningDate, mCurrentEditText;
+    private View mNextView;
+    private TextView mTvDateOfBirth, mTvHearing, mTvVision, mTvSpeachAndLanguage, mTvError;
+    private Spinner mSpnHearing, mSpnVision;
+    private Button mBtnNext;
+    private ScrollView mSvStudentInfo;
     private DatePickerDialog mDatePickerDialog;
     private SimpleDateFormat mDateFormatter;
     private CustomDatePickerDialogFragment mCustomDatePickerDialogFragment;
+    private InputMethodManager mInputMethodManager;
+    private boolean mKeyboardUp= false;
+    private boolean mGotHereFrommEtRoom = false;
+    private static final int CUT_OFF_DATE = 3 * 365;
+    private static final String DATE_FORMAT_STRING = "MMM dd, yyyy";
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -44,11 +54,25 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         View v = inflater.inflate(R.layout.fragment_student_info, container, false);
         getViews(v);
         mEtFirstName.requestFocus();
+        setUpListeners();
         setUpSpinners();
         setupDatePickers();
         setUpNextButton();
+        setUpRootViewListener();
         raiseKeyBoard();
         return v;
+    }
+
+    private void setUpListeners(){
+
+
+        mEtRoom.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGotHereFrommEtRoom = true;
+                return false;
+            }
+        });
     }
 
     private void setUpNextButton(){
@@ -56,14 +80,28 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             @Override
             public void onClick(View v) {
                 Log.i(TAG , "Next button clicked");
+                if ( ! dataOk()){
+                    return;
+                }
                 mOnFragmentInteractionListener.onFragmentInteraction(mId);
+            }
+        });
+
+        mEtAge.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    raiseKeyBoard();
+                }
             }
         });
     }
 
     private void raiseKeyBoard(){
-        InputMethodManager imm =(InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        mInputMethodManager =(InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
+        if ( ! mKeyboardUp) {
+            mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
     }
 
     private void getViews(View v) {
@@ -71,6 +109,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mTvDateOfBirth = (TextView)v.findViewById(R.id.tvDateOfBirth);
         mTvHearing = (TextView)v.findViewById(R.id.tvHearing);
         mTvSpeachAndLanguage = (TextView)v.findViewById(R.id.tvSpeachAndLanguage);
+        mTvError = (TextView)v.findViewById(R.id.tvError);
         mTvVision = (TextView)v.findViewById(R.id.tvVision);
         mEtFirstName = (EditText)v.findViewById(R.id.etFirstName);
         mEtLastName = (EditText)v.findViewById(R.id.etLastName);
@@ -125,35 +164,76 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         });
     }
 
-    private void showDatePickerDialog(String title, EditText et){
+    private void showDatePickerDialog(String title, int titleColor, EditText et){
         mCustomDatePickerDialogFragment = CustomDatePickerDialogFragment.newInstance(title);
         mCustomDatePickerDialogFragment.setTargetFragment(this, 0);
         mCustomDatePickerDialogFragment.setCancelable(false);
         mCustomDatePickerDialogFragment.setField(et);
+        if (titleColor != 0) {
+            mCustomDatePickerDialogFragment.setTitleColor(titleColor);
+        }
         mCustomDatePickerDialogFragment.show(getFragmentManager(), "tag");
     }
 
     public void onCustomDateDialogClicked() {
-        Log.i(TAG, "onCustomDateDialogClickedListener called");
-        nextView.requestFocus();
-        if (nextView == mEtRoom){
-            InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(mEtRoom.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        Log.i(TAG, "onCustomDateDialogClickedListener called Next view = " + mNextView);
+        mNextView.requestFocus();
+        if (mNextView == mEtFirstName){
+
+            Log.i(TAG,"next view was next button----------------");
+            Log.i(TAG,"mNextView = " + mNextView);
+            Log.i(TAG,"mEtFirstName = " + mEtFirstName);
+            Log.i(TAG, "focused child is " + ((LinearLayout)((LinearLayout)mSvStudentInfo.getFocusedChild()).getFocusedChild()).getFocusedChild()         );
+            View v =  ((LinearLayout)((LinearLayout)mSvStudentInfo.getFocusedChild()).getFocusedChild()).getFocusedChild();
+            //mSvStudentInfo.fullScroll(ScrollView.FOCUS_DOWN);
+            //InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            //mInputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            if (mKeyboardUp) {
+                mInputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
+            }
             Log.i(TAG,"Scrolling");
-            mSvStudentInfo.scrollTo(0,mSvStudentInfo.getBottom());
+            //mSvStudentInfo.fullScroll(ScrollView.FOCUS_DOWN);
+            mSvStudentInfo.post(new Runnable() {
+                public void run(){
+                    View v =  ((LinearLayout)((LinearLayout)mSvStudentInfo.getFocusedChild()).getFocusedChild()).getFocusedChild();
+                    //mSvStudentInfo.fullScroll(ScrollView.FOCUS_DOWN);
+                    //InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //mInputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                    mSvStudentInfo.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
+            //mSvStudentInfo.scrollTo(0,mSvStudentInfo.getBottom());
         }
+    }
+
+    private void setUpRootViewListener(){
+        mSvStudentInfo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.i(TAG,"OnGlobalLayout called#################3##");
+
+                int heightDiff = mSvStudentInfo.getRootView().getHeight() - mSvStudentInfo.getHeight();
+                mKeyboardUp = (heightDiff > 400);
+                Log.i(TAG,"height diff= " +heightDiff);
+            }
+        });
     }
 
     private void setupDatePickers() {
 
-        mDateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        mDateFormatter = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.US);
 
         mEtDateOfBirth.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    nextView = mEtAge;
-                    showDatePickerDialog(getResources().getString(R.string.date_of_birth_title), mEtDateOfBirth);
+                    if (mEtDateOfBirth.getText().toString().equals("")) {
+                        mNextView = mEtAge;
+                    }else{
+                        mNextView = mEtFirstName;
+                    }
+                    showDatePickerDialog(getResources().getString(R.string.date_of_birth_title), 0, mEtDateOfBirth);
                 }
             }
         });
@@ -163,8 +243,18 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    nextView = mEtVisionDate;
-                    showDatePickerDialog(getResources().getString(R.string.hearing_title),mEtHearingDate);
+                    if (( ! mEtHearingDate.getText().toString().equals("")) && mGotHereFrommEtRoom){
+                        mGotHereFrommEtRoom = false;
+                        mNextView = mEtFirstName;
+                        onCustomDateDialogClicked();
+                        return;
+                    }
+                    if (mEtHearingDate.getText().toString().equals("")) {
+                        mNextView = mEtVisionDate;
+                    }else{
+                        mNextView = mEtFirstName;
+                    }
+                    showDatePickerDialog(getResources().getString(R.string.hearing_title) , 0 , mEtHearingDate);
                 }
             }
         });
@@ -173,9 +263,9 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    nextView = mEtRoom;
-                    showDatePickerDialog(getResources().getString(R.string.speach_and_language_title),mEtScreeningDate);
-                    mSvStudentInfo.scrollTo(0, mSvStudentInfo.getBottom());
+                    mNextView = mEtFirstName;
+                    showDatePickerDialog(getResources().getString(R.string.speach_and_language_title) , 0 , mEtScreeningDate);
+                    //mSvStudentInfo.scrollTo(0, mSvStudentInfo.getBottom());
                 }
             }
         });
@@ -184,17 +274,97 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mEtVisionDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.i(TAG,"etVision onFocusChange called hasFocus=  " +hasFocus);
                 if (hasFocus) {
-                    nextView = mEtScreeningDate;
-                    showDatePickerDialog(getResources().getString(R.string.vision_title),mEtVisionDate);
+                    if (mEtVisionDate.getText().toString().equals("")) {
+                        mNextView = mEtScreeningDate;
+                    }else{
+                        mNextView = mEtFirstName;
+                    }
+                    showDatePickerDialog(getResources().getString(R.string.vision_title) , 0 , mEtVisionDate);
                 }
             }
         });
 
 
-
     }
 
+
+    private boolean dataOk() {
+
+
+        if (mEtFirstName.getText().toString().equals("")){
+            processError(mContext.getString(R.string.error_first_name), mEtFirstName);
+            return false;
+        }
+
+        if (mEtLastName.getText().toString().equals("")) {
+            processError(mContext.getString(R.string.error_last_name), mEtLastName);
+            return false;
+        }
+
+        if (mEtDateOfBirth.getText().toString().equals("")){
+            //processError(mContext.getString(R.string.error_date_of_birth), mEtDateOfBirth);
+            mNextView = mEtFirstName;
+            Log.i(TAG,"Calling show datepicker ");
+            showDatePickerDialog("Date of birth is required.", getResources().getColor(R.color.red), mEtDateOfBirth);
+            return false;
+        }
+
+        if (mEtAge.getText().toString().equals("")){
+            processError(mContext.getString(R.string.error_age), mEtAge);
+            return false;
+        }
+
+
+        if(mEtHearingDate.getText().toString().equals("")){
+            //processError("Error: Require date of hearing screen.", mEtHearingDate);
+            mNextView = mEtFirstName;
+            showDatePickerDialog("Date of hearing screen is required.", getResources().getColor(R.color.red), mEtDateOfBirth);
+            return false;
+        }
+
+        if (mEtVisionDate.getText().toString().equals("")){
+            showDatePickerDialog("Error: Date of vision screen is required.", getResources().getColor(R.color.red),  mEtVisionDate);
+            return false;
+        }
+
+        if (mEtScreeningDate.getText().toString().equals("")){
+            showDatePickerDialog("Error Date of speach & language screen is required.", getResources().getColor(R.color.red),  mEtScreeningDate);
+            return false;
+        }
+        if (daysAgo(mEtHearingDate) > CUT_OFF_DATE){
+            mTvError.setText(mContext.getString(R.string.error_hearing_to_old));
+            mTvError.setVisibility(View.VISIBLE);
+            return false;
+        }
+        if(daysAgo(mEtVisionDate) > CUT_OFF_DATE){
+            mTvError.setText((mContext.getString(R.string.error_vision_to_old)));
+            mTvError.setVisibility(View.VISIBLE);
+            return false;
+        }
+
+        mTvError.setVisibility(View.GONE);
+        return true;
+    }
+
+    private void processError(String errorMsg, EditText et){
+        et.setHint(errorMsg);
+        et.requestFocus();
+    }
+
+    private long daysAgo (EditText et) {
+        Date d = null;
+        try {
+            d = mDateFormatter.parse(mEtHearingDate.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar testDate = Calendar.getInstance();
+        testDate.setTime(d);
+        Calendar today = Calendar.getInstance();
+        long diff = today.getTimeInMillis() - testDate.getTimeInMillis();
+        Log.i(TAG, "days ago = " +(diff/(24*60*60*1000)));
+        return diff/(24 * 60 * 60 * 1000);
+    }
 
 }
