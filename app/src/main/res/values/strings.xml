@@ -39,6 +39,9 @@
     <string name="error_age">Error: require age.</string>
     <string name="error_hearing_to_old">Error: Hearing screen was to long ago.</string>
     <string name="error_vision_to_old">Error: Vision screen was to long ago.</string>
+    <string name="error_hearing_required">Date of hearing screen is required.</string>
+    <string name="error_vision_required">Error: Date of vision screen is required.</string>
+    <string name="error_speach_required"><![CDATA[Error Date of speach & language screen is required.]]></string>
 
     <string-array name="languages">
         <item>English</item>

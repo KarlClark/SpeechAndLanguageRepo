@@ -46,7 +46,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     private boolean mKeyboardUp= false;
     private boolean mGotHereFrommEtRoom = false;
     private static final int CUT_OFF_DATE = 3 * 365;
-    private static final String DATE_FORMAT_STRING = "MMM dd, yyyy";
+    public static final String DATE_FORMAT_STRING = "MMM dd, yyyy";
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -175,15 +175,19 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mCustomDatePickerDialogFragment.show(getFragmentManager(), "tag");
     }
 
-    public void onCustomDateDialogClicked() {
-        Log.i(TAG, "onCustomDateDialogClickedListener called Next view = " + mNextView);
+    public void onCustomDateDialogClicked(EditText et) {
+        //Log.i(TAG, "onCustomDateDialogClickedListener called Next view = " + mNextView);
+        Log.d(TAG,"date of birth= " + mEtDateOfBirth.getText());
+        if (et == mEtDateOfBirth){
+            mEtAge.setText("" + yearsAgo(mEtDateOfBirth));
+        }
         mNextView.requestFocus();
         if (mNextView == mEtFirstName){
 
-            Log.i(TAG,"next view was next button----------------");
-            Log.i(TAG,"mNextView = " + mNextView);
-            Log.i(TAG,"mEtFirstName = " + mEtFirstName);
-            Log.i(TAG, "focused child is " + ((LinearLayout)((LinearLayout)mSvStudentInfo.getFocusedChild()).getFocusedChild()).getFocusedChild()         );
+            //Log.i(TAG,"next view was next button----------------");
+            //Log.i(TAG,"mNextView = " + mNextView);
+            //Log.i(TAG,"mEtFirstName = " + mEtFirstName);
+            //Log.i(TAG, "focused child is " + ((LinearLayout)((LinearLayout)mSvStudentInfo.getFocusedChild()).getFocusedChild()).getFocusedChild()         );
             View v =  ((LinearLayout)((LinearLayout)mSvStudentInfo.getFocusedChild()).getFocusedChild()).getFocusedChild();
             //mSvStudentInfo.fullScroll(ScrollView.FOCUS_DOWN);
             //InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -191,7 +195,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             if (mKeyboardUp) {
                 mInputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
             }
-            Log.i(TAG,"Scrolling");
+            //Log.i(TAG,"Scrolling");
             //mSvStudentInfo.fullScroll(ScrollView.FOCUS_DOWN);
             mSvStudentInfo.post(new Runnable() {
                 public void run(){
@@ -211,11 +215,11 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mSvStudentInfo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Log.i(TAG,"OnGlobalLayout called#################3##");
+                //Log.i(TAG,"OnGlobalLayout called#################3##");
 
                 int heightDiff = mSvStudentInfo.getRootView().getHeight() - mSvStudentInfo.getHeight();
                 mKeyboardUp = (heightDiff > 400);
-                Log.i(TAG,"height diff= " +heightDiff);
+                //Log.i(TAG,"height diff= " +heightDiff);
             }
         });
     }
@@ -246,7 +250,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                     if (( ! mEtHearingDate.getText().toString().equals("")) && mGotHereFrommEtRoom){
                         mGotHereFrommEtRoom = false;
                         mNextView = mEtFirstName;
-                        onCustomDateDialogClicked();
+                        onCustomDateDialogClicked(mEtHearingDate);
                         return;
                     }
                     if (mEtHearingDate.getText().toString().equals("")) {
@@ -306,7 +310,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             //processError(mContext.getString(R.string.error_date_of_birth), mEtDateOfBirth);
             mNextView = mEtFirstName;
             Log.i(TAG,"Calling show datepicker ");
-            showDatePickerDialog("Date of birth is required.", getResources().getColor(R.color.red), mEtDateOfBirth);
+            showDatePickerDialog(mContext.getString(R.string.error_date_of_birth), getResources().getColor(R.color.red), mEtDateOfBirth);
             return false;
         }
 
@@ -319,17 +323,17 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         if(mEtHearingDate.getText().toString().equals("")){
             //processError("Error: Require date of hearing screen.", mEtHearingDate);
             mNextView = mEtFirstName;
-            showDatePickerDialog("Date of hearing screen is required.", getResources().getColor(R.color.red), mEtDateOfBirth);
+            showDatePickerDialog(mContext.getString(R.string.error_hearing_required), getResources().getColor(R.color.red), mEtDateOfBirth);
             return false;
         }
 
         if (mEtVisionDate.getText().toString().equals("")){
-            showDatePickerDialog("Error: Date of vision screen is required.", getResources().getColor(R.color.red),  mEtVisionDate);
+            showDatePickerDialog(mContext.getString(R.string.error_vision_required), getResources().getColor(R.color.red),  mEtVisionDate);
             return false;
         }
 
         if (mEtScreeningDate.getText().toString().equals("")){
-            showDatePickerDialog("Error Date of speach & language screen is required.", getResources().getColor(R.color.red),  mEtScreeningDate);
+            showDatePickerDialog(mContext.getString(R.string.error_speach_required), getResources().getColor(R.color.red),  mEtScreeningDate);
             return false;
         }
         if (daysAgo(mEtHearingDate) > CUT_OFF_DATE){
@@ -353,9 +357,17 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     }
 
     private long daysAgo (EditText et) {
+        return milliSecsAgo(et)/(24 * 60 * 60 * 1000);
+    }
+
+    private long yearsAgo(EditText et){
+        return daysAgo(et)/365;
+    }
+
+    private long milliSecsAgo (EditText et){
         Date d = null;
         try {
-            d = mDateFormatter.parse(mEtHearingDate.getText().toString());
+            d = mDateFormatter.parse(et.getText().toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -364,7 +376,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         Calendar today = Calendar.getInstance();
         long diff = today.getTimeInMillis() - testDate.getTimeInMillis();
         Log.i(TAG, "days ago = " +(diff/(24*60*60*1000)));
-        return diff/(24 * 60 * 60 * 1000);
+        return diff;
     }
 
 }

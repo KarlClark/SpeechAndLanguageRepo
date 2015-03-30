@@ -15,8 +15,10 @@ import android.widget.TextView;
 import com.neuroleap.speachandlanguage.Listeners.OnCustomDateDialogClickedListener;
 import com.neuroleap.speachandlanguage.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 // ...
 
@@ -37,13 +39,14 @@ public class CustomDatePickerDialogFragment extends DialogFragment {
     public static final String FIELD_TAG ="field";
     private static final String TAG = "## My Info ##";
 
-    public void setTitleColor(int titleColor) {
-        mTitleColor = titleColor;
-        mChangeColor=true;
-    }
 
     public CustomDatePickerDialogFragment() {
         // Empty constructor required for DialogFragment
+    }
+
+    public void setTitleColor(int titleColor) {
+        mTitleColor = titleColor;
+        mChangeColor=true;
     }
 
     public void setTitle(String title) {
@@ -83,6 +86,19 @@ public class CustomDatePickerDialogFragment extends DialogFragment {
             tvTitle.setTextColor(mTitleColor);
         }
         mDatePicker=(DatePicker)v.findViewById(R.id.datePicker);
+        if ( ! mField.getText().toString().equals("")){
+            SimpleDateFormat dateFormat = new SimpleDateFormat(StudentInfoFragment.DATE_FORMAT_STRING);
+            try {
+                Date date = dateFormat.parse(mField.getText().toString());
+                Calendar fieldDate = Calendar.getInstance();
+                fieldDate.setTime(date);
+                Log.d(TAG, "date= " +date);
+                Log.i(TAG, "Year= " +fieldDate.YEAR + "  month= " + fieldDate.MONTH + "  day= " + fieldDate.DAY_OF_MONTH);
+                mDatePicker.updateDate(fieldDate.get(Calendar.YEAR), fieldDate.get(Calendar.MONTH), fieldDate.get(Calendar.DAY_OF_MONTH));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setView(v);
         alertDialogBuilder.setCustomTitle(titleView);
@@ -94,7 +110,8 @@ public class CustomDatePickerDialogFragment extends DialogFragment {
                 Calendar pickedDate = Calendar.getInstance();
                 pickedDate.set(mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDayOfMonth());
                 mField.setText(mDateFormatter.format(pickedDate.getTime()));
-                mOnCustomDateDialogClickedListener.onCustomDateDialogClicked();
+                Log.i(TAG,"Date of birth from picker =" + mField.getText());
+                mOnCustomDateDialogClickedListener.onCustomDateDialogClicked(mField);
             }
         });
         return alertDialogBuilder.create();
