@@ -28,6 +28,9 @@
     <string name="error_hearing_required">Date of hearing screen is required.</string>
     <string name="error_vision_required">Error: Date of vision screen is required.</string>
     <string name="error_speach_required"><![CDATA[Error Date of speach & language screen is required.]]></string>
+    <string name="scoring_only">Scoring Buttons Only</string>
+    <string name="text_only">Text Input Only</string>
+    <string name="new_screening">New screening</string>
 
     <string-array name="languages">
         <item>Ingles</item>

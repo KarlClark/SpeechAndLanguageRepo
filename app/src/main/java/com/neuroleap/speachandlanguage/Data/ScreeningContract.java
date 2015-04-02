@@ -17,6 +17,8 @@ public class ScreeningContract {
         public static final String TEACHER ="teacher";
         public static final String BIRTHDAY = "birthday";
         public static final String AGE = "age";
+        public static final String GRADE = "grade";
+        public static final String ROOM = "room";
         public static final String HEARING_TEST_DATE = "hearing_test_date";
         public static final String VISION_TEST_DATE = "vision_test_date";
         public static final String HEARING_PASS = "hearing_pass";

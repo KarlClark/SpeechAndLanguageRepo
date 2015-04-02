@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.neuroleap.speachandlanguage.Listeners.OnCustomDateDialogClickedListener;
 import com.neuroleap.speachandlanguage.R;
+import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +46,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     private InputMethodManager mInputMethodManager;
     private boolean mKeyboardUp= false;
     private boolean mGotHereFrommEtRoom = false;
+    long mStudentId;
     private static final int CUT_OFF_DATE = 3 * 365;
     public static final String DATE_FORMAT_STRING = "MMM dd, yyyy";
     private static final String TAG = "## My Info ##";
@@ -83,6 +85,24 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                 if ( ! dataOk()){
                     return;
                 }
+                String[] sa = getResources().getStringArray(R.array.pass_fail);
+                boolean hearingPass = mSpnHearing.getSelectedItem().toString().equals(sa[0]);
+                boolean visionPass = mSpnVision.getSelectedItem().toString().equals(sa[0]);
+                int age = Integer.parseInt(mEtAge.getText().toString());
+                int grade = Integer.parseInt(mEtGrade.getText().toString());
+                mStudentId= DbCRUD.insertStudent(mEtFirstName.getText().toString(),
+                                                 mEtLastName.getText().toString(),
+                                                 mEtDateOfBirth.getText().toString(),
+                                                 age,
+                                                 mEtTeacher.getText().toString(),
+                                                 grade,
+                                                 mEtRoom.getText().toString(),
+                                                 mEtHearingDate.getText().toString(),
+                                                 hearingPass,
+                                                 mEtVisionDate.getText().toString(),
+                                                 visionPass );
+                Log.i(TAG ,"Student id= " + mStudentId);
+
                 mOnFragmentInteractionListener.onFragmentInteraction(mId);
             }
         });

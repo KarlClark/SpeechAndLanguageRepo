@@ -25,6 +25,7 @@ import com.neuroleap.speachandlanguage.Fragments.NewOrContinuingFragment;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
 import com.neuroleap.speachandlanguage.Fragments.StudentInfoFragment;
+import com.neuroleap.speachandlanguage.Fragments.WhichModeFragment;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
 import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
@@ -53,10 +54,13 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private SplashFragment_2 mSplashFragment_2;
     private NewOrContinuingFragment mNewOrContinuingFragment;
     private StudentInfoFragment mStudentInfoFragment;
+    private WhichModeFragment mWhichModeFragment;
+    private boolean mShowNewScreeningMenuItem;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
     private static final int SPLASH_FRAGMENT_2_ID = 1001;
     private static final int NEW_OR_CONTINUING_FRAGMENT_ID = 1002;
     private static final int STUDENT_INFO_FRAGMENT_ID = 1003;
+    private static final int WHICH_MODE_FRAGMENT_ID = 1004;
 
     private static final String TAG = "## My Info ##";
 
@@ -91,6 +95,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         Log.i(TAG,"onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.menu_flow_control, menu);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        MenuItem item = menu.findItem(R.id.new_screening);
+        if (mShowNewScreeningMenuItem) {
+            item.setVisible(true);
+        }else{
+            item.setVisible(false);
+        }
         return true;
     }
 
@@ -138,14 +148,23 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mSplashFragment_1 = null;
     }
 
+    private void displayWhichModeScreen(){
+        mWhichModeFragment = new WhichModeFragment();
+        mWhichModeFragment.setId(WHICH_MODE_FRAGMENT_ID);
+        mFragmentManager.beginTransaction().replace(R.id.fragmentContainer, mWhichModeFragment, "TAG").commit();
+        mSplashFragment_2 = null;
+    }
+
     private void displayNewOrContinuingScreen(){
         mNewOrContinuingFragment = new NewOrContinuingFragment();
         mNewOrContinuingFragment.setId(NEW_OR_CONTINUING_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(R.id.fragmentContainer, mNewOrContinuingFragment, "TAG").commit();
-        mSplashFragment_2 = null;
+        mWhichModeFragment = null;
     }
 
     private void displayStudentInfoScreen() {
+        mShowNewScreeningMenuItem = true;
+        invalidateOptionsMenu();
         mStudentInfoFragment = new StudentInfoFragment();
         mStudentInfoFragment.setId(STUDENT_INFO_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(R.id.fragmentContainer, mStudentInfoFragment, "TAG").commit();
@@ -266,6 +285,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 displaySecondSplashScreen();
                 break;
             case SPLASH_FRAGMENT_2_ID:
+                displayWhichModeScreen();
+                break;
+            case WHICH_MODE_FRAGMENT_ID:
                 displayNewOrContinuingScreen();
                 break;
             case NEW_OR_CONTINUING_FRAGMENT_ID:

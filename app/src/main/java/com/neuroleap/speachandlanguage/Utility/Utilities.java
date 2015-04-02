@@ -15,6 +15,9 @@ public class Utilities {
     public static final int ENGLISH = 0;
     public static final int SPANISH = 1;
     private static int mLanguage= ENGLISH;
+    public static final int SCORING_BUTTONS_ONLY= 0;
+    public static final int TEXT_INPUT_ONLY = 1;
+    public static final int BOTH_SCORING_BUTTONS_AND_TEXT = 2;
 
 
     public static int getLanguage() {

@@ -45,6 +45,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 StudentsEntry.TEACHER + " TEXT, " +
                 StudentsEntry.BIRTHDAY + " TEXT, " +
                 StudentsEntry.AGE + " INTEGER NOT NULL, " +
+                StudentsEntry.GRADE + " INTEGER, " +
+                StudentsEntry.ROOM + " TEXT, " +
                 StudentsEntry.HEARING_TEST_DATE + " TEXT, " +
                 StudentsEntry.VISION_TEST_DATE + " TEXT, " +
                 StudentsEntry.HEARING_PASS + " BOOLEAN, " +
