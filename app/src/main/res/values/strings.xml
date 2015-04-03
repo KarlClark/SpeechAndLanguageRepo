@@ -51,10 +51,15 @@
         <item>English</item>
         <item>Spanish</item>
     </string-array>
-
     <string-array name="pass_fail">
         <item>pass</item>
         <item>fail</item>
     </string-array>
+
+    <string name="title_activity_start_up">Screens</string>
+    <string name="screenings_title">Screenings</string>
+    <string name="screening_completed">Completed</string>
+    <string name="screening_not_completed">Not completed</string>
+    <string name="screening_not_started">Not started</string>
 
 </resources>

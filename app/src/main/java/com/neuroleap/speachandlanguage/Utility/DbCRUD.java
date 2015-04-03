@@ -52,17 +52,31 @@ public class DbCRUD {
         return mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, "_ID=" + questionCategoryId, null, null, null, null);
     }
 
-    public static long insertStudent(String firstName, String lastName, String date_of_birth, int age, String teacher, int grade,
-                                    String room, String hearingScreenDate, Boolean hearingPass, String visionScreenDate, boolean visionPass){
+    public static Cursor getShortScreens (){
+        String sql = "Select " + StudentsEntry.TABLE_NAME + "." +StudentsEntry.FIRST_NAME + " , "
+                      + StudentsEntry.TABLE_NAME + "." + StudentsEntry.LAST_NAME + " , "
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEACHER + " ,  "
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " , "
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.COMPLETION_STATE
+                      + " FROM " + StudentsEntry.TABLE_NAME + " , " + ScreeningsEntry.TABLE_NAME
+                      + " WHERE " + StudentsEntry.TABLE_NAME + "."+ StudentsEntry._ID + " = "
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.STUDENT_ID
+                      +" GROUP BY " + StudentsEntry.TABLE_NAME + "." + StudentsEntry.FIRST_NAME + " , "
+                      + StudentsEntry.TABLE_NAME + "." + StudentsEntry.LAST_NAME + " , "
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEACHER + " ,  "
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " , "
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.COMPLETION_STATE
+                      + " ORDER BY " + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " DESC";
+        return mDB.rawQuery(sql,null);
+    }
+
+    public static long insertStudent(String firstName, String lastName, String date_of_birth, String hearingScreenDate,
+                                     Boolean hearingPass, String visionScreenDate, boolean visionPass){
 
         ContentValues cv= new ContentValues();
         cv.put(StudentsEntry.FIRST_NAME , firstName);
         cv.put(StudentsEntry.LAST_NAME, lastName);
         cv.put(StudentsEntry.BIRTHDAY, date_of_birth);
-        cv.put(StudentsEntry.AGE, age);
-        cv.put(StudentsEntry.TEACHER, teacher);
-        cv.put(StudentsEntry.GRADE, grade);
-        cv.put(StudentsEntry.ROOM, room);
         cv.put(StudentsEntry.HEARING_TEST_DATE, hearingScreenDate);
         cv.put(StudentsEntry.HEARING_PASS, hearingPass);
         cv.put(StudentsEntry.VISION_TEST_DATE, visionScreenDate);

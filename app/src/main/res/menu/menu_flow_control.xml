@@ -4,9 +4,5 @@
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
 
-    <item android:id="@+id/new_screening"
-          android:title="@string/new_screening"
-          android:orderInCategory="10"
-          android:visible="false"
-          app:showAsAction="always"/>
+
 </menu>

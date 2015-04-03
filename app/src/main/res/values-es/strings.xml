@@ -31,6 +31,8 @@
     <string name="scoring_only">Scoring Buttons Only</string>
     <string name="text_only">Text Input Only</string>
     <string name="new_screening">New screening</string>
+    <string name="screenings_title">Screenings</string>
+    <string name="screening_not_started">Not started</string>
 
     <string-array name="languages">
         <item>Ingles</item>

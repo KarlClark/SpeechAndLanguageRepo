@@ -20,7 +20,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
-import com.neuroleap.speachandlanguage.DrawerListAdapter;
+import com.neuroleap.speachandlanguage.Adapters.DrawerListAdapter;
 import com.neuroleap.speachandlanguage.Fragments.NewOrContinuingFragment;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
