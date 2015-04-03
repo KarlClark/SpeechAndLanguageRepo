@@ -14,11 +14,7 @@ public class ScreeningContract {
 
         public static final String FIRST_NAME ="first_name";
         public static final String LAST_NAME = "last_name";
-        public static final String TEACHER ="teacher";
         public static final String BIRTHDAY = "birthday";
-        public static final String AGE = "age";
-        public static final String GRADE = "grade";
-        public static final String ROOM = "room";
         public static final String HEARING_TEST_DATE = "hearing_test_date";
         public static final String VISION_TEST_DATE = "vision_test_date";
         public static final String HEARING_PASS = "hearing_pass";
@@ -32,7 +28,11 @@ public class ScreeningContract {
         public static final String STUDENT_ID = "student_id";
         public static final String TEST_DATE = "test_date";
         public static final String AGE = "age";
+        public static final String GRADE = "grade";
+        public static final String TEACHER ="teacher";
+        public static final String ROOM = "room";
         public static final String TEST_MODE = "test_mode";
+        public static final String COMPLETION_STATE = "completion_state";
         public static final String LANGUAGE = "language";
     }
 

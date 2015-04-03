@@ -42,13 +42,9 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 StudentsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 StudentsEntry.FIRST_NAME + " TEXT NOT NULL, " +
                 StudentsEntry.LAST_NAME + " TEXT NOT NULL, " +
-                StudentsEntry.TEACHER + " TEXT, " +
-                StudentsEntry.BIRTHDAY + " TEXT, " +
-                StudentsEntry.AGE + " INTEGER NOT NULL, " +
-                StudentsEntry.GRADE + " INTEGER, " +
-                StudentsEntry.ROOM + " TEXT, " +
-                StudentsEntry.HEARING_TEST_DATE + " TEXT, " +
-                StudentsEntry.VISION_TEST_DATE + " TEXT, " +
+                StudentsEntry.BIRTHDAY + " LONG NOT NULL, " +
+                StudentsEntry.HEARING_TEST_DATE + " LONG NOT NULL, " +
+                StudentsEntry.VISION_TEST_DATE + " LONG NOT NULL, " +
                 StudentsEntry.HEARING_PASS + " BOOLEAN, " +
                 StudentsEntry.VISION_PASS + " BOOLEAN" +
                 " );";
@@ -56,9 +52,13 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_SCREENINGS_TABLE = "CREATE TABLE " + ScreeningsEntry.TABLE_NAME + " (" +
                 ScreeningsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ScreeningsEntry.STUDENT_ID  + " INTEGER NOT NULL, " +
-                ScreeningsEntry.TEST_DATE + " TEXT NOT NULL, " +
+                ScreeningsEntry.TEST_DATE + " LONG NOT NULL, " +
                 ScreeningsEntry.AGE +" INTEGER NOT NULL, " +
+                ScreeningsEntry.TEACHER + " TEXT, " +
+                ScreeningsEntry.GRADE + " INTEGER, " +
+                ScreeningsEntry.ROOM + " TEXT, " +
                 ScreeningsEntry.TEST_MODE + " INTEGER NOT NULL, " +
+                ScreeningsEntry.COMPLETION_STATE + " INTEGER NOT NULL, " +
                 ScreeningsEntry.LANGUAGE + " INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + ScreeningsEntry.STUDENT_ID + ") REFERENCES " +
                 StudentsEntry.TABLE_NAME +" (" + StudentsEntry._ID + ") " +
