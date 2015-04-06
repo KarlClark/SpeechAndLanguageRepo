@@ -23,7 +23,7 @@ public class DbCRUD {
 
     public static  Cursor getQuestionCategories(){
         String[] categoryColumns;
-        if (Utilities.getLanguage() == Utilities.ENGLISH) {
+        if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH) {
             categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG};
         }else{
             categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP};
@@ -34,7 +34,7 @@ public class DbCRUD {
 
     public static Cursor getQuestionsPrompts(long questionCategoryId){
         String[] questionColumns;
-        if (Utilities.getLanguage() == Utilities.ENGLISH) {
+        if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH) {
             questionColumns = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_ENGLISH};
         }else{
             questionColumns = new String[] {"_ID", QuestionsEntry.CATEGORY_ID, QuestionsEntry.PROMPT_SPANISH};
@@ -76,13 +76,28 @@ public class DbCRUD {
         ContentValues cv= new ContentValues();
         cv.put(StudentsEntry.FIRST_NAME , firstName);
         cv.put(StudentsEntry.LAST_NAME, lastName);
-        cv.put(StudentsEntry.BIRTHDAY, date_of_birth);
-        cv.put(StudentsEntry.HEARING_TEST_DATE, hearingScreenDate);
+        cv.put(StudentsEntry.BIRTHDAY, Utilities.getLongDate(date_of_birth));
+        cv.put(StudentsEntry.HEARING_TEST_DATE, Utilities.getLongDate(hearingScreenDate));
         cv.put(StudentsEntry.HEARING_PASS, hearingPass);
-        cv.put(StudentsEntry.VISION_TEST_DATE, visionScreenDate);
+        cv.put(StudentsEntry.VISION_TEST_DATE, Utilities.getLongDate(visionScreenDate));
         cv.put(StudentsEntry.VISION_PASS, visionPass);
 
         return mDB.insert(StudentsEntry.TABLE_NAME, null, cv);
+    }
+
+    public static void insertScreening(long student_id, String testDate, int mode, int language, int age, String room, int grade, String teacher){
+        ContentValues cv = new ContentValues();
+        cv.put(ScreeningsEntry.STUDENT_ID , student_id);
+        cv.put(ScreeningsEntry.TEST_DATE, Utilities.getLongDate(testDate));
+        cv.put(ScreeningsEntry.TEST_MODE, mode);
+        cv.put(ScreeningsEntry.LANGUAGE, language);
+        cv.put(ScreeningsEntry.AGE, age);
+        cv.put(ScreeningsEntry.ROOM, room);
+        cv.put(ScreeningsEntry.GRADE, grade);
+        cv.put(ScreeningsEntry.TEACHER, teacher);
+        cv.put(ScreeningsEntry.COMPLETION_STATE, Utilities.SCREENING_NOT_STARTED);
+
+        mDB.insert(ScreeningsEntry.TABLE_NAME, null, cv);
     }
 
 }
