@@ -6,7 +6,8 @@
     <string name="test_1">test 1-sp</string>
     <string name="test_2">test 2-sp</string>
     <string name="title_activity_settings">Sp-Settings</string>
-    <string name="language">Language:-sp</string>
+    <string name="app_language">App idioma:-sp</string>
+    <string name="questions_language">Preguntas idioma:</string>
     <string name="continuing">Continuo</string>
     <string name="newbtn">Nuevo</string>
     <string name="student_info">Student Information</string>
@@ -33,10 +34,19 @@
     <string name="new_screening">New screening</string>
     <string name="screenings_title">Screenings</string>
     <string name="screening_not_started">Not started</string>
+    <string name="student_info_title">Student Info</string>
+    <string name="test_mode_spn">Test mode:</string>
+    <string name="years">years</string>
 
     <string-array name="languages">
-        <item>Ingles</item>
-        <item>Espanol</item>
+        <item>English/Ingles</item>
+        <item>Espanol/Spanish</item>
+    </string-array>
+
+    <string-array name="test_mode">
+        <item>Scoring buttons only_sp</item>
+        <item>Text input only_sp</item>
+        <item>Text and scoring buttons_sp</item>
     </string-array>
 
 

@@ -1,6 +1,7 @@
 package com.neuroleap.speachandlanguage.Activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
 import com.neuroleap.speachandlanguage.Fragments.ShowScreeningsFragment;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
+import com.neuroleap.speachandlanguage.Fragments.StudentInfoFragment;
 import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
@@ -29,11 +31,13 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private SplashFragment_1 mSplashFragment_1;
     private SplashFragment_2 mSplashFragment_2;
     private ShowScreeningsFragment mShowScreeningsFragment;
+    private StudentInfoFragment mStudentInfoFragment;
     private boolean mShowSettingOption = false;
     private boolean mShowNewOption = false;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
     private static final int SPLASH_FRAGMENT_2_ID = 1001;
     private static final int SHOW_SCREENINGS_FRAGMENT_ID = 1002;
+    private static final int STUDENT_INFO_FRAGMENT_ID = 1003;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -43,7 +47,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         frContainerId = R.id.frContainer;
         ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
         DbCRUD.setDatabase(dbHelper.getWritableDatabase());
+        mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
         checkLanguagePreference();
+        checkTestModePreference();
         if(savedInstanceState == null) {
             displayFirstSplashScreen();
         }
@@ -70,11 +76,19 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i =new Intent(this,SettingsActivity.class);
+            startActivityForResult(i,0);
             return true;
+        }
+
+        if (id == R.id.new_screening){
+            displayStudentInfoFragment();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     public void onFragmentInteraction(int id, Object ... args){
         switch (id){
@@ -82,6 +96,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
                 displaySecondSplashScreen();
                 break;
             case SPLASH_FRAGMENT_2_ID:
+                displayShowScreeningsFragment();
+                break;
+            case STUDENT_INFO_FRAGMENT_ID:
                 displayShowScreeningsFragment();
                 break;
         }
@@ -110,24 +127,43 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mShowScreeningsFragment.setId(SHOW_SCREENINGS_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(frContainerId,mShowScreeningsFragment, "TAG").commit();
         mSplashFragment_2 = null;
+        mStudentInfoFragment = null;
+    }
+
+    private void displayStudentInfoFragment() {
+        mShowNewOption = false;
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle(getString(R.string.student_info_title));
+        invalidateOptionsMenu();
+        mStudentInfoFragment = new StudentInfoFragment();
+        mStudentInfoFragment.setId(STUDENT_INFO_FRAGMENT_ID);
+        mFragmentManager.beginTransaction().replace(frContainerId,mStudentInfoFragment, "TAG").commit();
+        mShowScreeningsFragment = null;
     }
 
     private void checkLanguagePreference() {
-        mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
-        int language = mPrefs.getInt(Utilities.PREFS_LANGUAGE, -1);
-        if (language == -1) {
+
+        int appLanguage = mPrefs.getInt(Utilities.PREFS_APP_LANGUAGE, -1);
+        if (appLanguage == -1) {
             Log.i (TAG, "locale language= " + Locale.getDefault().getLanguage());
             if(Locale.getDefault().getLanguage().equals("es")){
-                language = Utilities.SPANISH;
+                appLanguage = Utilities.SPANISH;
             }else{
-                language = Utilities.ENGLISH;
+                appLanguage = Utilities.ENGLISH;
             }
         }
-        Utilities.setLanguage(language);
-        if (language == Utilities.ENGLISH){
+        Utilities.setAppLanguage(appLanguage);
+        if (appLanguage == Utilities.ENGLISH){
             Utilities.setLocale(getBaseContext(), "en");
         }else{
             Utilities.setLocale(getBaseContext(), "es");
+        }
+    }
+
+    private void checkTestModePreference(){
+        int testMode = mPrefs.getInt(Utilities.PREFS_TEST_MODE , -1);
+        if (testMode != -1){
+            Utilities.setTestMode(testMode);
         }
     }
 }

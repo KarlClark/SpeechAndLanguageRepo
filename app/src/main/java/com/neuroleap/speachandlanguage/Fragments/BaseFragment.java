@@ -13,6 +13,7 @@ public class BaseFragment extends Fragment {
     protected Context mContext;
     protected OnFragmentInteractionListener mOnFragmentInteractionListener;
     protected int mId;
+    protected int questionId;
     private static final String TAG ="## My Info ##";
 
    public void setId(int id){

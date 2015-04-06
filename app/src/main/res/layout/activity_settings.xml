@@ -7,11 +7,11 @@
     tools:context="com.neuroleap.speachandlanguage.Activities.SettingsActivity">
 
     <TextView
-        android:layout_width="120sp"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/language"
-        android:id="@+id/tvLanguage"
+        android:text="@string/app_language"
+        android:id="@+id/tvAppLanguage"
         style = "@style/TextColor"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -21,8 +21,79 @@
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spnLanguage"
+        android:id="@+id/spnAppLanguage"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/tvLanguage"
-        android:layout_toEndOf="@+id/tvLanguage" />
+        android:layout_toRightOf="@+id/tvAppLanguage"
+        android:layout_toEndOf="@+id/tvAppLanguage" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/line1"
+        android:layout_below="@+id/tvAppLanguage"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/questions_language"
+        android:id="@+id/tvQuestionsLanguage"
+        android:layout_below="@+id/line1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="right"
+        style = "@style/TextColor"
+        android:layout_toStartOf="@+id/spnAppLanguage"
+        android:layout_toLeftOf="@+id/spnAppLanguage"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spnQuestionsLanguage"
+        android:layout_alignBottom="@+id/tvQuestionsLanguage"
+        android:layout_toRightOf="@+id/tvQuestionsLanguage"
+        android:layout_toEndOf="@+id/tvQuestionsLanguage"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/line2"
+        android:layout_below="@+id/tvQuestionsLanguage"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/test_mode_spn"
+        android:id="@+id/tvTestMode"
+        android:layout_below="@+id/line2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/tvQuestionsLanguage"
+        android:gravity="right"
+        style = "@style/TextColor"
+        android:layout_alignEnd="@+id/tvQuestionsLanguage"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spnTestMode"
+        android:layout_alignBottom="@+id/tvTestMode"
+        android:layout_toRightOf="@+id/tvQuestionsLanguage"
+        android:layout_toEndOf="@+id/tvQuestionsLanguage"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/line3"
+        android:layout_below="@+id/tvTestMode"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
 </RelativeLayout>

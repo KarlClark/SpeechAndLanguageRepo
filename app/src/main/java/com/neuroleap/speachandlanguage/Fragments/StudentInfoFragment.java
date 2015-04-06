@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.neuroleap.speachandlanguage.Listeners.OnCustomDateDialogClickedListener;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
+import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +34,7 @@ import java.util.Locale;
  * Created by Karl on 3/25/2015.
  */
 public class StudentInfoFragment extends BaseFragment implements OnCustomDateDialogClickedListener{
-    private EditText mEtFirstName, mEtLastName, mEtDateOfBirth, mEtAge, mEtTeacher, mEtGrade, mEtRoom,
+    private EditText mEtFirstName, mEtLastName, mEtDateOfBirth, mEtAgeYears, mEtAgeMonths, mEtTeacher, mEtGrade, mEtRoom,
                      mEtHearingDate, mEtVisionDate, mEtScreeningDate, mCurrentEditText;
     private View mNextView;
     private TextView mTvDateOfBirth, mTvHearing, mTvVision, mTvSpeachAndLanguage, mTvError;
@@ -88,7 +89,9 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                 String[] sa = getResources().getStringArray(R.array.pass_fail);
                 boolean hearingPass = mSpnHearing.getSelectedItem().toString().equals(sa[0]);
                 boolean visionPass = mSpnVision.getSelectedItem().toString().equals(sa[0]);
-                int age = Integer.parseInt(mEtAge.getText().toString());
+                int ageYears = Integer.parseInt(mEtAgeYears.getText().toString());
+                int ageMonths = Integer.parseInt(mEtAgeMonths.getText().toString());
+                int totalMonths = (ageYears *12) + ageMonths;
                 int grade = Integer.parseInt(mEtGrade.getText().toString());
                 mStudentId= DbCRUD.insertStudent(mEtFirstName.getText().toString(),
                                                  mEtLastName.getText().toString(),
@@ -99,11 +102,20 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                                                  visionPass );
                 Log.i(TAG ,"Student id= " + mStudentId);
 
+                DbCRUD.insertScreening(mStudentId,
+                                       mEtScreeningDate.getText().toString(),
+                                       Utilities.getTestMode(),
+                                       Utilities.getQuestionsLanguage(),
+                                       totalMonths,
+                                       mEtRoom.getText().toString(),
+                                       grade,
+                                       mEtTeacher.getText().toString());
+
                 mOnFragmentInteractionListener.onFragmentInteraction(mId);
             }
         });
 
-        mEtAge.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mEtAgeYears.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus){
@@ -130,7 +142,8 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mEtFirstName = (EditText)v.findViewById(R.id.etFirstName);
         mEtLastName = (EditText)v.findViewById(R.id.etLastName);
         mEtDateOfBirth = (EditText)v.findViewById(R.id.etDateOfBirth);
-        mEtAge = (EditText)v.findViewById(R.id.etAge);
+        mEtAgeYears = (EditText)v.findViewById(R.id.etAgeYears);
+        mEtAgeMonths = (EditText)v.findViewById(R.id.etAgeMonths);
         mEtTeacher = (EditText)v.findViewById(R.id.etTeacher);
         mEtGrade = (EditText)v.findViewById(R.id.etGrade);
         mEtRoom = (EditText)v.findViewById(R.id.etRoom);
@@ -195,7 +208,8 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         //Log.i(TAG, "onCustomDateDialogClickedListener called Next view = " + mNextView);
         Log.d(TAG,"date of birth= " + mEtDateOfBirth.getText());
         if (et == mEtDateOfBirth){
-            mEtAge.setText("" + yearsAgo(mEtDateOfBirth));
+            mEtAgeYears.setText("" + yearsAgo(mEtDateOfBirth));
+            mEtAgeMonths.setText("" + monthsOfAge(mEtDateOfBirth));
         }
         mNextView.requestFocus();
         if (mNextView == mEtFirstName){
@@ -249,7 +263,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     if (mEtDateOfBirth.getText().toString().equals("")) {
-                        mNextView = mEtAge;
+                        mNextView = mEtAgeYears;
                     }else{
                         mNextView = mEtFirstName;
                     }
@@ -330,8 +344,8 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             return false;
         }
 
-        if (mEtAge.getText().toString().equals("")){
-            processError(mContext.getString(R.string.error_age), mEtAge);
+        if (mEtAgeYears.getText().toString().equals("")){
+            processError(mContext.getString(R.string.error_age), mEtAgeYears);
             return false;
         }
 
@@ -378,6 +392,11 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
 
     private long yearsAgo(EditText et){
         return daysAgo(et)/365;
+    }
+
+    private long monthsOfAge (EditText et){
+        Log.i(TAG,"daysAgo= " + daysAgo(et) + "days % 365=" + (daysAgo(et) % 365));
+        return (daysAgo(et) % 365L)/30L;
     }
 
     private long milliSecsAgo (EditText et){

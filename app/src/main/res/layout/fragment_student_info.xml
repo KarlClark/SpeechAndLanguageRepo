@@ -123,15 +123,65 @@
                 style = "@style/TextColor"
                 android:layout_weight="1"/>
 
-            <EditText
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/etAge"
-                android:inputType="number"
-                style = "@style/TextColor"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_weight="1.5"/>
+                android:layout_weight="1.5"
+                >
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etAgeYears"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_alignBottom="@+id/etAgeMonths"
+                    android:gravity="right"
+                    style = "@style/TextColor"
+                    android:minWidth="35sp"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etAgeMonths"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/textView9"
+                    android:layout_toEndOf="@+id/textView9"
+                    style = "@style/TextColor"
+                    android:minWidth="35sp"
+                    android:gravity="right"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/years"
+                    android:id="@+id/textView9"
+                    android:layout_alignBottom="@+id/etAgeYears"
+                    android:layout_alignTop="@+id/etAgeYears"
+                    android:layout_toRightOf="@+id/etAgeYears"
+                    android:layout_toEndOf="@+id/etAgeYears"
+                    style = "@style/TextColor"
+                    android:paddingTop="4sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editText"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_alignBottom="@+id/etAgeYears"
+                    android:layout_alignTop="@+id/etAgeYears"
+                    android:layout_toRightOf="@+id/etAgeMonths"
+                    android:layout_toEndOf="@+id/etAgeMonths"
+                    android:text="@string/months"
+                    style = "@style/TextColor"
+                    android:paddingTop="4sp"/>
+
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -146,7 +196,8 @@
                 android:text="@string/teacher"
                 android:id="@+id/textView11"
                 style = "@style/TextColor"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                />
 
             <EditText
                 android:layout_width="0dp"
