@@ -1,13 +1,16 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.neuroleap.speachandlanguage.Activities.FlowControlActivity;
 import com.neuroleap.speachandlanguage.Adapters.ScreeningsArrayAdapter;
 import com.neuroleap.speachandlanguage.Models.Screening;
 import com.neuroleap.speachandlanguage.R;
@@ -32,6 +35,13 @@ public class ShowScreeningsFragment extends BaseFragment {
         fillList();
         mScreeningsArrayAdapter = new ScreeningsArrayAdapter(mContext, mScreenings);
         mLvScreenings.setAdapter(mScreeningsArrayAdapter);
+        mLvScreenings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(mContext,FlowControlActivity.class);
+                startActivity(i);
+            }
+        });
         return v;
     }
 
@@ -41,6 +51,7 @@ public class ShowScreeningsFragment extends BaseFragment {
             while (c.moveToNext()) {
                 mScreenings.add(new Screening(c.getString(0), c.getString(1), c.getString(2), c.getLong(3),c.getInt(4)));
             }
+            c.close();
         }else{
             mScreenings.add(new Screening ("No screens", "", "", 0L, -1));
         }

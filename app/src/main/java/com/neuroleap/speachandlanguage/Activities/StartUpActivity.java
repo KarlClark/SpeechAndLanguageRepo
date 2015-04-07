@@ -50,6 +50,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
         checkLanguagePreference();
         checkTestModePreference();
+        Utilities.setPackageName(getPackageName());
         if(savedInstanceState == null) {
             displayFirstSplashScreen();
         }

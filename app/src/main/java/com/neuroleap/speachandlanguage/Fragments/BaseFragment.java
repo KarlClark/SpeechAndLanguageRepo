@@ -13,7 +13,9 @@ public class BaseFragment extends Fragment {
     protected Context mContext;
     protected OnFragmentInteractionListener mOnFragmentInteractionListener;
     protected int mId;
-    protected int questionId;
+    protected int mQuestionId;
+    protected static final String ID_KEY ="id_key";
+    protected static final String QUESTION_ID_KEY = "question_id_key";
     private static final String TAG ="## My Info ##";
 
    public void setId(int id){

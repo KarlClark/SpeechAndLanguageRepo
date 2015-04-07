@@ -3,8 +3,8 @@ package com.neuroleap.speachandlanguage.Activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,15 +15,15 @@ import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.neuroleap.speachandlanguage.Adapters.DrawerListAdapter;
+import com.neuroleap.speachandlanguage.Adapters.QuestionFragmentPagerAdapter;
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
 import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
+import com.neuroleap.speachandlanguage.Utility.Utilities;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,27 +37,34 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerListAdapter mDrawerListAdapter;
     private FragmentManager mFragmentManager=getSupportFragmentManager();
+    private ViewPager mViewPager;
+    private QuestionFragmentPagerAdapter mQuestionFragmentPagerAdapter;
+    private int mOpenGroup = 0;
 
     private static final String TAG = "## My Info ##";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG,"start onCreate");
+        Log.i(TAG, "start onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_control);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
         DbCRUD.setDatabase(dbHelper.getWritableDatabase());
+        Utilities.setTotalQuestions(DbCRUD.getQuestionCount());
+        mQuestionFragmentPagerAdapter = new QuestionFragmentPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager)findViewById(R.id.pager);
+        mViewPager.setAdapter(mQuestionFragmentPagerAdapter);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         loadLists();
-
+        setUpDrawer();
+        //displayQuestion(1);
         Log.i(TAG,"end onCreate");
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        //mDrawerToggle.syncState();
+        mDrawerToggle.syncState();
     }
 
     @Override
@@ -119,8 +126,10 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 Question q = new Question(questionCursor.getInt(0), questionCursor.getInt(1), questionCursor.getString(2));
                 mQuestions.get(categoryCount).add(q);
             }
+            questionCursor.close();
             categoryCount++;
         }
+        categoryCursor.close();
     }
 
     private void setUpDrawer(){
@@ -149,32 +158,17 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         // Set the adapter for the list view
         mDrawerListAdapter = new DrawerListAdapter(this,mQuestionCategories, mQuestions);
         mDrawerList.setAdapter(mDrawerListAdapter);
+        //mDrawerListAdapter.notifyDataSetChanged();
 
         mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Cursor categoryCursor = DbCRUD.getFacilitatorModeFragmentName(id);
-                categoryCursor.moveToNext();
-                Class myClass;
-                Constructor constructor;
-                Log.i(TAG, " package name=" + getPackageName());
-                try {
-                    myClass = Class.forName(getPackageName() + ".Fragments." +categoryCursor.getString(0));
-                    constructor = myClass.getConstructor(null);
-                    Fragment frag =(Fragment) constructor.newInstance();
-                    mFragmentManager.beginTransaction().add(R.id.fragmentContainer, frag, "TAG").commit();
-                } catch (ClassNotFoundException e) {
-                    Log.i(TAG, "Class not found= "+ categoryCursor.getString(0));
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    Log.i(TAG, "bad constructor");
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                Log.i(TAG, "Group expanded = " + parent.isGroupExpanded(groupPosition));
+                if ( ! parent.isGroupExpanded(groupPosition)) {
+                    parent.collapseGroup(mOpenGroup);
+                    mOpenGroup = groupPosition;
+                    int questionId = DbCRUD.getFirstQuestion(id);
+                    mViewPager.setCurrentItem(questionId - 1);
                 }
                 return false;
             }
@@ -185,6 +179,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Log.i(TAG, "Child clicked, category= " + mQuestionCategories.get(groupPosition).getText()+
                         "  prompt=  " + mQuestions.get(groupPosition).get(childPosition).getText());
+                mViewPager.setCurrentItem((int)id -1);
                 return true;
             }
         });
@@ -192,6 +187,10 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     @Override
     public void onFragmentInteraction(int id, Object ... args){
+        if (id <= Utilities.getTotalQuestions()){
+            mViewPager.setCurrentItem(id);
+        }
+
     }
 
 }

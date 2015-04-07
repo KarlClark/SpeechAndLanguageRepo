@@ -70,6 +70,43 @@ public class DbCRUD {
         return mDB.rawQuery(sql,null);
     }
 
+    public static int getFirstQuestion(long questionCategoryId){
+        String sql = "SELECT MIN ( _ID)  FROM " + QuestionsEntry.TABLE_NAME +  " WHERE " + QuestionsEntry.CATEGORY_ID + " = " + questionCategoryId;
+        Cursor  c = mDB.rawQuery(sql, null);
+        c.moveToNext();
+        int questionId = c.getInt(0);
+        c.close();
+        return questionId;
+    }
+
+    public static Cursor getQuestionData(long questionId){
+        String[] columns = new String[] {QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
+                                         QuestionsEntry.AUDIO_ENGLISH, QuestionsEntry.AUDIO_SPANISH};
+        return mDB.query(QuestionsEntry.TABLE_NAME, columns, "_ID=" +  questionId, null, null, null, null);
+    }
+
+    public static int getQuestionCategory(int questionId){
+        String columns[] = new String[] {QuestionsEntry.CATEGORY_ID};
+        Cursor c = mDB.query(QuestionsEntry.TABLE_NAME, columns, "_ID=" + questionId, null, null, null, null);
+        c.moveToNext();
+        int id = c.getInt(0);
+        c.close();
+        return id;
+    }
+
+    public static Cursor getFragmentNames(long questionCategoryId){
+        String[] columns = new String[] {QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT, QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT};
+        return mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns,  "_ID=" + questionCategoryId, null, null, null, null);
+    }
+
+    public static int getQuestionCount(){
+        Cursor c = mDB.rawQuery("SELECT COUNT(*) FROM " + QuestionsEntry.TABLE_NAME , null);
+        c.moveToNext();
+        int count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
     public static long insertStudent(String firstName, String lastName, String date_of_birth, String hearingScreenDate,
                                      Boolean hearingPass, String visionScreenDate, boolean visionPass){
 
