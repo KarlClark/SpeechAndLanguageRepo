@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.neuroleap.speachandlanguage.Models.Question;
@@ -85,6 +86,8 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
         int resId = mContext.getResources().getIdentifier(drawableFileName, "drawable", mContext.getPackageName());
         ivSelector.setImageResource(resId);
 
+        RelativeLayout rl = (RelativeLayout)convertView.findViewById(R.id.rlGroupItem);
+        rl.setBackgroundResource(mCategories.get(groupPosition).getColor());
         return convertView;
     }
 
@@ -97,6 +100,8 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
         }
         TextView tvListItem = (TextView)convertView.findViewById(R.id.tvListItem);
         tvListItem.setText(mQuestions.get(groupPosition).get(childPosition).getText());
+        int color = mQuestions.get(groupPosition).get(childPosition).getColor();
+        tvListItem.setBackgroundResource(color);
 
         return convertView;
     }

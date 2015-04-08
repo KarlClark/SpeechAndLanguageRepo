@@ -3,6 +3,8 @@ package com.neuroleap.speachandlanguage.Utility;
 import android.content.Context;
 import android.content.res.Configuration;
 
+import com.neuroleap.speachandlanguage.R;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +33,12 @@ public class Utilities {
     public static final int SCREENING_NOT_STARTED = 0;
     public static final int SCREENING_NOT_COMPLETE = 1;
     public static final int SCREENING_COMPLETED = 2;
+    public static final int GROUP_DEFAULT_COLOR = R.color.lighter_blue;
+    public static final int GROUP_COMPLETED_COLOR = R.color.light_blue;
+    public static final int GROUP_HIGHLIGHT_COLOR = R.color.light_purple;
+    public static final int CHILD_DEFAULT_COLOR = R.color.light_green;
+    public static final int CHILD_COMPLETED_COLOR = R.color.green;
+    public static final int CHILD_HIGHLIGHT_COLOR = R.color.light_red;
 
     public static int getTotalQuestions() {
         return mTotalQuestions;

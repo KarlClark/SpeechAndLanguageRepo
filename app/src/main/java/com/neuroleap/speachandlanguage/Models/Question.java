@@ -6,8 +6,17 @@ package com.neuroleap.speachandlanguage.Models;
 public class Question {
     private int mId;
     private int mCategoryId;
+    private int mColor=0;
     private String mText;
     private boolean mDone = false;
+
+    public int getColor() {
+        return mColor;
+    }
+
+    public void setColor(int color) {
+        mColor = color;
+    }
 
     public boolean isDone() {
         return mDone;
@@ -29,10 +38,10 @@ public class Question {
         return mText;
     }
 
-    public Question(int id, int categoryId, String text){
+    public Question(int id, int categoryId, String text, int color){
         mId = id;
         mCategoryId = categoryId;
         mText = text;
-
+        mColor = color;
     }
 }

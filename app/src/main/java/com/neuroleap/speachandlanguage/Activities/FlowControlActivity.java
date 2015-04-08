@@ -40,6 +40,10 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private ViewPager mViewPager;
     private QuestionFragmentPagerAdapter mQuestionFragmentPagerAdapter;
     private int mOpenGroup = 0;
+    private QuestionCategory mPreviousHighLightedCategory;
+    private int mPreviousCategoryColor;
+    private Question mPreviousHighLightedQuestiion;
+    private int mPreviousQuestionColor;
 
     private static final String TAG = "## My Info ##";
 
@@ -118,12 +122,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         while (categoryCursor.moveToNext()){
             //Log.i(TAG, "categoryCursor . movetoNext");
             categoryId = categoryCursor.getInt(0);
-            QuestionCategory qc = new QuestionCategory(categoryId, categoryCursor.getString(1));
+            QuestionCategory qc = new QuestionCategory(categoryId, categoryCursor.getString(1), Utilities.GROUP_DEFAULT_COLOR);
             mQuestionCategories.add(qc);
             Cursor questionCursor = DbCRUD.getQuestionsPrompts(categoryId);
             mQuestions.add(new ArrayList<Question>());
             while (questionCursor.moveToNext()) {
-                Question q = new Question(questionCursor.getInt(0), questionCursor.getInt(1), questionCursor.getString(2));
+                Question q = new Question(questionCursor.getInt(0), questionCursor.getInt(1), questionCursor.getString(2), Utilities.CHILD_DEFAULT_COLOR);
                 mQuestions.get(categoryCount).add(q);
             }
             questionCursor.close();
@@ -140,14 +144,27 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.test_1,R.string.test_2){
             @Override
             public void onDrawerOpened(View drawerView) {
+                Log.i(TAG, " Drawer open");
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
+                int questionId = mViewPager.getCurrentItem()+1;
+                int categoryId = DbCRUD.getQuestionCategory(questionId);
+                Log.i(TAG,"here 2");
+                setGroupColors(categoryId);
+                setChildColors(categoryId,questionId);
+                Log.i(TAG,"categoryId= " + categoryId);
+                mDrawerList.expandGroup(categoryId-1);
+                mDrawerList.setSelection(categoryId-1);
+                //mOpenGroup = categoryId-1;
+                Log.i(TAG,"here 3");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
+                Log.i(TAG, "Drawer closed");
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
+                //mDrawerList.collapseGroup(mOpenGroup);
             }
         };
 
@@ -165,12 +182,25 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 Log.i(TAG, "Group expanded = " + parent.isGroupExpanded(groupPosition));
                 if ( ! parent.isGroupExpanded(groupPosition)) {
-                    parent.collapseGroup(mOpenGroup);
-                    mOpenGroup = groupPosition;
+                    Log.i(TAG,"mOpenGroup= " + mOpenGroup);
+
                     int questionId = DbCRUD.getFirstQuestion(id);
+                    setGroupColors((int)id);
+                    setChildColors((int)id, questionId);
                     mViewPager.setCurrentItem(questionId - 1);
+                    Log.i(TAG, "here 1");
                 }
                 return false;
+            }
+        });
+
+        mDrawerList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (mOpenGroup != groupPosition) {
+                    mDrawerList.collapseGroup(mOpenGroup);
+                }
+                mOpenGroup = groupPosition;
             }
         });
 
@@ -179,6 +209,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Log.i(TAG, "Child clicked, category= " + mQuestionCategories.get(groupPosition).getText()+
                         "  prompt=  " + mQuestions.get(groupPosition).get(childPosition).getText());
+                setChildColors(groupPosition + 1 , (int)id);
                 mViewPager.setCurrentItem((int)id -1);
                 return true;
             }
@@ -193,4 +224,34 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     }
 
+    private Question getCurrentQuestion(int categoryId, int questionId){
+        for (int i=0; i < mQuestions.get(categoryId-1).size(); i++){
+            if (mQuestions.get(categoryId-1).get(i).getId() == questionId){
+                return mQuestions.get(categoryId-1).get(i);
+            }
+        }
+        return null;
+    }
+
+    private void setChildColors(int categoryId, int questionId){
+        if (mPreviousHighLightedQuestiion != null) {
+            Log.i(TAG,"Resetting color");
+            mPreviousHighLightedQuestiion.setColor(mPreviousQuestionColor);
+        }
+        Question currentQuestion = getCurrentQuestion(categoryId, questionId);
+        mPreviousHighLightedQuestiion = currentQuestion;
+        mPreviousQuestionColor = currentQuestion.getColor();
+        currentQuestion.setColor(Utilities.CHILD_HIGHLIGHT_COLOR);
+        mDrawerListAdapter.notifyDataSetChanged();
+    }
+
+    private void setGroupColors(int categoryId){
+        if (mPreviousHighLightedCategory != null) {
+            mPreviousHighLightedCategory.setColor(mPreviousCategoryColor);
+        }
+        mPreviousHighLightedCategory= mQuestionCategories.get(categoryId-1);
+        mPreviousCategoryColor = mQuestionCategories.get(categoryId -1).getColor();
+        mQuestionCategories.get(categoryId -1).setColor(Utilities.GROUP_HIGHLIGHT_COLOR);
+        mDrawerListAdapter.notifyDataSetChanged();
+    }
 }

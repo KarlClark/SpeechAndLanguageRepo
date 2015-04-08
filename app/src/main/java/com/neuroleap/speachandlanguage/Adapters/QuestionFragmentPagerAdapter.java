@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
@@ -58,7 +57,7 @@ public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        Log.i(TAG, "Question count= " + Utilities.getTotalQuestions());
+        //Log.i(TAG, "Question count= " + Utilities.getTotalQuestions());
         return Utilities.getTotalQuestions();
     }
 }
