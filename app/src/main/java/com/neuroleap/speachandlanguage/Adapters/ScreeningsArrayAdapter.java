@@ -27,6 +27,11 @@ public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
     }
 
     @Override
+    public long getItemId(int position) {
+        return mScreenings.get(position).getId();
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);

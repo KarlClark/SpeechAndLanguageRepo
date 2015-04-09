@@ -18,10 +18,12 @@ import java.lang.reflect.Method;
  */
 public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
+    private int mScreeningId;
     private static final String TAG = "## My Info ##";
 
-    public QuestionFragmentPagerAdapter(FragmentManager fm) {
+    public QuestionFragmentPagerAdapter(FragmentManager fm, int screeningId) {
         super(fm);
+        mScreeningId = screeningId;
     }
 
     @Override
@@ -41,8 +43,8 @@ public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
         Class myFragmentClass;
         try {
             myFragmentClass = Class.forName(Utilities.getPackageName() +".Fragments." + fragmentName);
-            Method m = myFragmentClass.getMethod("newInstance",Integer.class);
-            frag = m.invoke(null, questionId);
+            Method m = myFragmentClass.getMethod("newInstance", Integer.class, Integer.class);
+            frag = m.invoke(null, questionId, mScreeningId);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

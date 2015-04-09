@@ -6,6 +6,7 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
  * Created by Karl on 4/2/2015.
  */
 public class Screening {
+    private int mId;
     private long mLongDate;
     private String mDisplayDate;
     private String mFirstName;
@@ -13,7 +14,8 @@ public class Screening {
     private String mTeacher;
     private int mCompletionState;
 
-    public Screening(String firstName, String lastName, String teacher, long longDate, int completionState){
+    public Screening(int id, String firstName, String lastName, String teacher, long longDate, int completionState){
+        mId = id;
         mFirstName = firstName;
         mLastName = lastName;
         mTeacher = teacher;
@@ -49,6 +51,8 @@ public class Screening {
     public long getLongDate() {
         return mLongDate;
     }
+
+    public int getId() { return mId; }
 }
 
 

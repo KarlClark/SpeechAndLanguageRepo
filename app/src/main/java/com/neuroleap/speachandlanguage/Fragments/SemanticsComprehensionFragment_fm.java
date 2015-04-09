@@ -19,10 +19,11 @@ public class SemanticsComprehensionFragment_fm extends BaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static SemanticsComprehensionFragment_fm newInstance(Integer questionId){
+    public static SemanticsComprehensionFragment_fm newInstance(Integer questionId, Integer screeningId){
         Bundle args = new Bundle();
         //args.putInt(ID_KEY, id);
         args.putInt(QUESTION_ID_KEY, questionId);
+        args.putInt (SCREENING_ID_KEY , screeningId);
 
         SemanticsComprehensionFragment_fm fragment = new SemanticsComprehensionFragment_fm();
         fragment.setArguments(args);
@@ -33,6 +34,7 @@ public class SemanticsComprehensionFragment_fm extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mQuestionId = getArguments().getInt(QUESTION_ID_KEY);
+        mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
     }
 
     @Override

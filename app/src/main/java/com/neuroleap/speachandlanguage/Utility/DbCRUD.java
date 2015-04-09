@@ -53,19 +53,23 @@ public class DbCRUD {
     }
 
     public static Cursor getShortScreens (){
-        String sql = "Select " + StudentsEntry.TABLE_NAME + "." +StudentsEntry.FIRST_NAME + " , "
+        String sql = "Select "
+                      + ScreeningsEntry.TABLE_NAME + "._ID , "
+                      + StudentsEntry.TABLE_NAME + "." +StudentsEntry.FIRST_NAME + " , "
                       + StudentsEntry.TABLE_NAME + "." + StudentsEntry.LAST_NAME + " , "
+
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEACHER + " ,  "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " , "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.COMPLETION_STATE
                       + " FROM " + StudentsEntry.TABLE_NAME + " , " + ScreeningsEntry.TABLE_NAME
                       + " WHERE " + StudentsEntry.TABLE_NAME + "."+ StudentsEntry._ID + " = "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.STUDENT_ID
-                      +" GROUP BY " + StudentsEntry.TABLE_NAME + "." + StudentsEntry.FIRST_NAME + " , "
+                      /*+" GROUP BY " + ScreeningsEntry.TABLE_NAME + "._ID , "
+                      + StudentsEntry.TABLE_NAME + "." + StudentsEntry.FIRST_NAME + " , "
                       + StudentsEntry.TABLE_NAME + "." + StudentsEntry.LAST_NAME + " , "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEACHER + " ,  "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " , "
-                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.COMPLETION_STATE
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.COMPLETION_STATE*/
                       + " ORDER BY " + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " DESC";
         return mDB.rawQuery(sql,null);
     }

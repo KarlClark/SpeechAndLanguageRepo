@@ -73,5 +73,7 @@
     <string name="test_mode_spn">Test mode:</string>
     <string name="years">years</string>
     <string name="months">months</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_screenings">No screenings.  Press  NEW  to create a new screening.</string>
 
 </resources>

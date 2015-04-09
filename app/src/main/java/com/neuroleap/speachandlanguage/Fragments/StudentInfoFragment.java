@@ -39,7 +39,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     private View mNextView;
     private TextView mTvDateOfBirth, mTvHearing, mTvVision, mTvSpeachAndLanguage, mTvError;
     private Spinner mSpnHearing, mSpnVision;
-    private Button mBtnNext;
+    private Button mBtnDone, mBtnCancel;
     private ScrollView mSvStudentInfo;
     private DatePickerDialog mDatePickerDialog;
     private SimpleDateFormat mDateFormatter;
@@ -60,7 +60,8 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         setUpListeners();
         setUpSpinners();
         setupDatePickers();
-        setUpNextButton();
+        setupDoneButton();
+        setupCancelButton();
         setUpRootViewListener();
         raiseKeyBoard();
         return v;
@@ -78,8 +79,8 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         });
     }
 
-    private void setUpNextButton(){
-        mBtnNext.setOnClickListener(new View.OnClickListener() {
+    private void setupDoneButton(){
+        mBtnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG , "Next button clicked");
@@ -111,6 +112,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                                        grade,
                                        mEtTeacher.getText().toString());
 
+                lowerKeyboard();
                 mOnFragmentInteractionListener.onFragmentInteraction(mId);
             }
         });
@@ -123,6 +125,23 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                 }
             }
         });
+    }
+
+    private void setupCancelButton() {
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lowerKeyboard();
+                mOnFragmentInteractionListener.onFragmentInteraction(mId);
+            }
+        });
+    }
+
+    private void lowerKeyboard() {
+        mInputMethodManager =(InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
+        if (mKeyboardUp) {
+            mInputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
+        }
     }
 
     private void raiseKeyBoard(){
@@ -152,7 +171,8 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mEtScreeningDate = (EditText)v.findViewById(R.id.etSpeachLanguage);
         mSpnHearing = (Spinner)v.findViewById(R.id.spnHearing);
         mSpnVision = (Spinner)v.findViewById(R.id.spnVision);
-        mBtnNext =(Button)v.findViewById(R.id.btnNext);
+        mBtnDone =(Button)v.findViewById(R.id.btnDone);
+        mBtnCancel = (Button)v.findViewById(R.id.btnCancel);
     }
 
     private void setUpSpinners(){

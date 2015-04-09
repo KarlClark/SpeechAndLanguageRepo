@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.neuroleap.speachandlanguage.Activities.FlowControlActivity;
 import com.neuroleap.speachandlanguage.Adapters.ScreeningsArrayAdapter;
@@ -24,14 +25,16 @@ import java.util.ArrayList;
 public class ShowScreeningsFragment extends BaseFragment {
 
     private ArrayList<Screening> mScreenings = new ArrayList<>();
-    ListView mLvScreenings;
-    ScreeningsArrayAdapter mScreeningsArrayAdapter;
+    private ListView mLvScreenings;
+    private ScreeningsArrayAdapter mScreeningsArrayAdapter;
+    private TextView mTvNoScreenings;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_show_screenings, container, false);
         mLvScreenings = (ListView)v.findViewById(R.id.lvScreenings);
+        mTvNoScreenings = (TextView)v.findViewById((R.id.tvNoScreenings));
         fillList();
         mScreeningsArrayAdapter = new ScreeningsArrayAdapter(mContext, mScreenings);
         mLvScreenings.setAdapter(mScreeningsArrayAdapter);
@@ -39,6 +42,7 @@ public class ShowScreeningsFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(mContext,FlowControlActivity.class);
+                i.putExtra(FlowControlActivity.SCREENING_ID_KEY, id);
                 startActivity(i);
             }
         });
@@ -48,12 +52,13 @@ public class ShowScreeningsFragment extends BaseFragment {
     private void fillList(){
         Cursor c = DbCRUD.getShortScreens();
         if (c.getCount() > 0 ){
+            mTvNoScreenings.setVisibility(View.GONE);
             while (c.moveToNext()) {
-                mScreenings.add(new Screening(c.getString(0), c.getString(1), c.getString(2), c.getLong(3),c.getInt(4)));
+                mScreenings.add(new Screening(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4),c.getInt(5)));
             }
             c.close();
         }else{
-            mScreenings.add(new Screening ("No screens", "", "", 0L, -1));
+            mTvNoScreenings.setVisibility(View.VISIBLE);
         }
     }
 }

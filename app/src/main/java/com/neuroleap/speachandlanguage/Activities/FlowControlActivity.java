@@ -44,7 +44,8 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private int mPreviousCategoryColor;
     private Question mPreviousHighLightedQuestiion;
     private int mPreviousQuestionColor;
-
+    private int mScreeningId;
+    public static final String SCREENING_ID_KEY = "screening_id_key";
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -54,8 +55,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         setContentView(R.layout.activity_flow_control);
         ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
         DbCRUD.setDatabase(dbHelper.getWritableDatabase());
+        mScreeningId = getIntent().getIntExtra(SCREENING_ID_KEY, 0);
         Utilities.setTotalQuestions(DbCRUD.getQuestionCount());
-        mQuestionFragmentPagerAdapter = new QuestionFragmentPagerAdapter(getSupportFragmentManager());
+        mQuestionFragmentPagerAdapter = new QuestionFragmentPagerAdapter(getSupportFragmentManager(), mScreeningId);
         mViewPager = (ViewPager)findViewById(R.id.pager);
         mViewPager.setAdapter(mQuestionFragmentPagerAdapter);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

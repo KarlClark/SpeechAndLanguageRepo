@@ -381,8 +381,8 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/next"
-                android:id="@+id/btnNext"
+                android:text="@string/done"
+                android:id="@+id/btnDone"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 style = "@style/TextColor"
@@ -390,6 +390,16 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:visibility="visible"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:id="@+id/btnCancel"
+                style = "@style/TextColor"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
 
         </RelativeLayout>
 

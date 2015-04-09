@@ -15,18 +15,18 @@ import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 /**
  * Created by Karl on 4/7/2015.
  */
-public class SemanticsAttributesFragment_fm extends  BaseFragment {
+public class IdiomsFragment_fm extends  BaseFragment {
 
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static SemanticsAttributesFragment_fm newInstance(Integer questionId, Integer screeningId){
+    public static IdiomsFragment_fm newInstance(Integer questionId, Integer screeningId){
         Bundle args = new Bundle();
         //args.putInt(ID_KEY, id);
         args.putInt(QUESTION_ID_KEY, questionId);
         args.putInt (SCREENING_ID_KEY , screeningId);
 
-        SemanticsAttributesFragment_fm fragment = new SemanticsAttributesFragment_fm();
+        IdiomsFragment_fm fragment = new IdiomsFragment_fm();
         fragment.setArguments(args);
         return fragment;
     }

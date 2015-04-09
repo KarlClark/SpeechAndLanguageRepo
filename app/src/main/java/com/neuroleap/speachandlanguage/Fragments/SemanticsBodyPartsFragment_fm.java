@@ -20,10 +20,11 @@ public class SemanticsBodyPartsFragment_fm extends BaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static SemanticsBodyPartsFragment_fm newInstance(Integer questionId){
+    public static SemanticsBodyPartsFragment_fm newInstance(Integer questionId, Integer screeningId){
         Bundle args = new Bundle();
         //args.putInt(ID_KEY, id);
         args.putInt(QUESTION_ID_KEY, questionId);
+        args.putInt (SCREENING_ID_KEY , screeningId);
 
         SemanticsBodyPartsFragment_fm fragment = new SemanticsBodyPartsFragment_fm();
         fragment.setArguments(args);
@@ -35,6 +36,7 @@ public class SemanticsBodyPartsFragment_fm extends BaseFragment {
         super.onCreate(savedInstanceState);
         mId = getArguments().getInt(ID_KEY);
         mQuestionId = getArguments().getInt(QUESTION_ID_KEY);
+        mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
     }
 
     @Override

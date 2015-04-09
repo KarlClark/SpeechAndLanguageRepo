@@ -37,6 +37,8 @@
     <string name="student_info_title">Student Info</string>
     <string name="test_mode_spn">Test mode:</string>
     <string name="years">years</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_screenings">No screenings.  Press  NEW  to create a new screening.</string>
 
     <string-array name="languages">
         <item>English/Ingles</item>
