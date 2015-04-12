@@ -8,6 +8,7 @@ public class QuestionCategory {
     int mColor;
     private String mText;
     private boolean mDone = false;
+    private int mPosition;
 
     public int getColor() {
         return mColor;
@@ -33,9 +34,14 @@ public class QuestionCategory {
         return mText;
     }
 
-    public QuestionCategory(int id, String text, int color){
+    private int getPosition() {
+        return mPosition;
+    }
+
+    public QuestionCategory(int id, String text, int color, int position){
         mId = id;
         mText = text;
         mColor = color;
+        mPosition = position;
     }
 }

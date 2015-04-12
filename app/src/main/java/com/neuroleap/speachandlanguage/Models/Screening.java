@@ -13,19 +13,17 @@ public class Screening {
     private String mLastName;
     private String mTeacher;
     private int mCompletionState;
+    private int mAge;
 
-    public Screening(int id, String firstName, String lastName, String teacher, long longDate, int completionState){
+    public Screening(int id, String firstName, String lastName, int age, String teacher, long longDate, int completionState){
         mId = id;
         mFirstName = firstName;
         mLastName = lastName;
         mTeacher = teacher;
         mLongDate = longDate;
         mCompletionState = completionState;
-        if (longDate == 0){
-            mDisplayDate ="";
-        }else {
-            mDisplayDate = Utilities.getDisplayDate(longDate);
-        }
+        mAge = age;
+        mDisplayDate = Utilities.getDisplayDate(longDate);
     }
 
     public String getDisplayDate() {
@@ -53,6 +51,8 @@ public class Screening {
     }
 
     public int getId() { return mId; }
+
+    public int getAge() { return mAge;}
 }
 
 

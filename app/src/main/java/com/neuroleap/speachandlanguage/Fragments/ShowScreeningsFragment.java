@@ -42,7 +42,9 @@ public class ShowScreeningsFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(mContext,FlowControlActivity.class);
-                i.putExtra(FlowControlActivity.SCREENING_ID_KEY, id);
+                i.putExtra(FlowControlActivity.SCREENING_ID_KEY, (int)id);
+                i.putExtra(FlowControlActivity.SCREENING_AGE_KEY, mScreenings.get(position).getAge());
+                i.putExtra(FlowControlActivity.SCREENING_COMPLETION_STATE_KEY, mScreenings.get(position).getCompletionState());
                 startActivity(i);
             }
         });
@@ -54,7 +56,7 @@ public class ShowScreeningsFragment extends BaseFragment {
         if (c.getCount() > 0 ){
             mTvNoScreenings.setVisibility(View.GONE);
             while (c.moveToNext()) {
-                mScreenings.add(new Screening(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4),c.getInt(5)));
+                mScreenings.add(new Screening(c.getInt(0), c.getString(1), c.getString(2), c.getInt(3), c.getString(4),c.getLong(5), c.getInt(6)));
             }
             c.close();
         }else{

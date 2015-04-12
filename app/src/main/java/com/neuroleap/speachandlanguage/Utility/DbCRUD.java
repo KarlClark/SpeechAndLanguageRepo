@@ -24,9 +24,11 @@ public class DbCRUD {
     public static  Cursor getQuestionCategories(){
         String[] categoryColumns;
         if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH) {
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG};
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG, QuestionCategoriesEntry.CUTOFF_AGE,
+                                           QuestionCategoriesEntry.FRAGMENT_NAME};
         }else{
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP};
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP, QuestionCategoriesEntry.CUTOFF_AGE,
+                                           QuestionCategoriesEntry.FRAGMENT_NAME};
         }
 
         return mDB.query(QuestionCategoriesEntry.TABLE_NAME, categoryColumns, null, null, null, null, null);
@@ -42,36 +44,32 @@ public class DbCRUD {
         return mDB.query(QuestionsEntry.TABLE_NAME, questionColumns, QuestionsEntry.CATEGORY_ID + "=" +questionCategoryId , null, null, null, null);
     }
 
-    public static Cursor getFacilitatorModeFragmentName(long questionCategoryId) {
-        String[] columns = new String[] {QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT};
-        return mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, "_ID=" + questionCategoryId, null, null, null, null);
-    }
-
-    public static Cursor getStudentModeFragmentName(long questionCategoryId) {
-        String[] columns = new String[] {QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT};
-        return mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, "_ID=" + questionCategoryId, null, null, null, null);
-    }
 
     public static Cursor getShortScreens (){
         String sql = "Select "
                       + ScreeningsEntry.TABLE_NAME + "._ID , "
                       + StudentsEntry.TABLE_NAME + "." +StudentsEntry.FIRST_NAME + " , "
                       + StudentsEntry.TABLE_NAME + "." + StudentsEntry.LAST_NAME + " , "
-
+                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.AGE + " , "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEACHER + " ,  "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " , "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.COMPLETION_STATE
                       + " FROM " + StudentsEntry.TABLE_NAME + " , " + ScreeningsEntry.TABLE_NAME
                       + " WHERE " + StudentsEntry.TABLE_NAME + "."+ StudentsEntry._ID + " = "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.STUDENT_ID
-                      /*+" GROUP BY " + ScreeningsEntry.TABLE_NAME + "._ID , "
-                      + StudentsEntry.TABLE_NAME + "." + StudentsEntry.FIRST_NAME + " , "
-                      + StudentsEntry.TABLE_NAME + "." + StudentsEntry.LAST_NAME + " , "
-                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEACHER + " ,  "
-                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " , "
-                      + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.COMPLETION_STATE*/
                       + " ORDER BY " + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " DESC";
         return mDB.rawQuery(sql,null);
+    }
+
+    public static Cursor getAnswer(long question_id, long screening_id){
+        String sql = "SELECT "
+                     + StudentAnswersEntry.ANSWER_TEXT + " , "
+                     + StudentAnswersEntry.CORRECT
+                     + " FROM " + StudentAnswersEntry.TABLE_NAME
+                     + " WHERE " + StudentAnswersEntry.QUESTION_ID + "=" + question_id
+                     + " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;
+
+        return mDB.rawQuery(sql, null);
     }
 
     public static int getFirstQuestion(long questionCategoryId){
@@ -89,6 +87,11 @@ public class DbCRUD {
         return mDB.query(QuestionsEntry.TABLE_NAME, columns, "_ID=" +  questionId, null, null, null, null);
     }
 
+    public static Cursor getPictureFilenames(long questionId){
+        String[] columns = new String[] {PicturesEntry.FILENAME};
+        return mDB.query(PicturesEntry.TABLE_NAME, columns, PicturesEntry.QUESTION_ID + " = " + questionId, null, null, null, null);
+    }
+
     public static int getQuestionCategory(int questionId){
         String columns[] = new String[] {QuestionsEntry.CATEGORY_ID};
         Cursor c = mDB.query(QuestionsEntry.TABLE_NAME, columns, "_ID=" + questionId, null, null, null, null);
@@ -98,8 +101,8 @@ public class DbCRUD {
         return id;
     }
 
-    public static Cursor getFragmentNames(long questionCategoryId){
-        String[] columns = new String[] {QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT, QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT};
+    public static Cursor getFragmentName(long questionCategoryId){
+        String[] columns = new String[] {QuestionCategoriesEntry.FRAGMENT_NAME};
         return mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns,  "_ID=" + questionCategoryId, null, null, null, null);
     }
 
@@ -141,4 +144,34 @@ public class DbCRUD {
         mDB.insert(ScreeningsEntry.TABLE_NAME, null, cv);
     }
 
+    public static void enterAnswer(long question_id, long screening_id, String answer_text, boolean correct){
+        ContentValues cv = new ContentValues();
+        cv.put(StudentAnswersEntry.QUESTION_ID, question_id);
+        cv.put(StudentAnswersEntry.SCREENING_ID, screening_id);
+        cv.put(StudentAnswersEntry.ANSWER_TEXT, answer_text);
+        cv.put(StudentAnswersEntry.CORRECT, correct);
+
+        String sql = "SELECT _ID " +
+                     " FROM " + StudentAnswersEntry.TABLE_NAME +
+                     " WHERE " + StudentAnswersEntry.QUESTION_ID + "=" + question_id +
+                      " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;
+        Cursor c = mDB.rawQuery(sql,null);
+        if (c.getCount() == 0) {
+            mDB.insert(StudentAnswersEntry.TABLE_NAME, null, cv);
+        }else{
+            c.moveToNext();
+            mDB.update(StudentAnswersEntry.TABLE_NAME, cv, "_ID=" + c.getLong(0), null);
+        }
+        c.close();
+
+        updateScreeningCompletionState(screening_id, Utilities.SCREENING_NOT_COMPLETE);
+    }
+
+    public static void updateScreeningCompletionState(long screening_id, int completion_state){
+        ContentValues cv = new ContentValues();
+        cv.put(ScreeningsEntry.COMPLETION_STATE, completion_state);
+
+        mDB.update(ScreeningsEntry.TABLE_NAME, cv, "_ID=" + screening_id, null);
+    }
 }
+

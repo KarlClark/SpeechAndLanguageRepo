@@ -68,8 +68,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 QuestionCategoriesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 QuestionCategoriesEntry.CATEGORY_NAME_EG + " TEXT NOT NULL, " +
                 QuestionCategoriesEntry.CATEGORY_NAME_SP + " TEXT, " +
-                QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT + " TEXT NOT NULL, " +
-                QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT + " TEXT NOT NULL " +
+                QuestionCategoriesEntry.FRAGMENT_NAME + " TEXT NOT NULL, " +
+                QuestionCategoriesEntry.CUTOFF_AGE + " INTEGER NOT NULL " +
                 " );";
 
         final String SQL_CREATE_QUESTIONS_TABLE = "CREATE TABLE " + QuestionsEntry.TABLE_NAME + " (" +
@@ -164,8 +164,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                             if ( ! row[1].equals("")){
                                 cv.put(QuestionCategoriesEntry.CATEGORY_NAME_SP , row[1]);
                             }
-                            cv.put(QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT , row[2]);
-                            cv.put(QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT , row[3]);
+                            cv.put(QuestionCategoriesEntry.FRAGMENT_NAME , row[2]);
+                            cv.put(QuestionCategoriesEntry.CUTOFF_AGE, row[3]);
                             categoryId = db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
                             continue whileLoop;
                         }

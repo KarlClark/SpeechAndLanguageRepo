@@ -283,7 +283,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     if (mEtDateOfBirth.getText().toString().equals("")) {
-                        mNextView = mEtAgeYears;
+                        mNextView = mEtTeacher;
                     }else{
                         mNextView = mEtFirstName;
                     }

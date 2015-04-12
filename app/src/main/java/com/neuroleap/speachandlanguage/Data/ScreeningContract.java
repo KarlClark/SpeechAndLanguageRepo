@@ -52,8 +52,8 @@ public class ScreeningContract {
 
         public static final String CATEGORY_NAME_EG = "category_name_eg";
         public static final String CATEGORY_NAME_SP = "category_name_sp";
-        public static final String FACILITATOR_MODE_FRAGMENT ="facilitator_mode_fragment";
-        public static final String STUDENT_MODE_FRAGMENT ="student_mode_fragment";
+        public static final String FRAGMENT_NAME ="fragment_name";
+        public static final String CUTOFF_AGE = "cutoff_age";
     }
 
     public static final class QuestionsEntry implements BaseColumns {

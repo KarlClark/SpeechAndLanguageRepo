@@ -1,16 +1,15 @@
 package com.neuroleap.speachandlanguage.Adapters;
 
-import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
-import com.neuroleap.speachandlanguage.Utility.DbCRUD;
+import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 
 /**
@@ -19,32 +18,24 @@ import java.lang.reflect.Method;
 public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private int mScreeningId;
+    private ArrayList<Question> mQuestions;
     private static final String TAG = "## My Info ##";
 
-    public QuestionFragmentPagerAdapter(FragmentManager fm, int screeningId) {
+    public QuestionFragmentPagerAdapter(FragmentManager fm, int screeningId, ArrayList<Question> questions) {
         super(fm);
         mScreeningId = screeningId;
+        mQuestions = questions;
     }
 
     @Override
     public Fragment getItem(int position) {
-        int questionId = position+1;
-        int categoryId = DbCRUD.getQuestionCategory(questionId);
-        Cursor c = DbCRUD.getFragmentNames(categoryId);
-        c.moveToNext();
-        String fragmentName;
-        if (Utilities.getTestMode() == Utilities.SCORING_BUTTONS_ONLY){
-            fragmentName=c.getString(c.getColumnIndex(QuestionCategoriesEntry.STUDENT_MODE_FRAGMENT));
-        }else{
-            fragmentName=c.getString(c.getColumnIndex(QuestionCategoriesEntry.FACILITATOR_MODE_FRAGMENT));
-        }
-        c.close();
+
         Object frag = null;
         Class myFragmentClass;
         try {
-            myFragmentClass = Class.forName(Utilities.getPackageName() +".Fragments." + fragmentName);
-            Method m = myFragmentClass.getMethod("newInstance", Integer.class, Integer.class);
-            frag = m.invoke(null, questionId, mScreeningId);
+            myFragmentClass = Class.forName(Utilities.getPackageName() +".Fragments." + mQuestions.get(position).getFragmentName());
+            Method m = myFragmentClass.getMethod("newInstance", Integer.class, Integer.class, Integer.class);
+            frag = m.invoke(null, mQuestions.get(position).getId(), mScreeningId, position);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -60,6 +51,6 @@ public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         //Log.i(TAG, "Question count= " + Utilities.getTotalQuestions());
-        return Utilities.getTotalQuestions();
+        return mQuestions.size();
     }
 }

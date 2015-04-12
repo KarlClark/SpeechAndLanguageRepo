@@ -24,7 +24,7 @@ public class Utilities {
     private static int mQuestionsLanguage = ENGLISH;
     private static SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
     private static String mPackageName;
-    private static int mTotalQuestions;
+    //private static int mTotalQuestions;
     public static final String PREFS_TEST_MODE = "prefs_test_mode";
     public static final int SCORING_BUTTONS_ONLY= 0;
     public static final int TEXT_INPUT_ONLY = 1;
@@ -40,13 +40,13 @@ public class Utilities {
     public static final int CHILD_COMPLETED_COLOR = R.color.green;
     public static final int CHILD_HIGHLIGHT_COLOR = R.color.light_red;
 
-    public static int getTotalQuestions() {
+   /* public static int getTotalQuestions() {
         return mTotalQuestions;
     }
 
     public static void setTotalQuestions(int totalQuestions) {
         mTotalQuestions = totalQuestions;
-    }
+    }*/
 
     public static String getPackageName() {
         return mPackageName;
