@@ -19,10 +19,10 @@ public class SemanticsPrepositionsFragment extends QuestionsBaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static SemanticsPrepositionsFragment newInstance(Integer questionId, Integer screeningId, Integer position){
+    public static SemanticsPrepositionsFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
         SemanticsPrepositionsFragment fragment = new SemanticsPrepositionsFragment();
-        fragment.setArguments(createBundle(questionId, screeningId, position));
+        fragment.setArguments(createBundle(questionId, screeningId, pageViewerPosition, groupPosition));
         return fragment;
     }
 
@@ -46,7 +46,7 @@ public class SemanticsPrepositionsFragment extends QuestionsBaseFragment {
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
         return v;

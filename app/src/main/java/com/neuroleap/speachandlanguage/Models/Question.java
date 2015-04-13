@@ -1,12 +1,14 @@
 package com.neuroleap.speachandlanguage.Models;
 
+import com.neuroleap.speachandlanguage.Utility.Utilities;
+
 /**
  * Created by Karl on 3/20/2015.
  */
 public class Question {
     private int mId;
     private int mCategoryId;
-    private int mColor=0;
+    private int mColor=Utilities.CHILD_DEFAULT_COLOR;
     private String mText;
     private boolean mDone = false;
     private String mFragmentName;
@@ -28,6 +30,9 @@ public class Question {
 
     public void setDone(boolean done) {
         mDone = done;
+        if (done) {
+            setColor(Utilities.CHILD_COMPLETED_COLOR);
+        }
     }
 
     public int getId() {
@@ -59,7 +64,7 @@ public class Question {
     }
 
     public Question(int id, int categoryId, String text, int color, String fragmentName, int viewPagerPosition,
-                    int childPosition, int groupPosition){
+                    int childPosition, int groupPosition, boolean done){
         mId = id;
         mCategoryId = categoryId;
         mText = text;
@@ -68,5 +73,9 @@ public class Question {
         mViewPagerPosition = viewPagerPosition;
         mChildPosition = childPosition;
         mGroupPosition = groupPosition;
+        mDone = done;
+        if (done) {
+            setColor(Utilities.CHILD_COMPLETED_COLOR);
+        }
     }
 }

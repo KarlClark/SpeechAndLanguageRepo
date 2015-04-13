@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/tvTestQuestion"
+        style = "@style/TextColor"
         android:layout_marginTop="104dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>

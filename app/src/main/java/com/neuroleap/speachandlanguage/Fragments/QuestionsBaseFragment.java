@@ -2,6 +2,7 @@ package com.neuroleap.speachandlanguage.Fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,27 +19,32 @@ public class QuestionsBaseFragment extends BaseFragment {
 
     protected int mQuestionId;
     protected int mScreeningId;
-    protected int mPosition;
+    protected int mViewPagerPosition;
+    protected int mGroupPosition;
     protected TextView mTvQuestion;
     protected Button mBtnZero, mBtnOne, mBtnNext;
     protected EditText mEtAnswer;
     protected static final String QUESTION_ID_KEY = "question_id_key";
     protected static final String SCREENING_ID_KEY = "screening_id_key";
-    protected static final String POSITION_KEY = "position_key";
+    protected static final String VIEW_PAGER_POSITION_KEY = "view_pager_position_key";
+    protected static final String GROUP_POSITION_KEY = "group_position_key";
+    protected static final String TAG = "## My Info ##";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mQuestionId = getArguments().getInt(QUESTION_ID_KEY);
         mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
-        mPosition = getArguments().getInt(POSITION_KEY);
+        mViewPagerPosition = getArguments().getInt(VIEW_PAGER_POSITION_KEY);
+        mGroupPosition = getArguments().getInt(GROUP_POSITION_KEY);
     }
 
-    protected static Bundle createBundle(Integer questionId, Integer screeningId, Integer position){
+    protected static Bundle createBundle(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
         Bundle args = new Bundle();
         args.putInt(QUESTION_ID_KEY, questionId);
         args.putInt (SCREENING_ID_KEY , screeningId);
-        args.putInt(POSITION_KEY, position);
+        args.putInt(VIEW_PAGER_POSITION_KEY, pageViewerPosition);
+        args.putInt(GROUP_POSITION_KEY, groupPosition);
         return args;
     }
 
@@ -52,7 +58,7 @@ public class QuestionsBaseFragment extends BaseFragment {
         Cursor c = DbCRUD.getAnswer(mQuestionId, mScreeningId);
         if (c.getCount() > 0) {
             c.moveToNext();
-            mTvQuestion.setText(c.getString(0));
+            mEtAnswer.setText(c.getString(0));
         }
         c.close();
 
@@ -61,7 +67,7 @@ public class QuestionsBaseFragment extends BaseFragment {
             public void onClick(View v) {
                 if (answerPresent()) {
                     DbCRUD.enterAnswer(mQuestionId, mScreeningId, mEtAnswer.getText().toString(), false);
-                    mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                    mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
                 }
             }
         });
@@ -71,7 +77,7 @@ public class QuestionsBaseFragment extends BaseFragment {
             public void onClick(View v) {
                 if (answerPresent()) {
                     DbCRUD.enterAnswer(mQuestionId, mScreeningId, mEtAnswer.getText().toString(), true);
-                    mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                    mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
                 }
             }
         });
@@ -79,7 +85,7 @@ public class QuestionsBaseFragment extends BaseFragment {
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
     }

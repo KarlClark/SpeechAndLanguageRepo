@@ -19,10 +19,10 @@ public class SemanticsComprehensionFragment extends QuestionsBaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static SemanticsComprehensionFragment newInstance(Integer questionId, Integer screeningId, Integer position){
+    public static SemanticsComprehensionFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
         SemanticsComprehensionFragment fragment = new SemanticsComprehensionFragment();
-        fragment.setArguments(createBundle(questionId, screeningId, position));
+        fragment.setArguments(createBundle(questionId, screeningId, pageViewerPosition, groupPosition));
         return fragment;
     }
 
@@ -46,7 +46,7 @@ public class SemanticsComprehensionFragment extends QuestionsBaseFragment {
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
         return v;

@@ -34,8 +34,8 @@ public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
         Class myFragmentClass;
         try {
             myFragmentClass = Class.forName(Utilities.getPackageName() +".Fragments." + mQuestions.get(position).getFragmentName());
-            Method m = myFragmentClass.getMethod("newInstance", Integer.class, Integer.class, Integer.class);
-            frag = m.invoke(null, mQuestions.get(position).getId(), mScreeningId, position);
+            Method m = myFragmentClass.getMethod("newInstance", Integer.class, Integer.class, Integer.class, Integer.class);
+            frag = m.invoke(null, mQuestions.get(position).getId(), mScreeningId, position, mQuestions.get(position).getGroupPosition());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

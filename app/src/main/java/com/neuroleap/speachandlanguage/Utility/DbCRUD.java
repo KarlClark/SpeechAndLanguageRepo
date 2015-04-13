@@ -72,6 +72,11 @@ public class DbCRUD {
         return mDB.rawQuery(sql, null);
     }
 
+    public static Cursor getAllCompletedQuestionsIds(long screeningId){
+        String [] columns = new String[] {StudentAnswersEntry.QUESTION_ID};
+        return mDB.query(StudentAnswersEntry.TABLE_NAME, columns, StudentAnswersEntry.SCREENING_ID + "=" + screeningId, null, null, null, null);
+    }
+
     public static int getFirstQuestion(long questionCategoryId){
         String sql = "SELECT MIN ( _ID)  FROM " + QuestionsEntry.TABLE_NAME +  " WHERE " + QuestionsEntry.CATEGORY_ID + " = " + questionCategoryId;
         Cursor  c = mDB.rawQuery(sql, null);

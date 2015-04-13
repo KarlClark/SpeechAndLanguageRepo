@@ -20,10 +20,10 @@ public class SemanticsAnalogiesFragment extends QuestionsBaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static SemanticsAnalogiesFragment newInstance(Integer questionId, Integer screeningId, Integer position){
+    public static SemanticsAnalogiesFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
         SemanticsAnalogiesFragment fragment = new SemanticsAnalogiesFragment();
-        fragment.setArguments(createBundle(questionId, screeningId, position));
+        fragment.setArguments(createBundle(questionId, screeningId, pageViewerPosition, groupPosition));
         return fragment;
     }
 
@@ -47,7 +47,7 @@ public class SemanticsAnalogiesFragment extends QuestionsBaseFragment {
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
         return v;

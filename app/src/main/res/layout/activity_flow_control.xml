@@ -17,5 +17,6 @@
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:groupIndicator="@null"
+        android:transcriptMode="disabled"
         android:dividerHeight="2dp" />
 </android.support.v4.widget.DrawerLayout>

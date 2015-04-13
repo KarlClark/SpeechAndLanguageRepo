@@ -21,10 +21,10 @@ public class SemanticsBodyPartsFragment extends QuestionsBaseFragment {
 
 
 
-    public static SemanticsBodyPartsFragment newInstance(Integer questionId, Integer screeningId, Integer position){
+    public static SemanticsBodyPartsFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
         SemanticsBodyPartsFragment fragment = new SemanticsBodyPartsFragment();
-        fragment.setArguments(createBundle(questionId, screeningId, position));
+        fragment.setArguments(createBundle(questionId, screeningId, pageViewerPosition, groupPosition));
         return fragment;
     }
 

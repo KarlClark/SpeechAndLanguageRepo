@@ -20,10 +20,10 @@ public class ProcessingNegativeWhyFragment extends  QuestionsBaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static ProcessingNegativeWhyFragment newInstance(Integer questionId, Integer screeningId, Integer position){
+    public static ProcessingNegativeWhyFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
         ProcessingNegativeWhyFragment fragment = new ProcessingNegativeWhyFragment();
-        fragment.setArguments(createBundle(questionId, screeningId, position));
+        fragment.setArguments(createBundle(questionId, screeningId, pageViewerPosition, groupPosition));
         return fragment;
     }
 
@@ -47,7 +47,7 @@ public class ProcessingNegativeWhyFragment extends  QuestionsBaseFragment {
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
         return v;

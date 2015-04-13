@@ -20,9 +20,9 @@ public class IdiomsFragment extends  QuestionsBaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static IdiomsFragment newInstance(Integer questionId, Integer screeningId, Integer position){
+    public static IdiomsFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
         IdiomsFragment fragment = new IdiomsFragment();
-        fragment.setArguments(createBundle(questionId, screeningId, position));
+        fragment.setArguments(createBundle(questionId, screeningId, pageViewerPosition, groupPosition));
         return fragment;
     }
 
@@ -46,7 +46,7 @@ public class IdiomsFragment extends  QuestionsBaseFragment {
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
         return v;

@@ -3,6 +3,7 @@ package com.neuroleap.speachandlanguage.Activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ExpandableListView;
 
 import com.neuroleap.speachandlanguage.Adapters.DrawerListAdapter;
@@ -33,7 +36,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private List<QuestionCategory> mQuestionCategories = new ArrayList<QuestionCategory>();
     private List<ArrayList<Question>> mDrawerQuestions = new ArrayList<ArrayList<Question>>();
     private ArrayList<Question> mViewPagerQuestions = new ArrayList<Question>();
+    private ArrayList<Integer> mAllCompletedQuestionIds = new ArrayList<Integer>();
     private DrawerLayout mDrawerLayout;
+    private InputMethodManager mInputMethodManager;
     private ExpandableListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerListAdapter mDrawerListAdapter;
@@ -42,12 +47,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private QuestionFragmentPagerAdapter mQuestionFragmentPagerAdapter;
     private int mOpenGroup = 0;
     private QuestionCategory mPreviousHighLightedCategory;
-    private int mPreviousCategoryColor;
     private Question mPreviousHighLightedQuestiion;
-    private int mPreviousQuestionColor;
     private int mScreeningId;
     private int mAge;
     private int mCompletionState;
+    private boolean mKeyboardUp = false;
     public static final String SCREENING_ID_KEY = "screening_id_key";
     public static final String SCREENING_AGE_KEY = "screening_age_key";
     public static final String SCREENING_COMPLETION_STATE_KEY ="screening_completion_state_key";
@@ -55,12 +59,14 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "start onCreate");
+        //Log.i(TAG, "start onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_control);
+        mInputMethodManager =(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
         DbCRUD.setDatabase(dbHelper.getWritableDatabase());
         mScreeningId = getIntent().getIntExtra(SCREENING_ID_KEY, 0);
+        Log.i(TAG, "Screening id= " + mScreeningId);
         mAge = getIntent().getIntExtra(SCREENING_AGE_KEY, 100);
         mCompletionState = getIntent().getIntExtra(SCREENING_COMPLETION_STATE_KEY, Utilities.SCREENING_NOT_STARTED);
         //Utilities.setTotalQuestions(DbCRUD.getQuestionCount());
@@ -70,8 +76,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mViewPager = (ViewPager)findViewById(R.id.pager);
         mViewPager.setAdapter(mQuestionFragmentPagerAdapter);
         setUpDrawer();
+        setUpRootViewListener();
         displayStartingQuestion();
-        Log.i(TAG,"end onCreate");
+        //Log.i(TAG,"end onCreate");
     }
 
     @Override
@@ -83,7 +90,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        Log.i(TAG,"onCreateOptionsMenu called");
+        //Log.i(TAG,"onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.menu_flow_control, menu);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         return true;
@@ -113,40 +120,73 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.i(TAG, "onActivityResult called");
+        //Log.i(TAG, "onActivityResult called");
         loadLists();
         mDrawerListAdapter.notifyDataSetChanged();
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         invalidateOptionsMenu();
     }
 
+    private void setUpRootViewListener(){
+        mDrawerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = mDrawerLayout.getRootView().getHeight() - mDrawerLayout.getHeight();
+                mKeyboardUp = (heightDiff > 400);
+            }
+        });
+    }
 
+    private void lowerKeyboard() {
+        if (mKeyboardUp) {
+            mInputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
+        }
+    }
+
+    private void raiseKeyBoard(){
+        if ( ! mKeyboardUp) {
+            mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
 
     private void loadLists(){
         mQuestionCategories.clear();
         mDrawerQuestions.clear();
         Cursor categoryCursor = DbCRUD.getQuestionCategories();
+        if (mCompletionState == Utilities.SCREENING_NOT_COMPLETE) {
+            Cursor allCompletedCursor = DbCRUD.getAllCompletedQuestionsIds(mScreeningId);
+            while (allCompletedCursor.moveToNext()) {
+                mAllCompletedQuestionIds.add(allCompletedCursor.getInt(0));
+            }
+        }
         int categoryId;
         int categoryCount = 0;
         int questionCount = 0;
         int childCount = 0;
+        boolean categoryDone;
         while (categoryCursor.moveToNext()){
             //Log.i(TAG, "categoryCursor . movetoNext");
             if (mAge >= categoryCursor.getInt(2)) {
+                categoryDone = true;
                 categoryId = categoryCursor.getInt(0);
                 QuestionCategory qc = new QuestionCategory(categoryId, categoryCursor.getString(1), Utilities.GROUP_DEFAULT_COLOR, categoryCount);
                 mQuestionCategories.add(qc);
                 Cursor questionCursor = DbCRUD.getQuestionsPrompts(categoryId);
                 mDrawerQuestions.add(new ArrayList<Question>());
                 while (questionCursor.moveToNext()) {
+                    boolean questionDone = mAllCompletedQuestionIds.contains(questionCursor.getInt(0));
+                    if ( ! questionDone){
+                        categoryDone = false;
+                    }
                     Question q = new Question(questionCursor.getInt(0), questionCursor.getInt(1), questionCursor.getString(2),
                                               Utilities.CHILD_DEFAULT_COLOR, categoryCursor.getString(3), questionCount,
-                                              childCount, categoryCount);
+                                              childCount, categoryCount, questionDone);
                     mDrawerQuestions.get(categoryCount).add(q);
                     mViewPagerQuestions.add(q);
                     questionCount++;
                     childCount++;
                 }
+                qc.setDone(categoryDone);
                 childCount=0;
                 questionCursor.close();
                 categoryCount++;
@@ -163,24 +203,26 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.test_1,R.string.test_2){
             @Override
             public void onDrawerOpened(View drawerView) {
-                Log.i(TAG, " Drawer open");
+                //Log.i(TAG, " Drawer open");
+                lowerKeyboard();
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
 
                 Question q = mViewPagerQuestions.get(mViewPager.getCurrentItem());
-                Log.i(TAG,"currentItem= " + mViewPager.getCurrentItem() );
-                Log.i(TAG, " groupPosition= " + q.getGroupPosition() + "  Childposition= " + q.getChildPosition());
+               // Log.i(TAG,"currentItem= " + mViewPager.getCurrentItem() );
+               // Log.i(TAG, " groupPosition= " + q.getGroupPosition() + "  Childposition= " + q.getChildPosition());
                 setGroupColors(q.getGroupPosition());
                 setChildColors(q.getGroupPosition(), q.getChildPosition());
                 mDrawerList.expandGroup(q.getGroupPosition());
                 mDrawerList.setSelection(q.getGroupPosition());
                 //mOpenGroup = categoryId-1;
-                Log.i(TAG,"here 3");
+               // Log.i(TAG,"here 3");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                Log.i(TAG, "Drawer closed");
+                //Log.i(TAG, "Drawer closed");
+                raiseKeyBoard();
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
                 //mDrawerList.collapseGroup(mOpenGroup);
@@ -199,15 +241,15 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Log.i(TAG, "Group expanded = " + parent.isGroupExpanded(groupPosition));
+                //Log.i(TAG, "Group expanded = " + parent.isGroupExpanded(groupPosition));
                 if ( ! parent.isGroupExpanded(groupPosition)) {
-                    Log.i(TAG,"mOpenGroup= " + mOpenGroup);
+                    //Log.i(TAG,"mOpenGroup= " + mOpenGroup);
 
                     setGroupColors(groupPosition);
                     Question q = mDrawerQuestions.get(groupPosition).get(0);
-                    setChildColors(groupPosition,  q.getChildPosition());
+                    setChildColors(groupPosition, q.getChildPosition());
                     mViewPager.setCurrentItem(q.getViewPagerPosition());
-                    Log.i(TAG, "here 1");
+                    //Log.i(TAG, "here 1");
                 }
                 return false;
             }
@@ -219,15 +261,28 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 if (mOpenGroup != groupPosition) {
                     mDrawerList.collapseGroup(mOpenGroup);
                 }
+
                 mOpenGroup = groupPosition;
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //mDrawerList.smoothScrollToPosition(mOpenGroup);
+                        mDrawerList.setSelectedGroup(mOpenGroup);
+                    }
+                }, 250);
+
+                Log.i(TAG,"Group expanded open group = " + mOpenGroup);
             }
         });
+
+
 
         mDrawerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Log.i(TAG, "Child clicked, category= " + mQuestionCategories.get(groupPosition).getText()+
-                        "  prompt=  " + mDrawerQuestions.get(groupPosition).get(childPosition).getText());
+                //Log.i(TAG, "Child clicked, category= " + mQuestionCategories.get(groupPosition).getText()+
+                 //       "  prompt=  " + mDrawerQuestions.get(groupPosition).get(childPosition).getText());
                 setChildColors(groupPosition, childPosition);
                 mViewPager.setCurrentItem(mDrawerQuestions.get(groupPosition).get(childPosition).getViewPagerPosition());
                 return true;
@@ -237,6 +292,10 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     @Override
     public void onFragmentInteraction(int id, Object ... args){
+        mViewPagerQuestions.get((int)args[0]).setDone(true);
+        if (groupIsCompleted((int)args[1])){
+            mQuestionCategories.get((int)args[1]).setDone(true);
+        }
         if ((int)args[0]+1 < mViewPagerQuestions.size()){
             mViewPager.setCurrentItem((int)args[0]+1);
         }
@@ -245,24 +304,39 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     private void setChildColors(int groupPosition, int childPosition){
         if (mPreviousHighLightedQuestiion != null) {
-            Log.i(TAG,"Resetting color");
-            mPreviousHighLightedQuestiion.setColor(mPreviousQuestionColor);
+            if (mPreviousHighLightedQuestiion.isDone()) {
+                mPreviousHighLightedQuestiion.setColor(Utilities.CHILD_COMPLETED_COLOR);
+            }else{
+                mPreviousHighLightedQuestiion.setColor(Utilities.CHILD_DEFAULT_COLOR);
+            }
         }
         Question currentQuestion = mDrawerQuestions.get(groupPosition).get(childPosition);
         mPreviousHighLightedQuestiion = currentQuestion;
-        mPreviousQuestionColor = currentQuestion.getColor();
         currentQuestion.setColor(Utilities.CHILD_HIGHLIGHT_COLOR);
         mDrawerListAdapter.notifyDataSetChanged();
     }
 
     private void setGroupColors(int position){
         if (mPreviousHighLightedCategory != null) {
-            mPreviousHighLightedCategory.setColor(mPreviousCategoryColor);
+            if (mPreviousHighLightedCategory.isDone()) {
+                mPreviousHighLightedCategory.setColor(Utilities.GROUP_COMPLETED_COLOR);
+            }else{
+                mPreviousHighLightedCategory.setColor(Utilities.GROUP_DEFAULT_COLOR);
+            }
         }
         mPreviousHighLightedCategory= mQuestionCategories.get(position);
-        mPreviousCategoryColor = mQuestionCategories.get(position).getColor();
         mQuestionCategories.get(position).setColor(Utilities.GROUP_HIGHLIGHT_COLOR);
         mDrawerListAdapter.notifyDataSetChanged();
+    }
+
+    private boolean groupIsCompleted(int groupPosition){
+        ArrayList<Question> al = mDrawerQuestions.get(groupPosition);
+        for (int i = 0; i < al.size(); i++){
+            if ( ! al.get(i).isDone()){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void displayStartingQuestion(){

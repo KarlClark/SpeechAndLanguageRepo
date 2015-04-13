@@ -20,10 +20,10 @@ public class SentenceRepetitionFragment extends  QuestionsBaseFragment {
     TextView mTvQuestion;
     Button mBtnNext;
 
-    public static SentenceRepetitionFragment newInstance(Integer questionId, Integer screeningId, Integer position){
+    public static SentenceRepetitionFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
         SentenceRepetitionFragment fragment = new SentenceRepetitionFragment();
-        fragment.setArguments(createBundle(questionId, screeningId, position));
+        fragment.setArguments(createBundle(questionId, screeningId, pageViewerPosition, groupPosition));
         return fragment;
     }
 
@@ -47,7 +47,7 @@ public class SentenceRepetitionFragment extends  QuestionsBaseFragment {
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
         return v;
