@@ -47,7 +47,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private QuestionFragmentPagerAdapter mQuestionFragmentPagerAdapter;
     private int mOpenGroup = 0;
     private QuestionCategory mPreviousHighLightedCategory;
-    private Question mPreviousHighLightedQuestiion;
+    private Question mCurrentHighLightedQuestion, mPreviousHighLightedQuestiion;
     private int mScreeningId;
     private int mAge;
     private int mCompletionState;
@@ -255,6 +255,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             }
         });
 
+
         mDrawerList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -267,12 +268,13 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //mDrawerList.smoothScrollToPosition(mOpenGroup);
                         mDrawerList.setSelectedGroup(mOpenGroup);
+                        int lastPosition =mDrawerList.getLastVisiblePosition();
+                        if (mCurrentHighLightedQuestion.getChildPosition() > lastPosition-2){
+                            mDrawerList.setSelection(mCurrentHighLightedQuestion.getChildPosition() - lastPosition/2);
+                        }
                     }
                 }, 250);
-
-                Log.i(TAG,"Group expanded open group = " + mOpenGroup);
             }
         });
 
@@ -310,9 +312,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 mPreviousHighLightedQuestiion.setColor(Utilities.CHILD_DEFAULT_COLOR);
             }
         }
-        Question currentQuestion = mDrawerQuestions.get(groupPosition).get(childPosition);
-        mPreviousHighLightedQuestiion = currentQuestion;
-        currentQuestion.setColor(Utilities.CHILD_HIGHLIGHT_COLOR);
+        mCurrentHighLightedQuestion = mDrawerQuestions.get(groupPosition).get(childPosition);
+        mPreviousHighLightedQuestiion = mCurrentHighLightedQuestion;
+        mCurrentHighLightedQuestion.setColor(Utilities.CHILD_HIGHLIGHT_COLOR);
         mDrawerListAdapter.notifyDataSetChanged();
     }
 
