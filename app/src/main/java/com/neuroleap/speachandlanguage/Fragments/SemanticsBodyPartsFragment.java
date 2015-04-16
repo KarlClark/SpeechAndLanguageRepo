@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 
@@ -19,8 +20,6 @@ public class SemanticsBodyPartsFragment extends QuestionsBaseFragment {
 
     private ImageView mIvPicture;
 
-
-
     public static SemanticsBodyPartsFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
         SemanticsBodyPartsFragment fragment = new SemanticsBodyPartsFragment();
@@ -28,11 +27,11 @@ public class SemanticsBodyPartsFragment extends QuestionsBaseFragment {
         return fragment;
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_semantics_body_parts, container, false);
+        mCategoryType = ScreeningContract.QuestionCategoriesEntry.SEMANTICS;
+
         setupBaseViews(v);
         setupWindow();
 

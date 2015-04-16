@@ -2,7 +2,6 @@ package com.neuroleap.speachandlanguage.Fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +20,7 @@ public class QuestionsBaseFragment extends BaseFragment {
     protected int mScreeningId;
     protected int mViewPagerPosition;
     protected int mGroupPosition;
+    protected int mCategoryType;
     protected TextView mTvQuestion;
     protected Button mBtnZero, mBtnOne, mBtnNext;
     protected EditText mEtAnswer;
@@ -66,7 +66,7 @@ public class QuestionsBaseFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (answerPresent()) {
-                    DbCRUD.enterAnswer(mQuestionId, mScreeningId, mEtAnswer.getText().toString(), false);
+                    DbCRUD.enterAnswer(mQuestionId, mScreeningId, mEtAnswer.getText().toString(), false, mCategoryType);
                     mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
                 }
             }
@@ -76,7 +76,7 @@ public class QuestionsBaseFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (answerPresent()) {
-                    DbCRUD.enterAnswer(mQuestionId, mScreeningId, mEtAnswer.getText().toString(), true);
+                    DbCRUD.enterAnswer(mQuestionId, mScreeningId, mEtAnswer.getText().toString(), true, mCategoryType);
                     mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
                 }
             }

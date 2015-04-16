@@ -45,18 +45,19 @@ public class ScreeningContract {
         public static final String SCREENING_ID = "screening_id";
         public static final String ANSWER_TEXT = "answer_text";
         public static final String CORRECT = "correct";
+        public static final String CATEGORY_TYPE = "category_type";
     }
 
     public static final class QuestionCategoriesEntry implements BaseColumns{
 
         public static final int SEMANTICS = 0;
-        public static final int PROCESSION = 1;
+        public static final int PROCESSING = 1;
         public static final int INFERENCES = 2;
         public static final int IDIOMS = 3;
         public static final int  SYNTAX = 4;
         public static final int AUDITORY_PROCESSING = 5;
         public static final int AUDITORY_MEMORY = 6;
-
+        public static final int UNKNOWN = 7;
 
         public static final String TABLE_NAME = "question_categories";
 

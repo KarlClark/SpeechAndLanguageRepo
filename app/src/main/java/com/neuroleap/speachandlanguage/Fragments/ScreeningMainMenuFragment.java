@@ -1,7 +1,9 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract;
 import com.neuroleap.speachandlanguage.R;
+import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 /**
@@ -46,53 +50,67 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
         return v;
     }
 
-     private void setupButtons(View v){
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "main menu onresume called");
+    }
+
+    private void setupButtons(View v){
          Button b;
          tblMainMenu = (TableLayout)v.findViewById(R.id.tblMainMenu);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(1)).getChildAt(0);
          b.setText("Semantics");
-         b.setTag(Utilities.SEMANTICS);
+         Cursor c = DbCRUD.getAnswersForCategoryType(mScreeningId, ScreeningContract.QuestionCategoriesEntry.SEMANTICS);
+         if (c.getCount() > 0) {
+             if (checkAnswer(c)) {
+                 b.setBackgroundResource(R.drawable.button_green_shadowed);
+             } else {
+                 b.setBackgroundResource(R.drawable.button_red_shadowed);
+             }
+         }
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.SEMANTICS);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(2)).getChildAt(0);
          b.setText("Processing");
-         b.setTag(Utilities.PROCESSING);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.PROCESSING);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(3)).getChildAt(0);
          b.setText("Inferences");
-         b.setTag(Utilities.INFERENCES);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.INFERENCES);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(1)).getChildAt(1);
          b.setText("Idioms");
-         b.setTag(Utilities.IDIOMS);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.IDIOMS);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(2)).getChildAt(1);
          b.setText("Syntax");
-         b.setTag(Utilities.SYNTAX);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.SYNTAX);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(3)).getChildAt(1);
          b.setText("Auditory Processing");
-         b.setTag(Utilities.AUDITORY_PROCESSING);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.AUDITORY_PROCESSING);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(1)).getChildAt(2);
          b.setText("Auditory Memory");
-         b.setTag(Utilities.AUDITORY_MEMORY);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.AUDITORY_MEMORY);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(2)).getChildAt(2);
          b.setText("Unknown");
-         b.setTag(Utilities.UNKNOWN);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.UNKNOWN);
          b.setOnClickListener(this);
 
          b= (Button)((TableRow)tblMainMenu.getChildAt(3)).getChildAt(2);
          b.setText("Unknown");
-         b.setTag(Utilities.UNKNOWN);
+         b.setTag(ScreeningContract.QuestionCategoriesEntry.UNKNOWN);
          b.setOnClickListener(this);
 
          b= (Button)v.findViewById(R.id.btnScreenings);
@@ -102,5 +120,17 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
 
     public void onClick(View v){
         mOnFragmentInteractionListener.onFragmentInteraction(mId, mScreeningId, v.getTag());
+    }
+
+    private boolean checkAnswer(Cursor c){
+        float rightAnswers=0;
+        while(c.moveToNext()){
+            if (c.getInt(1) == 1) {
+                rightAnswers++;
+            }
+        }
+        Log.i(TAG, "average = " + rightAnswers / c.getCount());
+        return rightAnswers/c.getCount() >= 0.8;
+
     }
 }

@@ -3,8 +3,14 @@ package com.neuroleap.speachandlanguage.Utility;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
 
 /**
  * Created by Karl on 3/22/2015.
@@ -12,6 +18,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
 public class DbCRUD {
 
     private static SQLiteDatabase mDB;
+    private static final String TAG = "## My Info ##";
 
     public static SQLiteDatabase getDatabase() {
         return mDB;
@@ -64,10 +71,23 @@ public class DbCRUD {
     public static Cursor getAnswer(long question_id, long screening_id){
         String sql = "SELECT "
                      + StudentAnswersEntry.ANSWER_TEXT + " , "
-                     + StudentAnswersEntry.CORRECT
+                     + StudentAnswersEntry.CORRECT + " , "
+                     + StudentAnswersEntry.CATEGORY_TYPE
                      + " FROM " + StudentAnswersEntry.TABLE_NAME
                      + " WHERE " + StudentAnswersEntry.QUESTION_ID + "=" + question_id
                      + " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;
+
+        return mDB.rawQuery(sql, null);
+    }
+
+    public static Cursor getAnswersForCategoryType(long screening_id, int categoryType){
+        String sql =  "SELECT "
+                + StudentAnswersEntry.ANSWER_TEXT + " , "
+                + StudentAnswersEntry.CORRECT + " , "
+                + StudentAnswersEntry.CATEGORY_TYPE
+                + " FROM " + StudentAnswersEntry.TABLE_NAME
+                + " WHERE " + StudentAnswersEntry.CATEGORY_TYPE + "=" + categoryType
+                + " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;
 
         return mDB.rawQuery(sql, null);
     }
@@ -84,6 +104,21 @@ public class DbCRUD {
         int questionId = c.getInt(0);
         c.close();
         return questionId;
+    }
+
+    public static int getFirstQuestionOfCategoryType(int categoryType){
+        String sql = "SELECT MIN ( _ID) FROM " + QuestionCategoriesEntry.TABLE_NAME + " WHERE "+ QuestionCategoriesEntry.CATEGORY_TYPE + " = " + categoryType;
+        Cursor c = mDB.rawQuery(sql , null);
+        int categoryId;
+        if (c.getCount() > 0){
+            c.moveToNext();
+            categoryId = c.getInt(0);
+        }else{
+            categoryId = 0;
+        }
+        Log.i(TAG, "category id= " + categoryId);
+        c.close();
+        return getFirstQuestion(categoryId);
     }
 
     public static Cursor getQuestionData(long questionId){
@@ -149,12 +184,13 @@ public class DbCRUD {
         mDB.insert(ScreeningsEntry.TABLE_NAME, null, cv);
     }
 
-    public static void enterAnswer(long question_id, long screening_id, String answer_text, boolean correct){
+    public static void enterAnswer(long question_id, long screening_id, String answer_text, boolean correct, int categoryType){
         ContentValues cv = new ContentValues();
         cv.put(StudentAnswersEntry.QUESTION_ID, question_id);
         cv.put(StudentAnswersEntry.SCREENING_ID, screening_id);
         cv.put(StudentAnswersEntry.ANSWER_TEXT, answer_text);
         cv.put(StudentAnswersEntry.CORRECT, correct);
+        cv.put(StudentAnswersEntry.CATEGORY_TYPE, categoryType);
 
         String sql = "SELECT _ID " +
                      " FROM " + StudentAnswersEntry.TABLE_NAME +

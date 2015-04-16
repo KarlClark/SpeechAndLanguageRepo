@@ -71,7 +71,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 QuestionCategoriesEntry.CATEGORY_NAME_SP + " TEXT, " +
                 QuestionCategoriesEntry.FRAGMENT_NAME + " TEXT NOT NULL, " +
                 QuestionCategoriesEntry.CUTOFF_AGE + " INTEGER NOT NULL, " +
-                QuestionCategoriesEntry.CATEGORY_TYPE +"INTEGER NOT NULL " +
+                QuestionCategoriesEntry.CATEGORY_TYPE +" INTEGER NOT NULL " +
                 " );";
 
         final String SQL_CREATE_QUESTIONS_TABLE = "CREATE TABLE " + QuestionsEntry.TABLE_NAME + " (" +
@@ -118,6 +118,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 StudentAnswersEntry.SCREENING_ID + " INTEGER NOT NULL, " +
                 StudentAnswersEntry.ANSWER_TEXT + " TEXT, " +
                 StudentAnswersEntry.CORRECT +" BOOLEAN, " +
+                StudentAnswersEntry.CATEGORY_TYPE +" INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + StudentAnswersEntry.QUESTION_ID +") REFERENCES " +
                 QuestionsEntry.TABLE_NAME + " (" + QuestionsEntry._ID + "), " +
                 " FOREIGN KEY (" + StudentAnswersEntry.SCREENING_ID + ") REFERENCES " +
@@ -159,6 +160,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                     if ( ! cvsLine.substring(0,1).equals("%")) {
 
                         String[] row = cvsLine.split(",");
+                        Log.i(TAG,"row = " + row );
                         cv.clear();
 
                         if ( ! row[0].equals("")) {  // First column has something in it so this must be question category row

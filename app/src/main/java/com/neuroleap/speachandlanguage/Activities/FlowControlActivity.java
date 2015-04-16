@@ -341,6 +341,14 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private void displayFirstQuestion() {
+        int questionId = DbCRUD.getFirstQuestionOfCategoryType(mCategoryRequest);
+        Log.i(TAG,"question id = " + questionId);
+        for (int i = 0; i < mViewPagerQuestions.size(); i++){
+            if (mViewPagerQuestions.get(i).getId() == questionId) {
+                mViewPager.setCurrentItem(i);
+                return;
+            }
+        }
 
     }
 
