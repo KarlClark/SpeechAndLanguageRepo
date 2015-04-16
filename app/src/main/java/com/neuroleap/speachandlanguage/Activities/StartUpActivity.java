@@ -37,7 +37,6 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private boolean mShowSettingOption = false;
     private boolean mShowNewOption = false;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
-    private static final int SPLASH_FRAGMENT_2_ID = 1001;
     private static final int SHOW_SCREENINGS_FRAGMENT_ID = 1002;
     private static final int STUDENT_INFO_FRAGMENT_ID = 1003;
     private static final int SCREENING_MAIN_MENU_FRAGMENT_ID = 1004;
@@ -97,9 +96,6 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     public void onFragmentInteraction(int id, Object ... args){
         switch (id){
             case SPLASH_FRAGMENT_1_ID:
-                displaySecondSplashScreen();
-                break;
-            case SPLASH_FRAGMENT_2_ID:
                 displayShowScreeningsFragment();
                 break;
             case STUDENT_INFO_FRAGMENT_ID:
@@ -124,12 +120,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mFragmentManager.beginTransaction().add(frContainerId, mSplashFragment_1, "TAG").commit();
     }
 
-    private void displaySecondSplashScreen(){
-        mSplashFragment_2= new SplashFragment_2();
-        mSplashFragment_2.setId(SPLASH_FRAGMENT_2_ID);
-        mFragmentManager.beginTransaction().replace(frContainerId, mSplashFragment_2, "TAG").commit();
-        mSplashFragment_1 = null;
-    }
+
 
     private void displayShowScreeningsFragment(){
         mShowNewOption = true;
@@ -140,7 +131,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mShowScreeningsFragment = new ShowScreeningsFragment();
         mShowScreeningsFragment.setId(SHOW_SCREENINGS_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(frContainerId,mShowScreeningsFragment, "TAG").commit();
-        mSplashFragment_2 = null;
+        mSplashFragment_1 = null;
         mStudentInfoFragment = null;
         mScreeningMainMenuFragment = null;
     }
