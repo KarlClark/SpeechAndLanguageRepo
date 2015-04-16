@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
+import com.neuroleap.speachandlanguage.Fragments.ScreeningMainMenuFragment;
 import com.neuroleap.speachandlanguage.Fragments.ShowScreeningsFragment;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
@@ -32,12 +33,14 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private SplashFragment_2 mSplashFragment_2;
     private ShowScreeningsFragment mShowScreeningsFragment;
     private StudentInfoFragment mStudentInfoFragment;
+    private ScreeningMainMenuFragment mScreeningMainMenuFragment;
     private boolean mShowSettingOption = false;
     private boolean mShowNewOption = false;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
     private static final int SPLASH_FRAGMENT_2_ID = 1001;
     private static final int SHOW_SCREENINGS_FRAGMENT_ID = 1002;
     private static final int STUDENT_INFO_FRAGMENT_ID = 1003;
+    private static final int SCREENING_MAIN_MENU_FRAGMENT_ID = 1004;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -102,6 +105,16 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
             case STUDENT_INFO_FRAGMENT_ID:
                 displayShowScreeningsFragment();
                 break;
+            case SHOW_SCREENINGS_FRAGMENT_ID:
+                displayScreeningMainMenuFragment((int)args[0], (String)args[1] + " " +  (String)args[2]);
+                break;
+            case SCREENING_MAIN_MENU_FRAGMENT_ID:
+                if((int)args[1] == Utilities.SCREENINGS){
+                    displayShowScreeningsFragment();
+                }else {
+                    Log.i(TAG, "screening id = " + (int) args[0] + "  category= " + (int) args[1]);
+                    startFlowControlActivity((int)args[0], (int)args[1]);
+                }
         }
     }
 
@@ -129,6 +142,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mFragmentManager.beginTransaction().replace(frContainerId,mShowScreeningsFragment, "TAG").commit();
         mSplashFragment_2 = null;
         mStudentInfoFragment = null;
+        mScreeningMainMenuFragment = null;
     }
 
     private void displayStudentInfoFragment() {
@@ -140,6 +154,24 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mStudentInfoFragment.setId(STUDENT_INFO_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(frContainerId,mStudentInfoFragment, "TAG").commit();
         mShowScreeningsFragment = null;
+    }
+
+    private void displayScreeningMainMenuFragment(int screeningId, String studentName) {
+        mShowNewOption = false;
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle(getString(R.string.main_menu));
+        invalidateOptionsMenu();
+        mScreeningMainMenuFragment = ScreeningMainMenuFragment.newInstance(SCREENING_MAIN_MENU_FRAGMENT_ID, screeningId, studentName);
+        mScreeningMainMenuFragment.setId(SCREENING_MAIN_MENU_FRAGMENT_ID);
+        mFragmentManager.beginTransaction().replace(frContainerId,mScreeningMainMenuFragment, "TAG").commit();
+        mShowScreeningsFragment = null;
+    }
+
+    private void startFlowControlActivity(int screeningId, int categoryRequest){
+        Intent i = new Intent(this, FlowControlActivity.class);
+        i.putExtra(FlowControlActivity.SCREENING_ID_KEY, screeningId);
+        i.putExtra(FlowControlActivity.CATEGORY_REQUEST_KEY, categoryRequest);
+        startActivity(i);
     }
 
     private void checkLanguagePreference() {

@@ -49,12 +49,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private QuestionCategory mPreviousHighLightedCategory;
     private Question mCurrentHighLightedQuestion, mPreviousHighLightedQuestiion;
     private int mScreeningId;
-    private int mAge;
-    private int mCompletionState;
+    private int mAge=20;
+    private int mCompletionState= Utilities.SCREENING_NOT_STARTED;
+    private int mCategoryRequest;
     private boolean mKeyboardUp = false;
     public static final String SCREENING_ID_KEY = "screening_id_key";
-    public static final String SCREENING_AGE_KEY = "screening_age_key";
-    public static final String SCREENING_COMPLETION_STATE_KEY ="screening_completion_state_key";
+    public static final String CATEGORY_REQUEST_KEY = "category_request_key";
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -67,8 +67,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         DbCRUD.setDatabase(dbHelper.getWritableDatabase());
         mScreeningId = getIntent().getIntExtra(SCREENING_ID_KEY, 0);
         Log.i(TAG, "Screening id= " + mScreeningId);
-        mAge = getIntent().getIntExtra(SCREENING_AGE_KEY, 100);
-        mCompletionState = getIntent().getIntExtra(SCREENING_COMPLETION_STATE_KEY, Utilities.SCREENING_NOT_STARTED);
+        mCategoryRequest= getIntent().getIntExtra(CATEGORY_REQUEST_KEY, 0);
         //Utilities.setTotalQuestions(DbCRUD.getQuestionCount());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         loadLists();
@@ -77,7 +76,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mViewPager.setAdapter(mQuestionFragmentPagerAdapter);
         setUpDrawer();
         setUpRootViewListener();
-        displayStartingQuestion();
+        displayFirstQuestion();
         //Log.i(TAG,"end onCreate");
     }
 
@@ -341,7 +340,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         return true;
     }
 
-    private void displayStartingQuestion(){
+    private void displayFirstQuestion() {
 
     }
+
+
 }

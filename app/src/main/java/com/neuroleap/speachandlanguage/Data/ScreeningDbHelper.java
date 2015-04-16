@@ -54,6 +54,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 ScreeningsEntry.STUDENT_ID  + " INTEGER NOT NULL, " +
                 ScreeningsEntry.TEST_DATE + " LONG NOT NULL, " +
                 ScreeningsEntry.AGE +" INTEGER NOT NULL, " +
+                ScreeningsEntry.MENTAL_AGE +" INTEGER, " +
                 ScreeningsEntry.TEACHER + " TEXT, " +
                 ScreeningsEntry.GRADE + " INTEGER, " +
                 ScreeningsEntry.ROOM + " TEXT, " +
@@ -69,7 +70,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 QuestionCategoriesEntry.CATEGORY_NAME_EG + " TEXT NOT NULL, " +
                 QuestionCategoriesEntry.CATEGORY_NAME_SP + " TEXT, " +
                 QuestionCategoriesEntry.FRAGMENT_NAME + " TEXT NOT NULL, " +
-                QuestionCategoriesEntry.CUTOFF_AGE + " INTEGER NOT NULL " +
+                QuestionCategoriesEntry.CUTOFF_AGE + " INTEGER NOT NULL, " +
+                QuestionCategoriesEntry.CATEGORY_TYPE +"INTEGER NOT NULL " +
                 " );";
 
         final String SQL_CREATE_QUESTIONS_TABLE = "CREATE TABLE " + QuestionsEntry.TABLE_NAME + " (" +
@@ -166,6 +168,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                             }
                             cv.put(QuestionCategoriesEntry.FRAGMENT_NAME , row[2]);
                             cv.put(QuestionCategoriesEntry.CUTOFF_AGE, row[3]);
+                            cv.put(QuestionCategoriesEntry.CATEGORY_TYPE, row[4]);
                             categoryId = db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
                             continue whileLoop;
                         }

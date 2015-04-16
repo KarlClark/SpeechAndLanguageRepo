@@ -28,6 +28,7 @@ public class ScreeningContract {
         public static final String STUDENT_ID = "student_id";
         public static final String TEST_DATE = "test_date";
         public static final String AGE = "age";
+        public static final String MENTAL_AGE = "mental_age";
         public static final String GRADE = "grade";
         public static final String TEACHER ="teacher";
         public static final String ROOM = "room";
@@ -48,12 +49,22 @@ public class ScreeningContract {
 
     public static final class QuestionCategoriesEntry implements BaseColumns{
 
+        public static final int SEMANTICS = 0;
+        public static final int PROCESSION = 1;
+        public static final int INFERENCES = 2;
+        public static final int IDIOMS = 3;
+        public static final int  SYNTAX = 4;
+        public static final int AUDITORY_PROCESSING = 5;
+        public static final int AUDITORY_MEMORY = 6;
+
+
         public static final String TABLE_NAME = "question_categories";
 
         public static final String CATEGORY_NAME_EG = "category_name_eg";
         public static final String CATEGORY_NAME_SP = "category_name_sp";
         public static final String FRAGMENT_NAME ="fragment_name";
         public static final String CUTOFF_AGE = "cutoff_age";
+        public static final String CATEGORY_TYPE = "category_type";
     }
 
     public static final class QuestionsEntry implements BaseColumns {

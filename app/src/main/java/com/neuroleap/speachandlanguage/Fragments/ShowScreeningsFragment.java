@@ -1,6 +1,5 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.neuroleap.speachandlanguage.Activities.FlowControlActivity;
 import com.neuroleap.speachandlanguage.Adapters.ScreeningsArrayAdapter;
 import com.neuroleap.speachandlanguage.Models.Screening;
 import com.neuroleap.speachandlanguage.R;
@@ -41,11 +39,7 @@ public class ShowScreeningsFragment extends BaseFragment {
         mLvScreenings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(mContext,FlowControlActivity.class);
-                i.putExtra(FlowControlActivity.SCREENING_ID_KEY, (int)id);
-                i.putExtra(FlowControlActivity.SCREENING_AGE_KEY, mScreenings.get(position).getAge());
-                i.putExtra(FlowControlActivity.SCREENING_COMPLETION_STATE_KEY, mScreenings.get(position).getCompletionState());
-                startActivity(i);
+                mOnFragmentInteractionListener.onFragmentInteraction(mId, (int)id, mScreenings.get(position).getFirstName(),mScreenings.get(position).getLastName());
             }
         });
         return v;

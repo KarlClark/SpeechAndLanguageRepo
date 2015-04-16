@@ -17,6 +17,15 @@
         parent = "@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
         <item name="android:textSize">18sp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name = "MainMenuButton">
+        <item name ="android:layout_width">0dp</item>
+        <item name = "android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name = "android:layout_margin">10dp</item>
+        <item name="android:background">@drawable/button_white_shadowed</item>
     </style>
 
 
