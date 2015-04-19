@@ -93,6 +93,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                 int ageYears = Integer.parseInt(mEtAgeYears.getText().toString());
                 int ageMonths = Integer.parseInt(mEtAgeMonths.getText().toString());
                 int totalMonths = (ageYears *12) + ageMonths;
+                Log.i(TAG,"total months=" + totalMonths);
                 int grade = Integer.parseInt(mEtGrade.getText().toString());
                 mStudentId= DbCRUD.insertStudent(mEtFirstName.getText().toString(),
                                                  mEtLastName.getText().toString(),

@@ -22,7 +22,7 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
  */
 public class ScreeningMainMenuFragment extends BaseFragment implements View.OnClickListener{
 
-    TableLayout tblMainMenu;
+    TableLayout mTblMainMenu;
     int mScreeningId;
     private static final String ID_TAG = "id_tag";
     private static final String SCREENING_ID_TAG = "screening_id_tag";
@@ -46,7 +46,11 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
         mScreeningId = getArguments().getInt(SCREENING_ID_TAG);
         TextView tvStudentName = (TextView)v.findViewById(R.id.tvStudentName);
         tvStudentName.setText(getArguments().getString(STUDENT_NAME_TAG));
-        setupButtons(v);
+        mTblMainMenu = (TableLayout)v.findViewById(R.id.tblMainMenu);
+        Button b= (Button)v.findViewById(R.id.btnScreenings);
+        b.setTag(Utilities.SCREENINGS);
+        b.setOnClickListener(this);
+        //setupButtons();
         return v;
     }
 
@@ -54,13 +58,14 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
     public void onResume() {
         super.onResume();
         Log.i(TAG, "main menu onresume called");
+        setupButtons();
     }
 
-    private void setupButtons(View v){
+    private void setupButtons(){
          Button b;
-         tblMainMenu = (TableLayout)v.findViewById(R.id.tblMainMenu);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(1)).getChildAt(0);
+
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(1)).getChildAt(0);
          b.setText("Semantics");
          Cursor c = DbCRUD.getAnswersForCategoryType(mScreeningId, ScreeningContract.QuestionCategoriesEntry.SEMANTICS);
          if (c.getCount() > 0) {
@@ -73,49 +78,47 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
          b.setTag(ScreeningContract.QuestionCategoriesEntry.SEMANTICS);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(2)).getChildAt(0);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(2)).getChildAt(0);
          b.setText("Processing");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.PROCESSING);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(3)).getChildAt(0);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(3)).getChildAt(0);
          b.setText("Inferences");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.INFERENCES);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(1)).getChildAt(1);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(1)).getChildAt(1);
          b.setText("Idioms");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.IDIOMS);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(2)).getChildAt(1);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(2)).getChildAt(1);
          b.setText("Syntax");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.SYNTAX);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(3)).getChildAt(1);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(3)).getChildAt(1);
          b.setText("Auditory Processing");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.AUDITORY_PROCESSING);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(1)).getChildAt(2);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(1)).getChildAt(2);
          b.setText("Auditory Memory");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.AUDITORY_MEMORY);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(2)).getChildAt(2);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(2)).getChildAt(2);
          b.setText("Unknown");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.UNKNOWN);
          b.setOnClickListener(this);
 
-         b= (Button)((TableRow)tblMainMenu.getChildAt(3)).getChildAt(2);
+         b= (Button)((TableRow)mTblMainMenu.getChildAt(3)).getChildAt(2);
          b.setText("Unknown");
          b.setTag(ScreeningContract.QuestionCategoriesEntry.UNKNOWN);
          b.setOnClickListener(this);
 
-         b= (Button)v.findViewById(R.id.btnScreenings);
-         b.setTag(Utilities.SCREENINGS);
-         b.setOnClickListener(this);
+
      }
 
     public void onClick(View v){

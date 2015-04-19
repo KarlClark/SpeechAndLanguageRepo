@@ -2,6 +2,7 @@ package com.neuroleap.speachandlanguage.Fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +44,7 @@ public class QuestionsBaseFragment extends BaseFragment {
         Bundle args = new Bundle();
         args.putInt(QUESTION_ID_KEY, questionId);
         args.putInt (SCREENING_ID_KEY , screeningId);
+        Log.i(TAG, "QuestionBaseFragment screeningid= " + screeningId);
         args.putInt(VIEW_PAGER_POSITION_KEY, pageViewerPosition);
         args.putInt(GROUP_POSITION_KEY, groupPosition);
         return args;

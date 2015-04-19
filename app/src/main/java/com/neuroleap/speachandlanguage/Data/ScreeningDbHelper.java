@@ -150,6 +150,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         ContentValues cv= new ContentValues();
         long categoryId=0;
+        long categoryType=0;
         long quetionId=0;
         String cvsLine;
         int i=0;
@@ -169,8 +170,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                                 cv.put(QuestionCategoriesEntry.CATEGORY_NAME_SP , row[1]);
                             }
                             cv.put(QuestionCategoriesEntry.FRAGMENT_NAME , row[2]);
-                            cv.put(QuestionCategoriesEntry.CUTOFF_AGE, row[3]);
-                            cv.put(QuestionCategoriesEntry.CATEGORY_TYPE, row[4]);
+                            cv.put(QuestionCategoriesEntry.CUTOFF_AGE, Long.parseLong(row[3]));
+                            cv.put(QuestionCategoriesEntry.CATEGORY_TYPE, Long.parseLong(row[4]));
                             categoryId = db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
                             continue whileLoop;
                         }

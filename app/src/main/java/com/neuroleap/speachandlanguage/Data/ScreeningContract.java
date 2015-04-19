@@ -72,7 +72,7 @@ public class ScreeningContract {
 
         public static final String TABLE_NAME = "questions";
 
-        public static final String CATEGORY_ID = "category";
+        public static final String CATEGORY_ID = "category_id";
         public static final String TEXT_ENGLISH = "text_english";
         public static final String TEXT_SPANISH = "test_spanish";
         public static final String AUDIO_ENGLISH = "audio_english";

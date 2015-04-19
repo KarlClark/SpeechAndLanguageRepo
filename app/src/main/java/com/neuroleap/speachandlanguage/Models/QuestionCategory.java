@@ -7,6 +7,7 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
  */
 public class QuestionCategory {
     private int mId;
+    private int mCategoryType;
     int mColor = Utilities.GROUP_DEFAULT_COLOR;
     private String mText;
     private boolean mDone = false;
@@ -31,6 +32,10 @@ public class QuestionCategory {
         }
     }
 
+    public int  getCategoryType(){
+        return mCategoryType;
+    }
+
     public int getId() {
         return mId;
     }
@@ -39,14 +44,15 @@ public class QuestionCategory {
         return mText;
     }
 
-    private int getPosition() {
+    public int getPosition() {
         return mPosition;
     }
 
-    public QuestionCategory(int id, String text, int color, int position){
+    public QuestionCategory(int id, int categoryType, String text, int color, int position){
         mId = id;
         mText = text;
         mColor = color;
         mPosition = position;
+        mCategoryType = categoryType;
     }
 }

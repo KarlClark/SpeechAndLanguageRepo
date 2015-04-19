@@ -32,10 +32,10 @@ public class DbCRUD {
         String[] categoryColumns;
         if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH) {
             categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG, QuestionCategoriesEntry.CUTOFF_AGE,
-                                           QuestionCategoriesEntry.FRAGMENT_NAME};
+                                           QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.CATEGORY_TYPE};
         }else{
             categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP, QuestionCategoriesEntry.CUTOFF_AGE,
-                                           QuestionCategoriesEntry.FRAGMENT_NAME};
+                                           QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.CATEGORY_TYPE};
         }
 
         return mDB.query(QuestionCategoriesEntry.TABLE_NAME, categoryColumns, null, null, null, null, null);
@@ -97,6 +97,24 @@ public class DbCRUD {
         return mDB.query(StudentAnswersEntry.TABLE_NAME, columns, StudentAnswersEntry.SCREENING_ID + "=" + screeningId, null, null, null, null);
     }
 
+    public static int getAge(int screeningId) {
+        String[] columns = new String[] {ScreeningsEntry.AGE};
+        Cursor c = mDB.query(ScreeningsEntry.TABLE_NAME, columns, "_ID = " + screeningId, null, null, null, null);
+        c.moveToNext();
+        int age = c.getInt(0);
+        c.close();
+        return age;
+    }
+
+    public static int getScreeningCompletionState(int screeningId){
+        String[] columns = new String[] {ScreeningsEntry.COMPLETION_STATE};
+        Cursor c = mDB.query(ScreeningsEntry.TABLE_NAME, columns, "_ID = " + screeningId, null, null, null, null);
+        c.moveToNext();
+        int completionState = c.getInt(0);
+        c.close();
+        return completionState;
+    }
+
     public static int getFirstQuestion(long questionCategoryId){
         String sql = "SELECT MIN ( _ID)  FROM " + QuestionsEntry.TABLE_NAME +  " WHERE " + QuestionsEntry.CATEGORY_ID + " = " + questionCategoryId;
         Cursor  c = mDB.rawQuery(sql, null);
@@ -104,6 +122,23 @@ public class DbCRUD {
         int questionId = c.getInt(0);
         c.close();
         return questionId;
+    }
+
+    public static int getLastAnsweredQuestionId(long screeningId, int categoryType){
+        String sql = "SELECT MAX (" + StudentAnswersEntry.QUESTION_ID + ") FROM " + StudentAnswersEntry.TABLE_NAME +
+                     " WHERE " + StudentAnswersEntry.SCREENING_ID + " = " +  screeningId +
+                     " AND " + StudentAnswersEntry.CATEGORY_TYPE + " = " + categoryType;
+        Cursor c = mDB.rawQuery(sql, null);
+        int questionId;
+        if (c.getCount() > 0){
+            c.moveToNext();
+            questionId = c.getInt(0);
+            c.close();
+            return questionId;
+        }else{
+            c.close();
+            return -1;
+        }
     }
 
     public static int getFirstQuestionOfCategoryType(int categoryType){
@@ -209,10 +244,13 @@ public class DbCRUD {
     }
 
     public static void updateScreeningCompletionState(long screening_id, int completion_state){
+        Log.i(TAG, "updateScreeningCompletionState, screening id= " + screening_id);
         ContentValues cv = new ContentValues();
         cv.put(ScreeningsEntry.COMPLETION_STATE, completion_state);
 
         mDB.update(ScreeningsEntry.TABLE_NAME, cv, "_ID=" + screening_id, null);
+
+
     }
 }
 
