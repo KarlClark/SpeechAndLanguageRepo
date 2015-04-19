@@ -16,6 +16,11 @@ public class Question {
     private int mViewPagerPosition;
     private int mChildPosition;
     private int mGroupPosition;
+    private boolean mCorrect;
+
+    public boolean isCorrect() {
+        return mCorrect;
+    }
 
     public int getColor() {
         return mColor;
@@ -69,7 +74,7 @@ public class Question {
     }
 
     public Question(int id, int categoryId, int categoryType,  String text, int color, String fragmentName,
-                    int viewPagerPosition, int childPosition, int groupPosition, boolean done){
+                    int viewPagerPosition, int childPosition, int groupPosition, boolean done, boolean correct){
         mId = id;
         mCategoryId = categoryId;
         mText = text;
@@ -82,6 +87,7 @@ public class Question {
         if (done) {
             setColor(Utilities.CHILD_COMPLETED_COLOR);
         }
+        mCorrect = correct;
         mCategoryType = categoryType;
     }
 }

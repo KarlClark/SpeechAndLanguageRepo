@@ -93,7 +93,7 @@ public class DbCRUD {
     }
 
     public static Cursor getAllCompletedQuestionsIds(long screeningId){
-        String [] columns = new String[] {StudentAnswersEntry.QUESTION_ID};
+        String [] columns = new String[] {StudentAnswersEntry.QUESTION_ID, StudentAnswersEntry.CORRECT};
         return mDB.query(StudentAnswersEntry.TABLE_NAME, columns, StudentAnswersEntry.SCREENING_ID + "=" + screeningId, null, null, null, null);
     }
 
