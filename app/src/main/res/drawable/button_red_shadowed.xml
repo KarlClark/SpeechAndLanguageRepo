@@ -10,6 +10,7 @@
     <item>
         <inset
             android:drawable="@drawable/button_red"
+            android:insetRight="5dp"
             android:insetBottom="5dp"/>
     </item>
 

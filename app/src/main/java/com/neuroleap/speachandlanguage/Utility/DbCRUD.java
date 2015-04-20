@@ -189,6 +189,22 @@ public class DbCRUD {
         return count;
     }
 
+    public static int getNumberOfQuestionsForCategoryType(int categoryType){
+        int total = 0;
+        String sql;
+        String[] columns = new String[] {"_ID"};
+        Cursor categoryIds = mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, QuestionCategoriesEntry.CATEGORY_TYPE + "=" + categoryType, null, null, null,null);
+        while (categoryIds.moveToNext()){
+            sql = "SELECT COUNT(*) FROM " + QuestionsEntry.TABLE_NAME + " WHERE " + QuestionsEntry.CATEGORY_ID + " = " + categoryIds.getInt(0);
+            Cursor count = mDB.rawQuery(sql , null);
+            count.moveToNext();
+            total += count.getInt(0);
+            count.close();
+        }
+        categoryIds.close();
+        return total;
+    }
+
     public static long insertStudent(String firstName, String lastName, String date_of_birth, String hearingScreenDate,
                                      Boolean hearingPass, String visionScreenDate, boolean visionPass){
 

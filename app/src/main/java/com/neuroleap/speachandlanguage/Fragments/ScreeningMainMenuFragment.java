@@ -69,7 +69,7 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
          b.setText("Semantics");
          Cursor c = DbCRUD.getAnswersForCategoryType(mScreeningId, ScreeningContract.QuestionCategoriesEntry.SEMANTICS);
          if (c.getCount() > 0) {
-             if (checkAnswer(c)) {
+             if (checkAnswer(c, ScreeningContract.QuestionCategoriesEntry.SEMANTICS)) {
                  b.setBackgroundResource(R.drawable.button_green_shadowed);
              } else {
                  b.setBackgroundResource(R.drawable.button_red_shadowed);
@@ -125,15 +125,16 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
         mOnFragmentInteractionListener.onFragmentInteraction(mId, mScreeningId, v.getTag());
     }
 
-    private boolean checkAnswer(Cursor c){
+    private boolean checkAnswer(Cursor c, int categoryType){
         float rightAnswers=0;
         while(c.moveToNext()){
             if (c.getInt(1) == 1) {
                 rightAnswers++;
             }
         }
-        Log.i(TAG, "average = " + rightAnswers / c.getCount());
-        return rightAnswers/c.getCount() >= 0.8;
+        int totalQuestions = DbCRUD.getNumberOfQuestionsForCategoryType(categoryType);
+        Log.i(TAG, "totalQuestions= " + totalQuestions +"  %%%%%%%%%%%%%%%%%%%");
+        return rightAnswers/totalQuestions >= 0.8;
 
     }
 }
