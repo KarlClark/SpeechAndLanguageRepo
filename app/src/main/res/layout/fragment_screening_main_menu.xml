@@ -29,12 +29,28 @@
         android:layout_weight="1"
         layout="@layout/button_row" />
 
-    <Button
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/screenings_title"
-        style = "@style/TextColor"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/btnScreenings"
-        />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/screenings_title"
+            style = "@style/TextColor"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/btnScreenings"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/results"
+            android:id="@+id/btnResults"
+            style = "@style/TextColor"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="1"/>
+    </LinearLayout>
 </TableLayout>

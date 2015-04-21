@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.neuroleap.speachandlanguage.Listeners.OnScreeningsListButtonsListener;
 import com.neuroleap.speachandlanguage.Models.Screening;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
@@ -19,10 +21,12 @@ import java.util.ArrayList;
 public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
     Context mContext;
     ArrayList<Screening> mScreenings;
+    OnScreeningsListButtonsListener mOnScreeningsListButtonsListener;
 
     public ScreeningsArrayAdapter(Context context, ArrayList<Screening> screenings) {
         super(context, R.layout.list_screenings_item, screenings);
         mContext = context;
+        mOnScreeningsListButtonsListener = (OnScreeningsListButtonsListener)context;
         mScreenings = screenings;
     }
 
@@ -41,6 +45,10 @@ public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
         TextView tvDate = (TextView)convertView.findViewById(R.id.tvDate);
         TextView tvTeacher = (TextView)convertView.findViewById(R.id.tvTeacher);
         TextView tvScreeningState = (TextView)convertView.findViewById(R.id.tvScreeningState);
+        Button btnResults =(Button)convertView.findViewById(R.id.btnResults);
+        Button btnOverview =(Button)convertView.findViewById(R.id.btnOverview);
+        Button btnQuestions = (Button)convertView.findViewById(R.id.btnQuestions);
+
         Screening screening = mScreenings.get(position);
         tvName.setText(screening.getFirstName() + " " + mScreenings.get(position).getLastName());
         tvDate.setText(screening.getDisplayDate());
@@ -58,6 +66,31 @@ public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
             default:
                 tvScreeningState.setText("");
         }
+
+        btnResults.setTag(screening);
+        btnResults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             mOnScreeningsListButtonsListener.onScreeningResultsButtonClicked((Screening)v.getTag());
+            }
+        });
+
+        btnQuestions.setTag(screening);
+        btnQuestions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnScreeningsListButtonsListener.onScreeningQuestionsButtonClicked((Screening)v.getTag());
+            }
+        });
+
+        btnOverview.setTag(screening);
+        btnOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnScreeningsListButtonsListener.onScreeningOverviewButtonClicked((Screening)v.getTag());
+            }
+        });
+
         return convertView;
     }
 }

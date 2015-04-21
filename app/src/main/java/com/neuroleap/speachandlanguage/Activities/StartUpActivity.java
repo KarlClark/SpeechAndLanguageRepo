@@ -18,13 +18,15 @@ import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
 import com.neuroleap.speachandlanguage.Fragments.StudentInfoFragment;
 import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
+import com.neuroleap.speachandlanguage.Listeners.OnScreeningsListButtonsListener;
+import com.neuroleap.speachandlanguage.Models.Screening;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 import java.util.Locale;
 
-public class StartUpActivity extends ActionBarActivity implements OnFragmentInteractionListener{
+public class StartUpActivity extends ActionBarActivity implements OnFragmentInteractionListener, OnScreeningsListButtonsListener{
 
     private int frContainerId;
     private SharedPreferences mPrefs;
@@ -101,9 +103,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
             case STUDENT_INFO_FRAGMENT_ID:
                 displayShowScreeningsFragment();
                 break;
-            case SHOW_SCREENINGS_FRAGMENT_ID:
+            /*case SHOW_SCREENINGS_FRAGMENT_ID:
                 displayScreeningMainMenuFragment((int)args[0], (String)args[1] + " " +  (String)args[2]);
-                break;
+                break;*/
             case SCREENING_MAIN_MENU_FRAGMENT_ID:
                 if((int)args[1] == Utilities.SCREENINGS){
                     displayShowScreeningsFragment();
@@ -189,5 +191,23 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         if (testMode != -1){
             Utilities.setTestMode(testMode);
         }
+    }
+
+
+    @Override
+    public void onScreeningResultsButtonClicked(Screening screening) {
+        Log.i(TAG, "onScreeningResultsButtonClicked called. Screening id = " + screening.getId());
+    }
+
+    @Override
+    public void onScreeningOverviewButtonClicked(Screening screening) {
+        Log.i(TAG, "onScreeningOverviewsButtonClicked called. Screening id = " + screening.getId());
+        displayScreeningMainMenuFragment(screening.getId(), screening.getFirstName() + " " +  screening.getLastName());
+    }
+
+    @Override
+    public void onScreeningQuestionsButtonClicked(Screening screening) {
+        Log.i(TAG, "onScreeningQuestionsButtonClicked called. Screening id = " + screening.getId());
+        startFlowControlActivity(screening.getId(), -1);
     }
 }

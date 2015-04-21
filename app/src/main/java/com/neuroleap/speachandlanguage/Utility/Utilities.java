@@ -40,6 +40,7 @@ public class Utilities {
     public static final int CHILD_COMPLETED_COLOR = R.color.light_blue;
     public static final int CHILD_HIGHLIGHT_COLOR = R.color.yellow;
     public static final int SCREENINGS = 20;
+    public static final int RESULTS = 21;
 
    /* public static int getTotalQuestions() {
         return mTotalQuestions;

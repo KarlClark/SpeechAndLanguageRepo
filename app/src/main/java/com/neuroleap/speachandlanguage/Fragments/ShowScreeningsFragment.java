@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,12 +35,12 @@ public class ShowScreeningsFragment extends BaseFragment {
         fillList();
         mScreeningsArrayAdapter = new ScreeningsArrayAdapter(mContext, mScreenings);
         mLvScreenings.setAdapter(mScreeningsArrayAdapter);
-        mLvScreenings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*mLvScreenings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mOnFragmentInteractionListener.onFragmentInteraction(mId, (int)id, mScreenings.get(position).getFirstName(),mScreenings.get(position).getLastName());
             }
-        });
+        });*/
         return v;
     }
 

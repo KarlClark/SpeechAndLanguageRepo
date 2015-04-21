@@ -27,6 +27,14 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
     private static final String ID_TAG = "id_tag";
     private static final String SCREENING_ID_TAG = "screening_id_tag";
     private static final String STUDENT_NAME_TAG = "student_name_tag";
+    private int[] mCategoryTypes = new int[] {ScreeningContract.QuestionCategoriesEntry.SEMANTICS,
+                                              ScreeningContract.QuestionCategoriesEntry.PROCESSING,
+                                              ScreeningContract.QuestionCategoriesEntry.INFERENCES,
+                                              ScreeningContract.QuestionCategoriesEntry.IDIOMS,
+                                              ScreeningContract.QuestionCategoriesEntry.SYNTAX,
+                                              ScreeningContract.QuestionCategoriesEntry.AUDITORY_PROCESSING,
+                                              ScreeningContract.QuestionCategoriesEntry.AUDITORY_MEMORY,
+                                              ScreeningContract.QuestionCategoriesEntry.UNKNOWN};
     private static final String TAG = "## My Info ##";
 
     public static ScreeningMainMenuFragment newInstance(int id, int screeningId, String studentName){
@@ -50,6 +58,10 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
         Button b= (Button)v.findViewById(R.id.btnScreenings);
         b.setTag(Utilities.SCREENINGS);
         b.setOnClickListener(this);
+
+        b = (Button)v.findViewById(R.id.btnResults);
+        b.setTag(Utilities.RESULTS);
+        b.setOnClickListener(this);
         //setupButtons();
         return v;
     }
@@ -62,63 +74,59 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
     }
 
     private void setupButtons(){
-         Button b;
+        Button b;
 
 
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(1)).getChildAt(0);
-         b.setText("Semantics");
-         Cursor c = DbCRUD.getAnswersForCategoryType(mScreeningId, ScreeningContract.QuestionCategoriesEntry.SEMANTICS);
-         if (c.getCount() > 0) {
-             if (checkAnswer(c, ScreeningContract.QuestionCategoriesEntry.SEMANTICS)) {
-                 b.setBackgroundResource(R.drawable.button_green_shadowed);
-             } else {
-                 b.setBackgroundResource(R.drawable.button_red_shadowed);
-             }
-         }
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.SEMANTICS);
-         b.setOnClickListener(this);
 
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(2)).getChildAt(0);
-         b.setText("Processing");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.PROCESSING);
-         b.setOnClickListener(this);
-
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(3)).getChildAt(0);
-         b.setText("Inferences");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.INFERENCES);
-         b.setOnClickListener(this);
-
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(1)).getChildAt(1);
-         b.setText("Idioms");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.IDIOMS);
-         b.setOnClickListener(this);
-
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(2)).getChildAt(1);
-         b.setText("Syntax");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.SYNTAX);
-         b.setOnClickListener(this);
-
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(3)).getChildAt(1);
-         b.setText("Auditory Processing");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.AUDITORY_PROCESSING);
-         b.setOnClickListener(this);
-
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(1)).getChildAt(2);
-         b.setText("Auditory Memory");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.AUDITORY_MEMORY);
-         b.setOnClickListener(this);
-
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(2)).getChildAt(2);
-         b.setText("Unknown");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.UNKNOWN);
-         b.setOnClickListener(this);
-
-         b= (Button)((TableRow)mTblMainMenu.getChildAt(3)).getChildAt(2);
-         b.setText("Unknown");
-         b.setTag(ScreeningContract.QuestionCategoriesEntry.UNKNOWN);
-         b.setOnClickListener(this);
-
-
+        int buttonCnt=0;
+        int index;
+        for (int row = 1; row <=3; row++){
+            for (int column = 0; column <=2; column++){
+                b= (Button)((TableRow)mTblMainMenu.getChildAt(row)).getChildAt(column);
+                index = Math.min(buttonCnt, mCategoryTypes.length-1);
+                Cursor c = DbCRUD.getAnswersForCategoryType(mScreeningId , mCategoryTypes[index]);
+                if (c.getCount() > 0) {
+                    if (checkAnswer(c,mCategoryTypes[index])){
+                        b.setBackgroundResource(R.drawable.button_green_shadowed);
+                    } else {
+                        b.setBackgroundResource(R.drawable.button_red_shadowed);
+                    }
+                }
+                c.close();
+                b.setTag(mCategoryTypes[index]);
+                b.setOnClickListener(this);
+                switch (buttonCnt) {
+                    case 0:
+                        b.setText("Semantics");
+                        break;
+                    case 1:
+                        b.setText("Processing");
+                        break;
+                    case 2:
+                        b.setText("Inferences");
+                        break;
+                    case 3:
+                        b.setText("Idioms");
+                        break;
+                    case 4:
+                        b.setText("Syntax");
+                        break;
+                    case 5:
+                        b.setText("Auditory Processing");
+                        break;
+                    case 6:
+                        b.setText("Auditory Memory");
+                        break;
+                    case 7:
+                        b.setText("Unknown");
+                        break;
+                    case 8:
+                        b.setText("Unknown");
+                        break;
+                }
+                buttonCnt++;
+            }
+        }
      }
 
     public void onClick(View v){

@@ -40,6 +40,9 @@
     <string name="cancel">Cancel</string>
     <string name="no_screenings">No screenings.  Press  NEW  to create a new screening.</string>
     <string name="main_menu">Main Menu</string>
+    <string name="overview">Overview</string>
+    <string name="questions">Questions</string>
+    <string name="results">Results</string>
 
     <string-array name="languages">
         <item>English/Ingles</item>
