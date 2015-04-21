@@ -20,7 +20,7 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
 /**
  * Created by Karl on 4/15/2015.
  */
-public class ScreeningMainMenuFragment extends BaseFragment implements View.OnClickListener{
+public class ScreeningOverviewFragment extends BaseFragment implements View.OnClickListener{
 
     TableLayout mTblMainMenu;
     int mScreeningId;
@@ -37,19 +37,19 @@ public class ScreeningMainMenuFragment extends BaseFragment implements View.OnCl
                                               ScreeningContract.QuestionCategoriesEntry.UNKNOWN};
     private static final String TAG = "## My Info ##";
 
-    public static ScreeningMainMenuFragment newInstance(int id, int screeningId, String studentName){
+    public static ScreeningOverviewFragment newInstance(int id, int screeningId, String studentName){
         Bundle args = new Bundle();
         args.putInt(ID_TAG, id);
         args.putInt(SCREENING_ID_TAG, screeningId);
         args.putString(STUDENT_NAME_TAG, studentName);
-        ScreeningMainMenuFragment fragment = new ScreeningMainMenuFragment();
+        ScreeningOverviewFragment fragment = new ScreeningOverviewFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_screening_main_menu, container, false);
+        View v = inflater.inflate(R.layout.fragment_screening_overview, container, false);
         mId = getArguments().getInt(ID_TAG);
         mScreeningId = getArguments().getInt(SCREENING_ID_TAG);
         TextView tvStudentName = (TextView)v.findViewById(R.id.tvStudentName);

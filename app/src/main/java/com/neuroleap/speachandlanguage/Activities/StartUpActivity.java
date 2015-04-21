@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
-import com.neuroleap.speachandlanguage.Fragments.ScreeningMainMenuFragment;
+import com.neuroleap.speachandlanguage.Fragments.ScreeningOverviewFragment;
 import com.neuroleap.speachandlanguage.Fragments.ShowScreeningsFragment;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_2;
@@ -35,7 +35,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private SplashFragment_2 mSplashFragment_2;
     private ShowScreeningsFragment mShowScreeningsFragment;
     private StudentInfoFragment mStudentInfoFragment;
-    private ScreeningMainMenuFragment mScreeningMainMenuFragment;
+    private ScreeningOverviewFragment mScreeningOverviewFragment;
     private boolean mShowSettingOption = false;
     private boolean mShowNewOption = false;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
@@ -135,7 +135,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mFragmentManager.beginTransaction().replace(frContainerId,mShowScreeningsFragment, "TAG").commit();
         mSplashFragment_1 = null;
         mStudentInfoFragment = null;
-        mScreeningMainMenuFragment = null;
+        mScreeningOverviewFragment = null;
     }
 
     private void displayStudentInfoFragment() {
@@ -154,9 +154,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         ActionBar ab = getSupportActionBar();
         ab.setTitle(getString(R.string.main_menu));
         invalidateOptionsMenu();
-        mScreeningMainMenuFragment = ScreeningMainMenuFragment.newInstance(SCREENING_MAIN_MENU_FRAGMENT_ID, screeningId, studentName);
-        mScreeningMainMenuFragment.setId(SCREENING_MAIN_MENU_FRAGMENT_ID);
-        mFragmentManager.beginTransaction().replace(frContainerId,mScreeningMainMenuFragment, "TAG").commit();
+        mScreeningOverviewFragment = ScreeningOverviewFragment.newInstance(SCREENING_MAIN_MENU_FRAGMENT_ID, screeningId, studentName);
+        mScreeningOverviewFragment.setId(SCREENING_MAIN_MENU_FRAGMENT_ID);
+        mFragmentManager.beginTransaction().replace(frContainerId, mScreeningOverviewFragment, "TAG").commit();
         mShowScreeningsFragment = null;
     }
 
