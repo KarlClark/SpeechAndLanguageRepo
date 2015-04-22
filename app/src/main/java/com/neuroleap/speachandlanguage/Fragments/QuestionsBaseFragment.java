@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.neuroleap.speachandlanguage.R;
@@ -25,6 +26,7 @@ public class QuestionsBaseFragment extends BaseFragment {
     protected TextView mTvQuestion;
     protected Button mBtnZero, mBtnOne, mBtnNext;
     protected EditText mEtAnswer;
+    protected GridView mGvIconAnswers;
     protected static final String QUESTION_ID_KEY = "question_id_key";
     protected static final String SCREENING_ID_KEY = "screening_id_key";
     protected static final String VIEW_PAGER_POSITION_KEY = "view_pager_position_key";
@@ -56,6 +58,7 @@ public class QuestionsBaseFragment extends BaseFragment {
         mBtnOne = (Button)v.findViewById(R.id.btnOne);
         mBtnNext = (Button)v.findViewById(R.id.btnNext);
         mEtAnswer = (EditText)v.findViewById(R.id.etAnswer);
+        mGvIconAnswers =(GridView)v.findViewById(R.id.gvIconAnswers);
 
         Cursor c = DbCRUD.getAnswer(mQuestionId, mScreeningId);
         if (c.getCount() > 0) {

@@ -91,5 +91,6 @@
     <string name="overview">Overview</string>
     <string name="questions">Questions</string>
     <string name="results">Results</string>
+    <string name="other">Other</string>
 
 </resources>

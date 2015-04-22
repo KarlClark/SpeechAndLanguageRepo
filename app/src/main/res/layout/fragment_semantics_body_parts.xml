@@ -13,7 +13,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:text="test question"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -22,12 +23,13 @@
         android:layout_below="@+id/tvQuestion"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/relativeLayout"/>
+        android:layout_above="@+id/gvIconAnswers"
+        android:src="@drawable/chin"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="75dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/llButtons"
         android:id="@+id/relativeLayout">
 
         <Button
@@ -38,16 +40,6 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/etAnswer"
-            style = "@style/TextColor"
-            android:inputType="textNoSuggestions"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:minWidth="150sp"/>
 
         <Button
             android:layout_width="75dp"
@@ -63,10 +55,85 @@
             android:layout_height="wrap_content"
             android:text="@string/next"
             android:id="@+id/btnNext"
+            style = "@style/TextColor"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:visibility="gone"/>
 
+
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/relativeLayout"
+        android:id="@+id/relativeLayout2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/other"
+            android:id="@+id/tvOther"
+            android:layout_alignParentTop="true"
+            style = "@style/TextColor"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAnswer"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tvOther"
+            style = "@style/TextColor"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+
+    <GridView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gvIconAnswers"
+        android:layout_above="@+id/relativeLayout2"
+
+        android:columnWidth="50dp"
+        android:stretchMode="columnWidth"
+        android:numColumns="3"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:id="@+id/llButtons">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/overview"
+            android:id="@+id/brnOverview"
+            style = "@style/TextColor"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/screenings_title"
+            android:id="@+id/btnScreenings"
+            style = "@style/TextColor"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/results"
+            android:id="@+id/btnResults"
+            style = "@style/TextColor"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
 </RelativeLayout>
