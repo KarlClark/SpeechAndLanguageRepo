@@ -33,7 +33,7 @@ public class SemanticsBodyPartsFragment extends QuestionsBaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_semantics_body_parts, container, false);
+        View v = inflater.inflate(R.layout.fragment_semantics_body_parts_2, container, false);
         mCategoryType = ScreeningContract.QuestionCategoriesEntry.SEMANTICS;
         for (int i = 0; i< 9; i++){
             mIconFilenames.add("chin");

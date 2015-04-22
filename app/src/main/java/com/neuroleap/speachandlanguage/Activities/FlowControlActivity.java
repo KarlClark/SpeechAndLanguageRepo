@@ -74,12 +74,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         //Utilities.setTotalQuestions(DbCRUD.getQuestionCount());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         loadLists();
-        mQuestionFragmentPagerAdapter = new QuestionFragmentPagerAdapter(getSupportFragmentManager(), mScreeningId, mViewPagerQuestions);
-        mViewPager = (ViewPager)findViewById(R.id.pager);
-        mViewPager.setAdapter(mQuestionFragmentPagerAdapter);
+        setupViewPager();
+
         setUpDrawer();
         setUpRootViewListener();
         displayFirstQuestion();
+        lowerKeyboard();
         //Log.i(TAG,"end onCreate");
     }
 
@@ -127,6 +127,28 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mDrawerListAdapter.notifyDataSetChanged();
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         invalidateOptionsMenu();
+    }
+
+    private void setupViewPager(){
+        mQuestionFragmentPagerAdapter = new QuestionFragmentPagerAdapter(getSupportFragmentManager(), mScreeningId, mViewPagerQuestions);
+        mViewPager = (ViewPager)findViewById(R.id.pager);
+        mViewPager.setAdapter(mQuestionFragmentPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                lowerKeyboard();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void setUpRootViewListener(){
@@ -238,7 +260,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             @Override
             public void onDrawerClosed(View drawerView) {
                 //Log.i(TAG, "Drawer closed");
-                raiseKeyBoard();
+                //raiseKeyBoard();
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
                 //mDrawerList.collapseGroup(mOpenGroup);
