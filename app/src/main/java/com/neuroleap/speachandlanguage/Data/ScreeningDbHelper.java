@@ -14,6 +14,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntr
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersEgEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersSpEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerIconEntry;
 import com.neuroleap.speachandlanguage.R;
 
 import java.io.BufferedReader;
@@ -112,6 +113,14 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 QuestionsEntry.TABLE_NAME + " (" + QuestionsEntry._ID + ")" +
                 " );";
 
+        final String SQL_CREATE_ANSWER_ICONS_TABLE = "CREATE TABLE " + AnswerIconEntry.TABLE_NAME + " (" +
+                AnswerIconEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                AnswerIconEntry.QUESTION_ID + " INTEGER NOT NULL, " +
+                AnswerIconEntry.FILENAME + " TEXT NOT NULL, " +
+                " FOREIGN KEY (" + AnswerIconEntry.QUESTION_ID + ") REFERENCES " +
+                QuestionsEntry.TABLE_NAME + " (" + QuestionsEntry._ID + ")" +
+                " );";
+
         final String SQL_CREATE_STUDENT_ANSWERS_TABLE = "CREATE TABLE " + StudentAnswersEntry.TABLE_NAME + " (" +
                 StudentAnswersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 StudentAnswersEntry.QUESTION_ID + " INTEGER NOT NULL, " +
@@ -133,6 +142,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_VALID_ANSWERS_SP_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_PICTURES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_STUDENT_ANSWERS_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_ANSWER_ICONS_TABLE);
 
         InitializeDatabase(sqLiteDatabase);
     }
@@ -158,10 +168,13 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
             whileLoop:
                 while((cvsLine = reader.readLine()) != null){
                     Log.d(TAG, "Loop= " + ++i);
+                    Log.i(TAG,"cvsLine= @" + cvsLine + "  substring = " + cvsLine.substring(0,1));
                     if ( ! cvsLine.substring(0,1).equals("%")) {
 
                         String[] row = cvsLine.split(",");
-                        Log.i(TAG,"row = " + row );
+                        for (int j = 0; j < row.length; j++){
+                            Log.i(TAG, "j= " + j +"  row[j] " + row[j]);
+                        }
                         cv.clear();
 
                         if ( ! row[0].equals("")) {  // First column has something in it so this must be question category row
@@ -214,10 +227,16 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                             continue whileLoop;
                         }
 
-                        if (row.length > 4) { // first 4 columns null so this must be picture filename
+                        if (row.length > 4 && ! row[4].equals("")) { // first 4 columns null so this must be picture filename
                             cv.put(PicturesEntry.QUESTION_ID , quetionId);
                             cv.put(PicturesEntry.FILENAME , row[4]);
                             db.insert(PicturesEntry.TABLE_NAME, null, cv);
+                        }
+
+                        if (row.length > 5) { // first 5 columns null so this must be an answer icon filename
+                            cv.put(AnswerIconEntry.QUESTION_ID, quetionId);
+                            cv.put(AnswerIconEntry.FILENAME, row[5]);
+                            db.insert(AnswerIconEntry.TABLE_NAME, null, cv);
                         }
                     }
                 }

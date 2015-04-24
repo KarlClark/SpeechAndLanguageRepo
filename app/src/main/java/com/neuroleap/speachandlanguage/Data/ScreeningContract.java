@@ -89,6 +89,7 @@ public class ScreeningContract {
         public static final String TEXT ="text";
     }
 
+
     public static final class ValidAnswersSpEntry implements BaseColumns {
 
         public static final String TABLE_NAME ="valid_answers_sp";
@@ -103,5 +104,14 @@ public class ScreeningContract {
 
         public static final String QUESTION_ID = "question_id";
         public static final String FILENAME = "filename";
+    }
+
+    public static final class AnswerIconEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "answer_icons";
+
+        public static final String QUESTION_ID = "question_id";
+        public static final String FILENAME = "filename";
+
     }
 }
