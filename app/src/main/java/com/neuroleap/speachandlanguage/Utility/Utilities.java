@@ -26,7 +26,7 @@ public class Utilities {
     private static String mPackageName;
     //private static int mTotalQuestions;
     public static final String PREFS_TEST_MODE = "prefs_test_mode";
-    public static final int SCORING_BUTTONS_ONLY= 0;
+    //public static final int SCORING_BUTTONS_ONLY= 0;
     public static final int TEXT_INPUT_ONLY = 1;
     public static final int BOTH_SCORING_BUTTONS_AND_TEXT = 2;
     private static int mTestMode = BOTH_SCORING_BUTTONS_AND_TEXT;

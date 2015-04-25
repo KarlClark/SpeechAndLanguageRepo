@@ -59,7 +59,6 @@
     </string-array>
 
     <string-array name="test_mode">
-        <item>Scoring buttons only</item>
         <item>Text input only</item>
         <item>Text and scoring buttons</item>
     </string-array>

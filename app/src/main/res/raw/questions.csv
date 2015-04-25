@@ -4,52 +4,52 @@ Semantics/Body parts,,SemanticsBodyPartsFragment,0,0,,
 ,,nose,,ans sp,,
 ,,,nariz,,,
 ,,,,nose,,
-,,,,,nose,
+,,,,,nose,nose
 ,Name the body part.,,,,knee,rodilla
 ,,knee,,,,
 ,,,rodilla,,,
 ,,,,knee,,
-,,,,,knee,
+,,,,,knee,knee
 ,Name the body part.,,,,chin,barbilla
 ,,chin,,,,
 ,,,barbilla,,,
 ,,,,chin,,
-,,,,,chin,
+,,,,,chin,chin
 ,Name the body part.,,,,wrist,muneca
 ,,wrist,,,,
 ,,,muneca,,,
 ,,,,wrist,,
-,,,,,wrist,
+,,,,,wrist,wrist
 ,Name the body part.,,,,elbow,codo
 ,,elbow,,,,
 ,,,codo,,,
 ,,,,elbow,,
-,,,,,elbow,
+,,,,,elbow,elbow
 ,Name the body part.,,,,shoulder,hombro
 ,,shoulder,,,,
 ,,,hombro,,,
 ,,,,shoulder,,
-,,,,,shoulder,
+,,,,,shoulder,shoulder
 ,Name the body part.,,,,mouth,boca
 ,,mouth,,,,
 ,,,boca,,,
 ,,,,mouth,,
-,,,,,mouth,
+,,,,,mouth,mouth
 ,Name the body part.,,,,thumb,pulgar
 ,,thumb,,,,
 ,,,pulgar,,,
 ,,,,thumb,,
-,,,,,thumb,
+,,,,,thumb,thumb
 ,Name the body part.,,,,ankle,tobilla
 ,,ankle,,,,
 ,,,tobillo,,,
 ,,,,ankle,,
-,,,,,ankle,
+,,,,,ankle,ankle
 ,Name the body part.,,,,foot,pie
 ,,foot,,,,
 ,,,pie,,,
 ,,,,foot,,
-,,,,,foot,
+,,,,,foot,foot
 Semantics/Categories,,SemanticsCategoriesFragment,0,0,,
 ,Tell me 2 kinds of shapes.,,,,shapes,
 ,,triangle,,,,
@@ -63,15 +63,15 @@ Semantics/Categories,,SemanticsCategoriesFragment,0,0,,
 ,,pentagon,,,,
 ,,diamond,,,,
 ,,fullerene,,,,
-,,,,,triangle,
-,,,,,circle,
-,,,,,square,
-,,,,,rectangle,
-,,,,,cube,
-,,,,,cylinder,
-,,,,,diamond,
-,,,,,pentagon,
-,,,,,hexagon,
+,,,,,triangle,triangle
+,,,,,circle,circle
+,,,,,square,square
+,,,,,rectangle,rectangle
+,,,,,cube,cube
+,,,,,cylinder,cylinder
+,,,,,diamond,diamond
+,,,,,pentagon,pentagon
+,,,,,hexagon,hexagon
 ,Tell me 2 kinds of fruits.,,,,fruits,
 ,,mango,,,,
 ,,strawberry,,,,
@@ -93,15 +93,15 @@ Semantics/Categories,,SemanticsCategoriesFragment,0,0,,
 ,,pear,,,,
 ,,nectarene,,,,
 ,,cantelope,,,,
-,,,,,apple,
-,,,,,orange,
-,,,,,banana,
-,,,,,pear,
-,,,,,watermelon,
-,,,,,grapes,
-,,,,,plum,
-,,,,,strawberry,
-,,,,,blueberry,
+,,,,,apple,apple
+,,,,,orange,orange
+,,,,,banana,banana
+,,,,,pear,pear
+,,,,,watermelon,watermelon
+,,,,,grapes,grapes
+,,,,,plum,plum
+,,,,,strawberry,strawberry
+,,,,,blueberry,blueberry
 ,Tell me 2 kinds of furniture,,,,furniture,
 ,,desk,,,,
 ,,table,,,,
@@ -116,14 +116,14 @@ Semantics/Categories,,SemanticsCategoriesFragment,0,0,,
 ,,armoire,,,,
 ,,tv stand,,,,
 ,,tv-stand,,,,
-,,,,,chair,
-,,,,,table,
-,,,,,bed,
-,,,,,desk,
-,,,,,dresser,
-,,,,,chest_of_drawers,
-,,,,,sofa,
-,,,,,bookcase,
+,,,,,chair,chair
+,,,,,table,table
+,,,,,bed,bed
+,,,,,desk,desk
+,,,,,dresser,dresser
+,,,,,chest_of_drawers,chest of drawers
+,,,,,sofa,couch
+,,,,,bookcase,bookcase
 ,Tell me 2 kinds of clothing.,,,,clothing,
 ,,shirt,,,,
 ,,dress,,,,
@@ -156,15 +156,15 @@ Semantics/Categories,,SemanticsCategoriesFragment,0,0,,
 ,,sweat shirt,,,,
 ,,raincoat,,,,
 ,,rain coat,,,,
-,,,,,pants,
-,,,,,shirt,
-,,,,,dress,
-,,,,,skirt,
-,,,,,shoes,
-,,,,,socks,
-,,,,,hat,
-,,,,,underwear,
-,,,,,gloves,
+,,,,,pants,pants
+,,,,,shirt,shirt
+,,,,,dress,dress
+,,,,,skirt,skirt
+,,,,,shoes,shoes
+,,,,,socks,socks
+,,,,,hat,hat
+,,,,,underwear,underwear
+,,,,,gloves,gloves
 Semantics/Comprehension,,SemanticsComprehensionFragment,0,0,,
 ,Where do you keep your cloths?,,,,keep cloths?,
 ,,in a drawer,,,,
@@ -175,21 +175,21 @@ Semantics/Comprehension,,SemanticsComprehensionFragment,0,0,,
 ,,under the bed,,,,
 ,,on a table,,,,
 ,,under a table,,,,
-,,,,,closet,
-,,,,,dresser,
-,,,,,chest_of_drawers,
-,,,,,chest,
-,,,,,wardrobe,
+,,,,,closet,closet
+,,,,,dresser,dresser
+,,,,,chest_of_drawers,chest of drawers
+,,,,,chest,chest
+,,,,,wardrobe,wardrobe
 ,How do you wash your hands.,,,,wash hands?,
 ,,Turn on water/wet you hands/apply soap/ rub hands/ wash off soap/turn off water/dry hands,,,,
 ,,Wet hands/rub soap/rub hands/rinse off soap/dry hands with towel,,,,
-,,,,,faucet_on,
-,,,,,wet_hands,
-,,,,,soap,
-,,,,,rub_hands,
-,,,,,rinse_hands,
-,,,,,faucet_off,
-,,,,,towel,
+,,,,,faucet_on,turn on faucet
+,,,,,wet_hands,wet hands
+,,,,,soap,use soap
+,,,,,rub_hands,rub hands
+,,,,,rinse_hands,rinse hand
+,,,,,faucet_off,turn off faucet
+,,,,,towel,dry hands
 ,What do you ride?,,,,ride?,
 ,,horse,,,,
 ,,car,,,,
@@ -225,15 +225,15 @@ Semantics/Comprehension,,SemanticsComprehensionFragment,0,0,,
 ,,tricycle,,,,
 ,,trike,,,,
 ,,scooter,,,,
-,,,,,car,
-,,,,,bus,
-,,,,,school_bus,
-,,,,,bicycle,
-,,,,,motorcycle,
-,,,,,skateboard,
-,,,,,tricycle,
-,,,,,pickup,
-,,,,,scooter,
+,,,,,car,car
+,,,,,bus,bus
+,,,,,school_bus,school bus
+,,,,,bicycle,bicycle
+,,,,,motorcycle,motorcycle
+,,,,,skateboard,skateboard
+,,,,,tricycle,tricycle
+,,,,,pickup,pickup truck
+,,,,,scooter,scooter
 ,Who lives with you?,,,,lives with you?,
 ,,daddy,,,,
 ,,dad,,,,

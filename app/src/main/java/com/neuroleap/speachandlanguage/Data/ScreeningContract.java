@@ -48,6 +48,14 @@ public class ScreeningContract {
         public static final String CATEGORY_TYPE = "category_type";
     }
 
+    public static final class AnswerButtonsPressedEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "answer_buttons_pressed";
+
+        public static final String ANSWER_ID = "answer_id";
+        public static final String ANSWER_ICONS_ID = "answer_icons_id";
+    }
+
     public static final class QuestionCategoriesEntry implements BaseColumns{
 
         public static final int SEMANTICS = 0;
@@ -111,6 +119,7 @@ public class ScreeningContract {
         public static final String TABLE_NAME = "answer_icons";
 
         public static final String QUESTION_ID = "question_id";
+        public static final String DESCRIPTION = "description";
         public static final String FILENAME = "filename";
 
     }

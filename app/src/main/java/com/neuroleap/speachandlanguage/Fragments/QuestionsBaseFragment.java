@@ -99,13 +99,6 @@ public class QuestionsBaseFragment extends BaseFragment {
 
         switch (Utilities.getTestMode()) {
 
-            case Utilities.SCORING_BUTTONS_ONLY:
-                mBtnNext.setVisibility(View.GONE);
-                mBtnOne.setVisibility(View.VISIBLE);
-                mBtnZero.setVisibility(View.VISIBLE);
-                mEtAnswer.setVisibility(View.GONE);
-                break;
-
             case Utilities.TEXT_INPUT_ONLY:
                 mBtnNext.setVisibility(View.VISIBLE);
                 mBtnOne.setVisibility(View.GONE);

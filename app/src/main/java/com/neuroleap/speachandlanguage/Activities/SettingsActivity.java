@@ -71,17 +71,12 @@ public class SettingsActivity extends ActionBarActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SharedPreferences.Editor prefsEditor = mPrefs.edit();
-                if (position == 0) {
-                    prefsEditor.putInt(Utilities.PREFS_TEST_MODE , Utilities.SCORING_BUTTONS_ONLY).commit();
-                    Utilities.setTestMode(Utilities.SCORING_BUTTONS_ONLY);
+                if (position == 1) {
+                    prefsEditor.putInt(Utilities.PREFS_TEST_MODE, Utilities.TEXT_INPUT_ONLY).commit();
+                    Utilities.setTestMode(Utilities.TEXT_INPUT_ONLY);
                 }else{
-                    if (position == 1) {
-                        prefsEditor.putInt(Utilities.PREFS_TEST_MODE, Utilities.TEXT_INPUT_ONLY).commit();
-                        Utilities.setTestMode(Utilities.TEXT_INPUT_ONLY);
-                    }else{
-                        prefsEditor.putInt(Utilities.PREFS_TEST_MODE, Utilities.BOTH_SCORING_BUTTONS_AND_TEXT).commit();
-                        Utilities.setTestMode(Utilities.BOTH_SCORING_BUTTONS_AND_TEXT);
-                    }
+                    prefsEditor.putInt(Utilities.PREFS_TEST_MODE, Utilities.BOTH_SCORING_BUTTONS_AND_TEXT).commit();
+                    Utilities.setTestMode(Utilities.BOTH_SCORING_BUTTONS_AND_TEXT);
                 }
             }
 
