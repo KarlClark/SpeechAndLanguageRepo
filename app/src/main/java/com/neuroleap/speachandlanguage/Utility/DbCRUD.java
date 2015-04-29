@@ -3,14 +3,22 @@ package com.neuroleap.speachandlanguage.Utility;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerButtonsPressedEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerIconEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersTextEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
+import com.neuroleap.speachandlanguage.Models.PressedIcon;
+import com.neuroleap.speachandlanguage.Models.StudentAnswerText;
+
+import java.util.ArrayList;
 
 /**
  * Created by Karl on 3/22/2015.
@@ -68,9 +76,9 @@ public class DbCRUD {
         return mDB.rawQuery(sql,null);
     }
 
-    public static Cursor getAnswer(long question_id, long screening_id){
+    public static Cursor getStudentAnswer(long question_id, long screening_id){
         String sql = "SELECT "
-                     + StudentAnswersEntry.ANSWER_TEXT + " , "
+                     + StudentAnswersEntry._ID + " , "
                      + StudentAnswersEntry.CORRECT + " , "
                      + StudentAnswersEntry.CATEGORY_TYPE
                      + " FROM " + StudentAnswersEntry.TABLE_NAME
@@ -80,9 +88,18 @@ public class DbCRUD {
         return mDB.rawQuery(sql, null);
     }
 
-    public static Cursor getAnswersForCategoryType(long screening_id, int categoryType){
+    public static Cursor getStudentAnswersText(long studentAnswerId){
+        String sql = "SELECT "
+                     + StudentAnswersTextEntry.ANSWER_NUMBER + " , "
+                     + StudentAnswersTextEntry.TEXT
+                     + " FROM " + StudentAnswersTextEntry.TABLE_NAME
+                     + " WHERE " + StudentAnswersTextEntry.ANSWER_ID + "=" + studentAnswerId
+                     + " ORDER BY " + StudentAnswersTextEntry.ANSWER_NUMBER + " ASC";
+        return mDB.rawQuery(sql, null);
+    }
+
+    public static Cursor getStudentAnswersForCategoryType(long screening_id, int categoryType){
         String sql =  "SELECT "
-                + StudentAnswersEntry.ANSWER_TEXT + " , "
                 + StudentAnswersEntry.CORRECT + " , "
                 + StudentAnswersEntry.CATEGORY_TYPE
                 + " FROM " + StudentAnswersEntry.TABLE_NAME
@@ -167,6 +184,12 @@ public class DbCRUD {
         return mDB.query(PicturesEntry.TABLE_NAME, columns, PicturesEntry.QUESTION_ID + " = " + questionId, null, null, null, null);
     }
 
+    public static Cursor getIconFilenames(long questionId){
+        String[] columns = new String [] {AnswerIconEntry._ID, AnswerIconEntry.FILENAME};
+        return mDB.query(AnswerIconEntry.TABLE_NAME, columns, AnswerIconEntry.QUESTION_ID + " = " + questionId, null, null, null, null);
+    }
+
+
     public static int getQuestionCategory(int questionId){
         String columns[] = new String[] {QuestionsEntry.CATEGORY_ID};
         Cursor c = mDB.query(QuestionsEntry.TABLE_NAME, columns, "_ID=" + questionId, null, null, null, null);
@@ -235,11 +258,20 @@ public class DbCRUD {
         mDB.insert(ScreeningsEntry.TABLE_NAME, null, cv);
     }
 
-    public static void enterAnswer(long question_id, long screening_id, String answer_text, boolean correct, int categoryType){
+    public static void enterAnswerText(long answerId, ArrayList<StudentAnswerText> alAnswerText){
+        ContentValues cv = new ContentValues();
+        cv.put (StudentAnswersTextEntry.ANSWER_ID, answerId);
+        for (int i = 0; i < alAnswerText.size(); i++){
+            cv.put (StudentAnswersTextEntry.ANSWER_NUMBER, alAnswerText.get(i).getAnswerNumber());
+            cv.put (StudentAnswersTextEntry.TEXT, alAnswerText.get(i).getText());
+            mDB.insert(StudentAnswersTextEntry.TABLE_NAME, null, cv);
+        }
+    }
+
+    public static long enterAnswer(long question_id, long screening_id, boolean correct, int categoryType){
         ContentValues cv = new ContentValues();
         cv.put(StudentAnswersEntry.QUESTION_ID, question_id);
         cv.put(StudentAnswersEntry.SCREENING_ID, screening_id);
-        cv.put(StudentAnswersEntry.ANSWER_TEXT, answer_text);
         cv.put(StudentAnswersEntry.CORRECT, correct);
         cv.put(StudentAnswersEntry.CATEGORY_TYPE, categoryType);
 
@@ -247,16 +279,62 @@ public class DbCRUD {
                      " FROM " + StudentAnswersEntry.TABLE_NAME +
                      " WHERE " + StudentAnswersEntry.QUESTION_ID + "=" + question_id +
                       " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;
-        Cursor c = mDB.rawQuery(sql,null);
-        if (c.getCount() == 0) {
-            mDB.insert(StudentAnswersEntry.TABLE_NAME, null, cv);
+        Cursor c_Answer = mDB.rawQuery(sql,null);
+        long id;
+        if (c_Answer.getCount() == 0) {
+            id=mDB.insert(StudentAnswersEntry.TABLE_NAME, null, cv);
         }else{
-            c.moveToNext();
-            mDB.update(StudentAnswersEntry.TABLE_NAME, cv, "_ID=" + c.getLong(0), null);
+            c_Answer.moveToNext();
+            id = c_Answer.getLong(0);
+            mDB.delete(StudentAnswersTextEntry.TABLE_NAME, StudentAnswersTextEntry.ANSWER_ID + "=" + id, null);
+            mDB.delete(AnswerButtonsPressedEntry.TABLE_NAME, AnswerButtonsPressedEntry.ANSWER_ID + "=" + id, null);
+            mDB.update(StudentAnswersEntry.TABLE_NAME, cv, "_ID=" + id, null);
         }
-        c.close();
+        c_Answer.close();
 
         updateScreeningCompletionState(screening_id, Utilities.SCREENING_NOT_COMPLETE);
+        return id;
+    }
+
+    public static void insertAnswerText(long studentAnswerId, ArrayList<StudentAnswerText> alAnswerText){
+        String sql = "INSERT INTO " + StudentAnswersTextEntry.TABLE_NAME +
+                "(" +
+                    StudentAnswersTextEntry.ANSWER_ID + "," +
+                    StudentAnswersTextEntry.ANSWER_NUMBER + "," +
+                    StudentAnswersTextEntry.TEXT  +
+                ") VALUES (?,?,?)";
+        SQLiteStatement statement = mDB.compileStatement(sql);
+        mDB.beginTransaction();
+        for(int i = 0; i < alAnswerText.size(); i++){
+            statement.clearBindings();
+            statement.bindLong(1 , studentAnswerId);
+            statement.bindLong(2, alAnswerText.get(i).getAnswerNumber());
+            statement.bindString(3, alAnswerText.get(i).getText());
+            statement.execute();
+        }
+        mDB.setTransactionSuccessful();
+        mDB.endTransaction();
+    }
+
+    public static void insertAnswerIconsPressed(long studentAnswerId, ArrayList<PressedIcon> alPressedIcons){
+        String sql = "INSERT INTO " + AnswerButtonsPressedEntry.TABLE_NAME +
+                "(" +
+                    AnswerButtonsPressedEntry.ANSWER_ID + "," +
+                    AnswerButtonsPressedEntry.ANSWER_ICONS_ID + "," +
+                    AnswerButtonsPressedEntry.ANSWER_NUMBER +
+                ") VALUES (?,?,?)";
+        SQLiteStatement statement = mDB.compileStatement(sql);
+        mDB.beginTransaction();
+        for (int i=0; i < alPressedIcons.size(); i ++) {
+            statement.clearBindings();
+            statement.bindLong(1, studentAnswerId);
+            statement.bindLong(2, alPressedIcons.get(i).getAnswerIconId());
+            statement.bindLong(3, alPressedIcons.get(i).getAnswerNumber());
+            statement.execute();
+        }
+        mDB.setTransactionSuccessful();
+        mDB.endTransaction();
+
     }
 
     public static void updateScreeningCompletionState(long screening_id, int completion_state){

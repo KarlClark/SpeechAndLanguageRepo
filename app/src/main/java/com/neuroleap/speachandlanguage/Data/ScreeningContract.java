@@ -43,9 +43,17 @@ public class ScreeningContract {
 
         public static final String QUESTION_ID = "question_id";
         public static final String SCREENING_ID = "screening_id";
-        public static final String ANSWER_TEXT = "answer_text";
         public static final String CORRECT = "correct";
         public static final String CATEGORY_TYPE = "category_type";
+    }
+
+    public static final class StudentAnswersTextEntry implements BaseColumns{
+
+        public static final String TABLE_NAME = "student_answers_text";
+
+        public static final String ANSWER_ID = "answer_id";
+        public static final String ANSWER_NUMBER = "answer_number";
+        public static final String TEXT = "text";
     }
 
     public static final class AnswerButtonsPressedEntry implements BaseColumns {
@@ -54,6 +62,7 @@ public class ScreeningContract {
 
         public static final String ANSWER_ID = "answer_id";
         public static final String ANSWER_ICONS_ID = "answer_icons_id";
+        public static final String ANSWER_NUMBER = "answer_number";
     }
 
     public static final class QuestionCategoriesEntry implements BaseColumns{

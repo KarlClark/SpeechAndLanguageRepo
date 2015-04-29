@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/other"
-            android:id="@+id/tvOther"
+            android:id="@+id/tvOther1"
             android:layout_alignParentTop="true"
             style = "@style/TextColor"
             android:layout_marginLeft="15dp"
@@ -59,7 +59,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/etAnswer"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tvOther"
+            android:layout_toRightOf="@+id/tvOther1"
+            android:inputType="textNoSuggestions"
             style = "@style/TextColor"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>

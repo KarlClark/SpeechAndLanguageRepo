@@ -84,7 +84,7 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
             for (int column = 0; column <=2; column++){
                 b= (Button)((TableRow)mTblMainMenu.getChildAt(row)).getChildAt(column);
                 index = Math.min(buttonCnt, mCategoryTypes.length-1);
-                Cursor c = DbCRUD.getAnswersForCategoryType(mScreeningId , mCategoryTypes[index]);
+                Cursor c = DbCRUD.getStudentAnswersForCategoryType(mScreeningId , mCategoryTypes[index]);
                 if (c.getCount() > 0) {
                     if (checkAnswer(c,mCategoryTypes[index])){
                         b.setBackgroundResource(R.drawable.button_green_shadowed);
@@ -136,7 +136,7 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
     private boolean checkAnswer(Cursor c, int categoryType){
         float rightAnswers=0;
         while(c.moveToNext()){
-            if (c.getInt(1) == 1) {
+            if (c.getInt(0) == 1) {
                 rightAnswers++;
             }
         }

@@ -16,6 +16,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersEgEntr
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersSpEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerIconEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerButtonsPressedEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersTextEntry;
 import com.neuroleap.speachandlanguage.R;
 
 import java.io.BufferedReader;
@@ -127,7 +128,6 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 StudentAnswersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 StudentAnswersEntry.QUESTION_ID + " INTEGER NOT NULL, " +
                 StudentAnswersEntry.SCREENING_ID + " INTEGER NOT NULL, " +
-                StudentAnswersEntry.ANSWER_TEXT + " TEXT, " +
                 StudentAnswersEntry.CORRECT +" BOOLEAN, " +
                 StudentAnswersEntry.CATEGORY_TYPE +" INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + StudentAnswersEntry.QUESTION_ID +") REFERENCES " +
@@ -136,10 +136,20 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 ScreeningsEntry.TABLE_NAME + " (" + ScreeningsEntry._ID + ")" +
                 " );";
 
+        final String SQL_CREATE_STUDENT_ANSWERS_TEXT_TABLE = "CREATE TABLE " + StudentAnswersTextEntry.TABLE_NAME + " (" +
+                StudentAnswersTextEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                StudentAnswersTextEntry.ANSWER_ID + " INTEGER NOT NULL, " +
+                StudentAnswersTextEntry.ANSWER_NUMBER + " INTEGER NOT NULL, " +
+                StudentAnswersTextEntry.TEXT + " TEXT NOT NULL, " +
+                " FOREIGN KEY (" + StudentAnswersTextEntry.ANSWER_ID + ") REFERENCES " +
+                StudentAnswersEntry.TABLE_NAME + " (" + StudentAnswersEntry._ID + ")"+
+                " );";
+
         final String SQL_CREATE_ANSWER_BUTTONS_PRESSED_TABLE = "CREATE TABLE " + AnswerButtonsPressedEntry.TABLE_NAME + " (" +
                 AnswerButtonsPressedEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 AnswerButtonsPressedEntry.ANSWER_ID + " INTEGER NOT NULL, " +
                 AnswerButtonsPressedEntry.ANSWER_ICONS_ID + " INTEGER NOT NULL, " +
+                AnswerButtonsPressedEntry.ANSWER_NUMBER + " INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + AnswerButtonsPressedEntry.ANSWER_ID + ") REFERENCES " +
                 StudentAnswersEntry.TABLE_NAME + " (" + StudentAnswersEntry._ID + "), " +
                 " FOREIGN KEY (" + AnswerButtonsPressedEntry.ANSWER_ICONS_ID + ") REFERENCES " +
@@ -156,6 +166,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_STUDENT_ANSWERS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ANSWER_ICONS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ANSWER_BUTTONS_PRESSED_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_STUDENT_ANSWERS_TEXT_TABLE);
 
         InitializeDatabase(sqLiteDatabase);
     }

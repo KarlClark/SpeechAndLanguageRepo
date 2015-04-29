@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.neuroleap.speachandlanguage.Adapters.IconAnswersGridViewAdapter;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
@@ -33,22 +32,14 @@ public class SemanticsBodyPartsFragment extends QuestionsBaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_semantics_body_parts_2, container, false);
+        View v = inflater.inflate(R.layout.fragment_semantics_body_parts_4, container, false);
         mCategoryType = ScreeningContract.QuestionCategoriesEntry.SEMANTICS;
-        for (int i = 0; i< 9; i++){
-            mIconFilenames.add("chin");
-        }
 
-        setupBaseViews(v);
+        setupBaseViews(v, 1);
         setupWindow();
 
-        mGvIconAnswers.setAdapter(new IconAnswersGridViewAdapter(mContext, mIconFilenames));
-
         mIvPicture = (ImageView)v.findViewById(R.id.ivPicture);
-        Cursor questionCursor = DbCRUD.getQuestionData(mQuestionId);
-        questionCursor.moveToNext();
-        mTvQuestion.setText(questionCursor.getString(1));
-        questionCursor.close();
+
         Cursor filenameCursor = DbCRUD.getPictureFilenames(mQuestionId);
         filenameCursor.moveToNext();
         String drawableFileName = filenameCursor.getString(0);

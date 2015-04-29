@@ -2,30 +2,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/tvQuestion"
-        style = "@style/TextColor"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="test question"/>
+        android:layout_above="@+id/gvIconAnswers">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ivPicture"
-        android:layout_below="@+id/tvQuestion"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/gvIconAnswers"
-        android:src="@drawable/chin"/>
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/tvQuestion"
+            style = "@style/TextColor"
+
+            android:text="test question"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_below="@+id/tvQuestion"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+           >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivPicture"
+
+                android:src="@drawable/chin"/>
+
+        </LinearLayout>
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="75dp"
@@ -83,12 +97,58 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/etAnswer"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tvOther1"
+            android:id="@+id/etAnswer1"
+            android:inputType="textNoSuggestions"
             style = "@style/TextColor"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/tvOther1"
+            android:layout_toEndOf="@+id/tvOther1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/other"
+            style = "@style/TextColor"
+            android:id="@+id/tvOther2"
+            android:layout_alignTop="@+id/etAnswer2"
+            android:layout_alignLeft="@+id/tvOther1"/>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAnswer2"
+            android:inputType="textNoSuggestions"
+            style = "@style/TextColor"
+            android:layout_below="@id/etAnswer1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/etAnswer1"
+            android:layout_alignStart="@+id/etAnswer1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/other"
+            style = "@style/TextColor"
+            android:id="@+id/tvOther3"
+            android:layout_alignTop="@+id/etAnswer3"
+            android:layout_alignLeft="@+id/tvOther2"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAnswer3"
+            android:inputType="textNoSuggestions"
+            style = "@style/TextColor"
+            android:layout_below="@id/etAnswer2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/etAnswer1"
+            android:layout_alignStart="@+id/etAnswer1"/>
+
     </RelativeLayout>
 
 

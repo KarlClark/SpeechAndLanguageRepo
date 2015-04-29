@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 
+import com.neuroleap.speachandlanguage.Listeners.OnIconButtonClickedListener;
+import com.neuroleap.speachandlanguage.Models.AnswerIcon;
 import com.neuroleap.speachandlanguage.R;
 
 import java.util.ArrayList;
@@ -18,22 +20,25 @@ import java.util.ArrayList;
 public class IconAnswersGridViewAdapter extends BaseAdapter {
 
     Context mContext;
-    ArrayList<String> mIconFilenames;
+    ArrayList<AnswerIcon> mAnswerIcons;
+    OnIconButtonClickedListener mOnIconButtonClickedListener;
+    private static final String IdTag = "idtag";
     private static final String TAG = "## My Info ##";
 
-    public IconAnswersGridViewAdapter(Context context, ArrayList<String> iconFilenames){
+    public IconAnswersGridViewAdapter(Context context, OnIconButtonClickedListener onIconButtonClickedListener, ArrayList<AnswerIcon> answerIcons){
         mContext = context;
-        mIconFilenames = iconFilenames;
+        mAnswerIcons = answerIcons;
+        mOnIconButtonClickedListener = onIconButtonClickedListener;
     }
 
     @Override
     public int getCount() {
-       return  mIconFilenames.size();
+       return  mAnswerIcons.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mIconFilenames.get(position);
+        return mAnswerIcons.get(position);
     }
 
     @Override
@@ -45,19 +50,20 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageButton ibIcon;
         if (convertView == null) {
-            /*imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8,8,8,8);*/
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_icon_item, parent, false);
-        }/*else{
-            imageView = (ImageView)convertView;
-        }*/
-        int resId = mContext.getResources().getIdentifier(mIconFilenames.get(position), "drawable", mContext.getPackageName());
-        Log.i(TAG,"IconAnswerGradViewAdapter filename= " + mIconFilenames.get(position)+ "  Position= " + position + "  resid = " + resId);
+        }
+        int resId = mContext.getResources().getIdentifier(mAnswerIcons.get(position).getFilename(), "drawable", mContext.getPackageName());
+        Log.i(TAG,"IconAnswerGradViewAdapter filename= " + mAnswerIcons.get(position).getFilename()+ "  Position= " + position + "  resid = " + resId);
         ibIcon= (ImageButton)convertView.findViewById(R.id.ibIcon);
         ibIcon.setImageResource(resId);
+        ibIcon.setTag(mAnswerIcons.get(position).getAnswerIconId());
+        ibIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnIconButtonClickedListener.onIconButtonClicked((Long)v.getTag());
+            }
+        });
         return convertView;
     }
 }

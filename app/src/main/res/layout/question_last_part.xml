@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="75dp"
+    android:layout_above="@+id/llButtons"
+    android:id="@+id/relativeLayout">
+
+        <Button
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/btnZero"
+            android:background="@drawable/button_0_sq"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <Button
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/btnOne"
+            android:layout_alignBottom="@+id/btnZero"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:id="@+id/btnNext"
+            style = "@style/TextColor"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/relativeLayout"
+    android:id="@+id/relativeLayout2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/other"
+            android:id="@+id/tvOther1"
+            android:layout_alignParentTop="true"
+            style = "@style/TextColor"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAnswer1"
+            android:inputType="textNoSuggestions"
+            style = "@style/TextColor"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/tvOther1"
+            android:layout_toEndOf="@+id/tvOther1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/other"
+            style = "@style/TextColor"
+            android:id="@+id/tvOther2"
+            android:layout_alignTop="@+id/etAnswer2"
+            android:layout_alignLeft="@+id/tvOther1"
+            android:visibility="gone"/>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAnswer2"
+            android:inputType="textNoSuggestions"
+            style = "@style/TextColor"
+            android:layout_below="@id/etAnswer1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/etAnswer1"
+            android:layout_alignStart="@+id/etAnswer1"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/other"
+            style = "@style/TextColor"
+            android:id="@+id/tvOther3"
+            android:layout_alignTop="@+id/etAnswer3"
+            android:layout_alignLeft="@+id/tvOther2"
+            android:visibility="gone"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAnswer3"
+            android:inputType="textNoSuggestions"
+            style = "@style/TextColor"
+            android:layout_below="@id/etAnswer2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/etAnswer1"
+            android:layout_alignStart="@+id/etAnswer1"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+    <GridView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/gvIconAnswers"
+    android:layout_above="@+id/relativeLayout2"
+
+    android:columnWidth="50dp"
+    android:stretchMode="columnWidth"
+    android:numColumns="3"
+    android:layout_centerHorizontal="true"
+    android:gravity="center_horizontal"
+    android:background="@drawable/view_border"/>
+
+    <LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_height="wrap_content"
+    android:id="@+id/llButtons">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/overview"
+            android:id="@+id/brnOverview"
+            style = "@style/TextColor"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/screenings_title"
+            android:id="@+id/btnScreenings"
+            style = "@style/TextColor"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/results"
+            android:id="@+id/btnResults"
+            style = "@style/TextColor"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+
+
+</merge>
