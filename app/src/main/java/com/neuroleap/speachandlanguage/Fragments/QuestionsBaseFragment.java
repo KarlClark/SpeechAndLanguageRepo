@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by Karl on 4/10/2015.
  */
-public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonClickedListener {
+public abstract class QuestionsBaseFragment extends BaseFragment implements OnIconButtonClickedListener {
 
     protected int mQuestionId;
     protected int mScreeningId;
@@ -31,28 +32,84 @@ public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonC
     protected int mGroupPosition;
     protected int mCategoryType;
     protected int mAnswerNumber = 1;
+    protected boolean mCommitted=false;
     protected TextView mTvQuestion;
-    protected Button mBtnZero, mBtnOne, mBtnNext;
+    protected Button mBtnZero, mBtnOne, mBtnNext, mBtnScreenings, mBtnResults, mBtnOverview;
     protected ArrayList<EditText> mEtAnswers = new ArrayList<EditText>();
     protected ArrayList<TextView> mTvAnswerPrompts = new ArrayList<TextView>();
     protected ArrayList<AnswerIcon> mAnswerIcons = new ArrayList<AnswerIcon>();
+    protected ArrayList<Long> mPressedIconIds = new ArrayList<>();
     protected ArrayList<PressedIcon> mPressedIcons = new ArrayList<PressedIcon>();
     protected GridView mGvIconAnswers;
+    protected boolean[] mOriginalClicked = new boolean[20];
+    protected String[] mOriginalAnswers = new String[] {"", "", ""};
+    protected long[] mOriginalPressedIconIds = new long [20];
+    protected int mOriginalPressedIconIdsCount = 0;
     protected IconAnswersGridViewAdapter mIconAnswersGridViewAdapter;
     protected static final String QUESTION_ID_KEY = "question_id_key";
     protected static final String SCREENING_ID_KEY = "screening_id_key";
     protected static final String VIEW_PAGER_POSITION_KEY = "view_pager_position_key";
     protected static final String GROUP_POSITION_KEY = "group_position_key";
     protected static final String ICON_BUTTON_TAG_KEY = "icon_button_tag_key";
+    public static final int SHOW_NEXT_FRAGMENT = 0;
+    public static final int OVERVIEW_BUTTON_CLICKED  = 1;
+    public static final int RESULTS_BUTTON_CLICKED = 2;
+    public static final int SCREENINGS_BUTTON_CLICKED = 3;
     protected static final String TAG = "## My Info ##";
+
+    protected abstract boolean answerCorrect();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mQuestionId = getArguments().getInt(QUESTION_ID_KEY);
+        Log.i(TAG,"fragment for question " + mQuestionId + "  onCreate called");
         mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
         mViewPagerPosition = getArguments().getInt(VIEW_PAGER_POSITION_KEY);
         mGroupPosition = getArguments().getInt(GROUP_POSITION_KEY);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "Fragment for question " + mQuestionId+" onResume Called");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "Fragment for question " + mQuestionId+" onPause Called");
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.i(TAG, "Fragment for question " + mQuestionId +" is visible= " + isVisibleToUser +"  mCommitted= " + mCommitted + "   mIconGridViewAdapter= " + mIconAnswersGridViewAdapter);
+        if ( ! isVisibleToUser) {
+            if ( ! mCommitted)  {
+
+                for(int i =0; i < mEtAnswers.size(); i++){
+                    mEtAnswers.get(i).setText(mOriginalAnswers[i]);
+                }
+
+                for (int i = 0; i < mAnswerIcons.size(); i++) {
+                    Log.i(TAG,"i= " + i + "  mOriginal click= " + mOriginalClicked[i]);
+                    mAnswerIcons.get(i).setClicked(mOriginalClicked[i]);
+                }
+
+                mPressedIconIds.clear();
+                for (int i = 0; i < mOriginalPressedIconIdsCount; i++){
+                    mPressedIconIds.add(mOriginalPressedIconIds[i]);
+                }
+
+                if (mIconAnswersGridViewAdapter != null) {
+                    Log.i(TAG, "Calling notifyDataSetChanged for question " + mQuestionId);
+                    mIconAnswersGridViewAdapter.notifyDataSetChanged();
+                }
+            }
+            mCommitted = false;
+        }
     }
 
     protected static Bundle createBundle(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
@@ -70,8 +127,12 @@ public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonC
         mBtnZero = (Button)v.findViewById(R.id.btnZero);
         mBtnOne = (Button)v.findViewById(R.id.btnOne);
         mBtnNext = (Button)v.findViewById(R.id.btnNext);
+        mBtnOverview = (Button)v.findViewById(R.id.btnOverview);
+        mBtnResults = (Button)v.findViewById(R.id.btnResults);
+        mBtnScreenings = (Button)v.findViewById(R.id.btnScreenings);
         mEtAnswers.add((EditText)v.findViewById(R.id.etAnswer1));
         mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther1));
+
 
         Cursor questionCursor = DbCRUD.getQuestionData(mQuestionId);
         questionCursor.moveToNext();
@@ -89,32 +150,59 @@ public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonC
 
         Cursor c_answer = DbCRUD.getStudentAnswer(mQuestionId, mScreeningId);
         if (c_answer.getCount() > 0) {
+
             c_answer.moveToNext();
             Cursor c_text = DbCRUD.getStudentAnswersText(c_answer.getLong(0));
             int i=0;
             while (c_text.moveToNext()){
                 mEtAnswers.get(i).setText(c_text.getString(1));
+                mOriginalAnswers[i]  = c_text.getString(1);
                 i++;
             }
+            c_text.close();
+
+            Cursor c_answerIcons = DbCRUD.getStudentAnswersIcons(c_answer.getLong(0));
+            Log.i(TAG,"c_answersIcons size= " + c_answerIcons.getCount());
+            while (c_answerIcons.moveToNext()){
+                Log.i(TAG, "answerIconsId= " + c_answerIcons.getLong(1));
+                mPressedIconIds.add(c_answerIcons.getLong(1));
+                mOriginalPressedIconIds[i] = c_answerIcons.getLong(1);
+                mOriginalPressedIconIdsCount++;
+            }
+            c_answerIcons.close();
         }
         c_answer.close();
 
         mGvIconAnswers =(GridView)v.findViewById(R.id.gvIconAnswers);
         Cursor ic_Cursor = DbCRUD.getIconFilenames(mQuestionId);
+        AnswerIcon ai;
+
         while(ic_Cursor.moveToNext()){
-            mAnswerIcons.add(new AnswerIcon(ic_Cursor.getLong(0), ic_Cursor.getString(1)));
+            ai = new AnswerIcon(ic_Cursor.getLong(0), ic_Cursor.getString(1));
+            if (idIsaPressedIcon(ai.getAnswerIconId())){
+                Log.i(TAG,"setting clicked true for id " + ai.getAnswerIconId());
+                ai.setClicked(true);
+            }
+            mAnswerIcons.add(ai);
         }
         ic_Cursor.close();
-        mIconAnswersGridViewAdapter = new IconAnswersGridViewAdapter(mContext,this,mAnswerIcons);
-        mGvIconAnswers.setAdapter(mIconAnswersGridViewAdapter);
+        for (int i = 0; i < mAnswerIcons.size(); i++ ){
+            mOriginalClicked[i] = mAnswerIcons.get(i).isClicked();
+        }
+
+        if(Utilities.getTestMode() == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT) {
+            mIconAnswersGridViewAdapter = new IconAnswersGridViewAdapter(mContext, this, mAnswerIcons);
+            mGvIconAnswers.setAdapter(mIconAnswersGridViewAdapter);
+        }
 
         mBtnZero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, false, mCategoryType);
-                DbCRUD.insertAnswerIconsPressed(answerId, mPressedIcons);
+                enterIconAnswers(answerId);
                 enterTextAnswers(answerId);
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
+                mCommitted = true;
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition);
             }
         });
 
@@ -122,9 +210,10 @@ public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonC
             @Override
             public void onClick(View v) {
                 long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, true, mCategoryType);
-                DbCRUD.insertAnswerIconsPressed(answerId, mPressedIcons);
+                enterIconAnswers(answerId);
                 enterTextAnswers(answerId);
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
+                mCommitted=true;
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition);
             }
         });
 
@@ -134,6 +223,45 @@ public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonC
                 mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
             }
         });
+
+        mBtnScreenings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SCREENINGS_BUTTON_CLICKED);
+            }
+        });
+
+        mBtnResults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, RESULTS_BUTTON_CLICKED);
+            }
+        });
+
+        mBtnOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, OVERVIEW_BUTTON_CLICKED);
+            }
+        });
+    }
+
+    private boolean idIsaPressedIcon(long iconId){
+        for (long id : mPressedIconIds){
+            if (id == iconId){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void enterIconAnswers(long studentAnswerId){
+        mAnswerNumber= 1;
+        for (long id : mPressedIconIds){
+            mPressedIcons.add(new PressedIcon(id , mAnswerNumber++));
+        }
+        DbCRUD.insertAnswerIconsPressed(studentAnswerId, mPressedIcons);
+        mAnswerNumber--;
     }
 
     public void enterTextAnswers(long studentAnswerId){
@@ -161,16 +289,23 @@ public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonC
                 mBtnNext.setVisibility(View.VISIBLE);
                 mBtnOne.setVisibility(View.GONE);
                 mBtnZero.setVisibility(View.GONE);
-                for(int i = 0; i < mTvAnswerPrompts.size(); i++){
-                    mTvAnswerPrompts.get(i).setText("Answer " + (i+1));
-                    mTvAnswerPrompts.get(i).setVisibility(View.VISIBLE);
+                mGvIconAnswers.setVisibility(View.GONE);
+                if (mTvAnswerPrompts.size() == 1){
+                    mTvAnswerPrompts.get(0).setText(mContext.getString(R.string.answer));
+                } else {
+                    for (int i = 0; i < mTvAnswerPrompts.size(); i++) {
+                        mTvAnswerPrompts.get(i).setText(mContext.getString(R.string.answer) + (i + 1));
+                        mTvAnswerPrompts.get(i).setVisibility(View.VISIBLE);
+                    }
                 }
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 break;
 
             case Utilities.BOTH_SCORING_BUTTONS_AND_TEXT:
                 mBtnNext.setVisibility(View.GONE);
                 mBtnOne.setVisibility(View.VISIBLE);
                 mBtnZero.setVisibility(View.VISIBLE);
+                mGvIconAnswers.setVisibility(View.VISIBLE);
                 for(TextView tv : mTvAnswerPrompts){
                     tv.setVisibility(View.VISIBLE);
                 }
@@ -179,8 +314,22 @@ public class QuestionsBaseFragment extends BaseFragment implements OnIconButtonC
 
 
     @Override
-    public void onIconButtonClicked(long answerIconId){
-        mPressedIcons.add(new PressedIcon(answerIconId, mAnswerNumber));
-        mAnswerNumber++;
+    public void onIconButtonClicked(AnswerIcon answerIcon){
+        Log.i(TAG, "QuestionBaseFragment onIconButtonClicked called, answerIconId= " + answerIcon.getAnswerIconId()+ "  isClicked= " + answerIcon.isClicked());
+        //mPressedIcons.add(new PressedIcon(answerIconId, mAnswerNumber));
+        if (answerIcon.isClicked()){
+            mPressedIconIds.add(answerIcon.getAnswerIconId());
+        }else {
+            deleteIdFromList(answerIcon.getAnswerIconId());
+        }
+    }
+
+    private void deleteIdFromList(long answerIconId){
+        for (int i = 0; i < mPressedIconIds.size(); i++){
+            if (mPressedIconIds.get(i) == answerIconId){
+                mPressedIconIds.remove(i);
+                return;
+            }
+        }
     }
 }

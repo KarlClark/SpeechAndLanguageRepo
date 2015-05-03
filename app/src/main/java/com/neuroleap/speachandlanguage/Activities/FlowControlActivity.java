@@ -18,6 +18,7 @@ import android.widget.ExpandableListView;
 
 import com.neuroleap.speachandlanguage.Adapters.DrawerListAdapter;
 import com.neuroleap.speachandlanguage.Adapters.QuestionFragmentPagerAdapter;
+import com.neuroleap.speachandlanguage.Fragments.QuestionsBaseFragment;
 import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
@@ -55,6 +56,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private boolean mKeyboardUp = false;
     public static final String SCREENING_ID_KEY = "screening_id_key";
     public static final String CATEGORY_REQUEST_KEY = "category_request_key";
+    public static final String REQUESTED_ACTION_KEY ="requested_fragment_key";
+    public static final String SCREENING_ID_TAG = "screening-id_tag";
+    public static final String SCREENING_STUDENT_NAME_TAG = "screening_student_name_tag";
+    public static final int SHOW_SCREENINGS = 0;
+    public static final int SHOW_OVERVIEW = 1;
+    public static final int SHOW_RESULTS = 2;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -125,6 +132,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         //Log.i(TAG, "onActivityResult called");
         loadLists();
         mDrawerListAdapter.notifyDataSetChanged();
+        mQuestionFragmentPagerAdapter.notifyDataSetChanged();
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         invalidateOptionsMenu();
     }
@@ -176,6 +184,8 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private void loadLists(){
         mQuestionCategories.clear();
         mDrawerQuestions.clear();
+        mAllCompletedQuestionIds.clear();
+        mViewPagerQuestions.clear();
         Cursor categoryCursor = DbCRUD.getQuestionCategories();
         Log.i(TAG,"mCompletionState= " + mCompletionState);
         if (mCompletionState == Utilities.SCREENING_NOT_COMPLETE) {
@@ -332,14 +342,43 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     @Override
     public void onFragmentInteraction(int id, Object ... args){
-        mViewPagerQuestions.get((int)args[0]).setDone(true);
-        if (groupIsCompleted((int)args[1])){
-            mQuestionCategories.get((int)args[1]).setDone(true);
-        }
-        if ((int)args[0]+1 < mViewPagerQuestions.size()){
-            mViewPager.setCurrentItem((int)args[0]+1);
+        switch ((int)args[0]) {
+            case QuestionsBaseFragment.SHOW_NEXT_FRAGMENT:
+                mViewPagerQuestions.get((int) args[1]).setDone(true);
+                if (groupIsCompleted((int) args[2])) {
+                    mQuestionCategories.get((int) args[1]).setDone(true);
+                }
+                if ((int) args[0] + 1 < mViewPagerQuestions.size()) {
+                    mViewPager.setCurrentItem((int) args[1] + 1);
+                }
+                break;
+            case QuestionsBaseFragment.OVERVIEW_BUTTON_CLICKED:
+                Log.i(TAG,"Overview Button pressed");
+
+                Intent i = new Intent();
+                i.putExtra(REQUESTED_ACTION_KEY, SHOW_OVERVIEW);
+                i.putExtra(SCREENING_ID_TAG, mScreeningId);
+                String name = DbCRUD.getStudentNameStringFromScreeningId(mScreeningId);
+                i.putExtra(SCREENING_STUDENT_NAME_TAG, name);
+                setResult(RESULT_OK, i);
+                finish();
+                break;
+            case QuestionsBaseFragment.RESULTS_BUTTON_CLICKED:
+                Log.i(TAG, "Results Button pressed");
+                callSetResult(SHOW_RESULTS);
+                break;
+            case QuestionsBaseFragment.SCREENINGS_BUTTON_CLICKED:
+                Log.i(TAG, " Screenings button pressed");
+                callSetResult(SHOW_SCREENINGS);
         }
 
+    }
+
+    private void callSetResult(int nextAction){
+        Intent i = new Intent();
+        i.putExtra(REQUESTED_ACTION_KEY, nextAction);
+        setResult(RESULT_OK, i);
+        finish();
     }
 
     private void setChildColors(int groupPosition, int childPosition){

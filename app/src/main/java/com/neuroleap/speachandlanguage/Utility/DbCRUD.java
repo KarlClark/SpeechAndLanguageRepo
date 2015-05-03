@@ -89,6 +89,7 @@ public class DbCRUD {
     }
 
     public static Cursor getStudentAnswersText(long studentAnswerId){
+        Log.i(TAG,"get answer text for student answer id= " + studentAnswerId);
         String sql = "SELECT "
                      + StudentAnswersTextEntry.ANSWER_NUMBER + " , "
                      + StudentAnswersTextEntry.TEXT
@@ -96,6 +97,17 @@ public class DbCRUD {
                      + " WHERE " + StudentAnswersTextEntry.ANSWER_ID + "=" + studentAnswerId
                      + " ORDER BY " + StudentAnswersTextEntry.ANSWER_NUMBER + " ASC";
         return mDB.rawQuery(sql, null);
+    }
+
+    public static Cursor getStudentAnswersIcons(long studentAnswerId){
+        Log.i(TAG,"get answer icons for student answer id= " + studentAnswerId);
+        String sql ="SELECT "
+                    + AnswerButtonsPressedEntry.ANSWER_NUMBER + " , "
+                    + AnswerButtonsPressedEntry.ANSWER_ICONS_ID
+                    + " FROM " + AnswerButtonsPressedEntry.TABLE_NAME
+                    + " WHERE " + AnswerButtonsPressedEntry.ANSWER_ID + " = " + studentAnswerId
+                    + " ORDER BY " + AnswerButtonsPressedEntry.ANSWER_NUMBER + " ASC";
+        return mDB.rawQuery(sql , null);
     }
 
     public static Cursor getStudentAnswersForCategoryType(long screening_id, int categoryType){
@@ -121,6 +133,20 @@ public class DbCRUD {
         int age = c.getInt(0);
         c.close();
         return age;
+    }
+
+    public static String getStudentNameStringFromScreeningId(long screeningId){
+        String[] columns = new String[] {ScreeningsEntry.STUDENT_ID};
+        Cursor c = mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry._ID + "=" + screeningId, null, null, null, null);
+        c.moveToNext();
+        long studentId = c.getLong(0);
+        c.close();
+        columns = new String[] {StudentsEntry.FIRST_NAME, StudentsEntry.LAST_NAME};
+        c = mDB.query(StudentsEntry.TABLE_NAME, columns, StudentsEntry._ID + "=" + screeningId, null, null, null, null);
+        c.moveToNext();
+        String name = c.getString(0) + " " + c.getString(1);
+        c.close();
+        return name;
     }
 
     public static int getScreeningCompletionState(int screeningId){

@@ -38,10 +38,14 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private ScreeningOverviewFragment mScreeningOverviewFragment;
     private boolean mShowSettingOption = false;
     private boolean mShowNewOption = false;
+    private boolean mReturningWithResult = false;
+    private Intent mResultIntent= null;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
     private static final int SHOW_SCREENINGS_FRAGMENT_ID = 1002;
     private static final int STUDENT_INFO_FRAGMENT_ID = 1003;
-    private static final int SCREENING_MAIN_MENU_FRAGMENT_ID = 1004;
+    private static final int SCREENING_OVERVIEW_FRAGMENT_ID = 1004;
+    private static final int FLOW_CONTROL_ACTIVITY_TAG = 0;
+    private static final int SETTINGS_ACTIVITY_TAG = 1;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -60,6 +64,14 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         }
     }
 
+    @Override
+    protected void onPostResume(){
+        super.onPostResume();
+        if (mReturningWithResult) {
+            showRequestedFragment(mResultIntent);
+            mReturningWithResult = false;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +94,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i =new Intent(this,SettingsActivity.class);
-            startActivityForResult(i,0);
+            startActivityForResult(i,SETTINGS_ACTIVITY_TAG);
             return true;
         }
 
@@ -106,7 +118,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
             /*case SHOW_SCREENINGS_FRAGMENT_ID:
                 displayScreeningMainMenuFragment((int)args[0], (String)args[1] + " " +  (String)args[2]);
                 break;*/
-            case SCREENING_MAIN_MENU_FRAGMENT_ID:
+            case SCREENING_OVERVIEW_FRAGMENT_ID:
                 if((int)args[1] == Utilities.SCREENINGS){
                     displayShowScreeningsFragment();
                 }else {
@@ -149,13 +161,13 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mShowScreeningsFragment = null;
     }
 
-    private void displayScreeningMainMenuFragment(int screeningId, String studentName) {
+    private void displayScreeningOverviewFragment(int screeningId, String studentName) {
         mShowNewOption = false;
         ActionBar ab = getSupportActionBar();
         ab.setTitle(getString(R.string.main_menu));
         invalidateOptionsMenu();
-        mScreeningOverviewFragment = ScreeningOverviewFragment.newInstance(SCREENING_MAIN_MENU_FRAGMENT_ID, screeningId, studentName);
-        mScreeningOverviewFragment.setId(SCREENING_MAIN_MENU_FRAGMENT_ID);
+        mScreeningOverviewFragment = ScreeningOverviewFragment.newInstance(SCREENING_OVERVIEW_FRAGMENT_ID, screeningId, studentName);
+        //mScreeningOverviewFragment.setId(SCREENING_OVERVIEW_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(frContainerId, mScreeningOverviewFragment, "TAG").commit();
         mShowScreeningsFragment = null;
     }
@@ -164,7 +176,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         Intent i = new Intent(this, FlowControlActivity.class);
         i.putExtra(FlowControlActivity.SCREENING_ID_KEY, screeningId);
         i.putExtra(FlowControlActivity.CATEGORY_REQUEST_KEY, categoryRequest);
-        startActivity(i);
+        startActivityForResult(i, FLOW_CONTROL_ACTIVITY_TAG);
     }
 
     private void checkLanguagePreference() {
@@ -202,12 +214,40 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     @Override
     public void onScreeningOverviewButtonClicked(Screening screening) {
         Log.i(TAG, "onScreeningOverviewsButtonClicked called. Screening id = " + screening.getId());
-        displayScreeningMainMenuFragment(screening.getId(), screening.getFirstName() + " " +  screening.getLastName());
+        displayScreeningOverviewFragment(screening.getId(), screening.getFirstName() + " " +  screening.getLastName());
     }
 
     @Override
     public void onScreeningQuestionsButtonClicked(Screening screening) {
         Log.i(TAG, "onScreeningQuestionsButtonClicked called. Screening id = " + screening.getId());
         startFlowControlActivity(screening.getId(), -1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case SETTINGS_ACTIVITY_TAG:
+                break;
+            case FLOW_CONTROL_ACTIVITY_TAG:
+                mReturningWithResult = true;
+                mResultIntent = data;
+        }
+    }
+
+    private void showRequestedFragment(Intent data){
+        switch (data.getIntExtra(FlowControlActivity.REQUESTED_ACTION_KEY,0)){
+            case FlowControlActivity.SHOW_OVERVIEW:
+                int screeningId = data.getIntExtra(FlowControlActivity.SCREENING_ID_TAG,-1);
+                String studentName = data.getStringExtra(FlowControlActivity.SCREENING_STUDENT_NAME_TAG);
+                Log.i(TAG,"screeningId = " + screeningId +"  student name= " + studentName);
+                displayScreeningOverviewFragment(screeningId, studentName);
+                break;
+            case FlowControlActivity.SHOW_RESULTS:
+                Log.i(TAG, "Show Results");
+                break;
+            case FlowControlActivity.SHOW_SCREENINGS:
+                displayShowScreeningsFragment();
+        }
     }
 }

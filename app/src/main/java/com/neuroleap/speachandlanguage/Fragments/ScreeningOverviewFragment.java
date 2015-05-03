@@ -22,8 +22,8 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
  */
 public class ScreeningOverviewFragment extends BaseFragment implements View.OnClickListener{
 
-    TableLayout mTblMainMenu;
-    int mScreeningId;
+    private TableLayout mTblMainMenu;
+    private int mScreeningId;
     private static final String ID_TAG = "id_tag";
     private static final String SCREENING_ID_TAG = "screening_id_tag";
     private static final String STUDENT_NAME_TAG = "student_name_tag";

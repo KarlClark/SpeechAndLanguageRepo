@@ -48,6 +48,9 @@ public class SemanticsBodyPartsFragment extends QuestionsBaseFragment {
         mIvPicture.setImageResource(resId);
 
         return v;
+    }
+
+    protected boolean answerCorrect(){
 
     }
 }

@@ -42,6 +42,7 @@ public class Utilities {
     public static final int SCREENINGS = 20;
     public static final int RESULTS = 21;
 
+
    /* public static int getTotalQuestions() {
         return mTotalQuestions;
     }

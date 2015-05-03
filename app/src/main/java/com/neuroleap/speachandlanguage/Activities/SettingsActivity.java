@@ -61,17 +61,17 @@ public class SettingsActivity extends ActionBarActivity {
         mTestModeAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
         mSpnTestMode.setAdapter(mTestModeAdapter);
         if (mTestMode == Utilities.TEXT_INPUT_ONLY){
-            mSpnTestMode.setSelection(1);
+            mSpnTestMode.setSelection(0);
         }else{
             if (mTestMode == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT){
-                mSpnTestMode.setSelection(2);
+                mSpnTestMode.setSelection(1);
             }
         }
         mSpnTestMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SharedPreferences.Editor prefsEditor = mPrefs.edit();
-                if (position == 1) {
+                if (position == 0) {
                     prefsEditor.putInt(Utilities.PREFS_TEST_MODE, Utilities.TEXT_INPUT_ONLY).commit();
                     Utilities.setTestMode(Utilities.TEXT_INPUT_ONLY);
                 }else{
@@ -161,7 +161,6 @@ public class SettingsActivity extends ActionBarActivity {
                 s = getResources().getStringArray(R.array.test_mode);
                 mTestModeChoices[0] = s[0];
                 mTestModeChoices[1] = s[1];
-                mTestModeChoices[2] = s[2];
                 mTestModeAdapter.notifyDataSetChanged();
                 mTvTestMode.setText(getResources().getString(R.string.test_mode_spn));
 

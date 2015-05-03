@@ -2,11 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:id="@+id/rlIconContainer">
 
     <ImageButton
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/ibIcon"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY"
+        />
 </RelativeLayout>
