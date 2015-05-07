@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -99,13 +100,21 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         }
 
         if (id == R.id.new_screening){
-            displayStudentInfoFragment();
+            displayStudentInfoFragment(-1);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = mFragmentManager.findFragmentById(R.id.frContainer);
+        if (fragment instanceof ShowScreeningsFragment) {
+            super.onBackPressed();
+        }else{
+            displayShowScreeningsFragment();
+        }
+    }
 
     public void onFragmentInteraction(int id, Object ... args){
         switch (id){
@@ -150,12 +159,12 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mScreeningOverviewFragment = null;
     }
 
-    private void displayStudentInfoFragment() {
+    private void displayStudentInfoFragment(long studentId) {
         mShowNewOption = false;
         ActionBar ab = getSupportActionBar();
         ab.setTitle(getString(R.string.student_info_title));
         invalidateOptionsMenu();
-        mStudentInfoFragment = new StudentInfoFragment();
+        mStudentInfoFragment = StudentInfoFragment.newInstance(studentId);
         mStudentInfoFragment.setId(STUDENT_INFO_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(frContainerId,mStudentInfoFragment, "TAG").commit();
         mShowScreeningsFragment = null;
@@ -221,6 +230,12 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     public void onScreeningQuestionsButtonClicked(Screening screening) {
         Log.i(TAG, "onScreeningQuestionsButtonClicked called. Screening id = " + screening.getId());
         startFlowControlActivity(screening.getId(), -1);
+    }
+
+    @Override
+    public void onScreeningProfileButtonClicked(Screening screening){
+        Log.i(TAG, "onScreeningProfileButtonClicked called. Screening id = " + screening.getId());
+        displayStudentInfoFragment(screening.getStudentId());
     }
 
     @Override

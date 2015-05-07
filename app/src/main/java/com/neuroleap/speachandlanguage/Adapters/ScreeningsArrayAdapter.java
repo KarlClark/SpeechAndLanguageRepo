@@ -48,6 +48,7 @@ public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
         Button btnResults =(Button)convertView.findViewById(R.id.btnResults);
         Button btnOverview =(Button)convertView.findViewById(R.id.btnOverview);
         Button btnQuestions = (Button)convertView.findViewById(R.id.btnQuestions);
+        Button btnProfile = (Button)convertView.findViewById(R.id.btnProfile);
 
         Screening screening = mScreenings.get(position);
         tvName.setText(screening.getFirstName() + " " + mScreenings.get(position).getLastName());
@@ -88,6 +89,14 @@ public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
             @Override
             public void onClick(View v) {
                 mOnScreeningsListButtonsListener.onScreeningOverviewButtonClicked((Screening)v.getTag());
+            }
+        });
+
+        btnProfile.setTag(screening);
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnScreeningsListButtonsListener.onScreeningProfileButtonClicked((Screening)v.getTag());
             }
         });
 

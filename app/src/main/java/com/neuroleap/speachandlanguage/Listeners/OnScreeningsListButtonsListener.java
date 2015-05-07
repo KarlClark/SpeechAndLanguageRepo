@@ -12,4 +12,6 @@ public interface OnScreeningsListButtonsListener {
     public void onScreeningOverviewButtonClicked(Screening screening);
 
     public void onScreeningQuestionsButtonClicked(Screening screening);
+
+    public void onScreeningProfileButtonClicked(Screening screening);
 }

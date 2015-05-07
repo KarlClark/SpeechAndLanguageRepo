@@ -1,6 +1,7 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
 import android.app.DatePickerDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -50,12 +51,31 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     long mStudentId=-1;
     private static final int CUT_OFF_DATE = 3 * 365;
     public static final String DATE_FORMAT_STRING = "MMM dd, yyyy";
+    private static final String STUDENT_ID_KEY = "student_id_key";
     private static final String TAG = "## My Info ##";
+
+    public static StudentInfoFragment newInstance(long studentId){
+        Bundle args = new Bundle();
+        args.putLong(STUDENT_ID_KEY , studentId);
+        StudentInfoFragment fragment = new StudentInfoFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mStudentId = getArguments().getLong(STUDENT_ID_KEY);
+        mDateFormatter = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.US);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_student_info, container, false);
         getViews(v);
+        if (mStudentId != -1){
+            fillInFields();
+        }
         mEtFirstName.requestFocus();
         setUpListeners();
         setUpSpinners();
@@ -69,7 +89,6 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
 
     private void setUpListeners(){
 
-
         mEtRoom.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -77,10 +96,6 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                 return false;
             }
         });
-    }
-
-    public void setStudentId(long studentId) {
-        mStudentId = studentId;
     }
 
     private void setupDoneButton(){
@@ -178,6 +193,37 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mSpnVision = (Spinner)v.findViewById(R.id.spnVision);
         mBtnDone =(Button)v.findViewById(R.id.btnDone);
         mBtnCancel = (Button)v.findViewById(R.id.btnCancel);
+    }
+
+    private void fillInFields(){
+        Cursor c = DbCRUD.getStudentInfo(mStudentId);
+        c.moveToNext();
+        mEtFirstName.setText(c.getString(0));
+        mEtLastName.setText(c.getString(1));
+        //mField.setText(mDateFormatter.format(pickedDate.getTime()));
+        mEtDateOfBirth.setText(mDateFormatter.format(c.getLong(2)));
+        mEtHearingDate.setText(mDateFormatter.format(c.getLong(3)));
+        if (c.getLong(4) == 1){
+            mSpnHearing.setSelection(0);
+        }else{
+            mSpnHearing.setSelection(1);
+        }
+        mEtVisionDate.setText(mDateFormatter.format(c.getLong(5)));
+        if (c.getLong(6) == 1){
+            mSpnVision.setSelection(0);
+        }else{
+            mSpnVision.setSelection(1);
+        }
+        c.close();
+        c = DbCRUD.getScreeningStudentInfo(mStudentId);
+        c.moveToNext();
+        mEtScreeningDate.setText(mDateFormatter.format(c.getLong(0)));
+        mEtAgeYears.setText("" + c.getLong(1)/12);
+        mEtAgeMonths.setText(("" + c.getLong(1)%12));
+        mEtRoom.setText(c.getString(2));
+        mEtTeacher.setText(c.getString(3));
+        mEtGrade.setText(c.getString(4));
+        c.close();
     }
 
     private void setUpSpinners(){
@@ -280,8 +326,6 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     }
 
     private void setupDatePickers() {
-
-        mDateFormatter = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.US);
 
         mEtDateOfBirth.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

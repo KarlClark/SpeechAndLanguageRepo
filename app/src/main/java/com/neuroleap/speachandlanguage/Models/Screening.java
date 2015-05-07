@@ -7,6 +7,7 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
  */
 public class Screening {
     private int mId;
+    private long mStudentId;
     private long mLongDate;
     private String mDisplayDate;
     private String mFirstName;
@@ -15,8 +16,9 @@ public class Screening {
     private int mCompletionState;
     private int mAge;
 
-    public Screening(int id, String firstName, String lastName, int age, String teacher, long longDate, int completionState){
+    public Screening(int id, long studentId, String firstName, String lastName, int age, String teacher, long longDate, int completionState){
         mId = id;
+        mStudentId = studentId;
         mFirstName = firstName;
         mLastName = lastName;
         mTeacher = teacher;
@@ -28,6 +30,10 @@ public class Screening {
 
     public String getDisplayDate() {
         return mDisplayDate;
+    }
+
+    public long getStudentId() {
+        return mStudentId;
     }
 
     public String getFirstName() {

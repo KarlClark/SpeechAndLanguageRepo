@@ -69,6 +69,15 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@string/profile"
+            android:id="@+id/btnProfile"
+            android:layout_gravity="center_vertical"
+            style = "@style/TextColor"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:text="@string/overview"
             android:id="@+id/btnOverview"
             android:layout_gravity="center_vertical"

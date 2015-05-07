@@ -45,6 +45,7 @@
     <string name="results">Results</string>
     <string name="other">Other</string>
     <string name="answer">"Answer "</string>
+    <string name="profile">Profile</string>
 
     <string-array name="languages">
         <item>English/Ingles</item>

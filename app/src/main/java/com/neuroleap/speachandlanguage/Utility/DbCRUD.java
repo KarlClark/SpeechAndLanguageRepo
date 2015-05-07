@@ -61,10 +61,30 @@ public class DbCRUD {
         return mDB.query(QuestionsEntry.TABLE_NAME, questionColumns, QuestionsEntry.CATEGORY_ID + "=" +questionCategoryId , null, null, null, null);
     }
 
+    public static Cursor getStudentInfo(long studentId){
+        String[] columns = new String[] {   StudentsEntry.FIRST_NAME,
+                                            StudentsEntry.LAST_NAME,
+                                            StudentsEntry.BIRTHDAY,
+                                            StudentsEntry.HEARING_TEST_DATE,
+                                            StudentsEntry.HEARING_PASS,
+                                            StudentsEntry.VISION_TEST_DATE,
+                                            StudentsEntry.VISION_PASS};
+        return mDB.query(StudentsEntry.TABLE_NAME, columns, StudentsEntry._ID + "=" + studentId, null, null, null, null);
+    }
+
+    public static Cursor getScreeningStudentInfo(long studentId){
+        String[] columns = new String[]{    ScreeningsEntry.TEST_DATE,
+                                            ScreeningsEntry.AGE,
+                                            ScreeningsEntry.ROOM,
+                                            ScreeningsEntry.TEACHER,
+                                            ScreeningsEntry.GRADE};
+        return mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry.STUDENT_ID + "=" + studentId, null, null, null, null);
+    }
 
     public static Cursor getShortScreens (){
         String sql = "Select "
                       + ScreeningsEntry.TABLE_NAME + "._ID , "
+                      + ScreeningsEntry.TABLE_NAME + "." +ScreeningsEntry.STUDENT_ID + " , "
                       + StudentsEntry.TABLE_NAME + "." +StudentsEntry.FIRST_NAME + " , "
                       + StudentsEntry.TABLE_NAME + "." + StudentsEntry.LAST_NAME + " , "
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.AGE + " , "
