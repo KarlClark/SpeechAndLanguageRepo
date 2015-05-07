@@ -47,7 +47,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     private InputMethodManager mInputMethodManager;
     private boolean mKeyboardUp= false;
     private boolean mGotHereFrommEtRoom = false;
-    long mStudentId;
+    long mStudentId=-1;
     private static final int CUT_OFF_DATE = 3 * 365;
     public static final String DATE_FORMAT_STRING = "MMM dd, yyyy";
     private static final String TAG = "## My Info ##";
@@ -79,6 +79,10 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         });
     }
 
+    public void setStudentId(long studentId) {
+        mStudentId = studentId;
+    }
+
     private void setupDoneButton(){
         mBtnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +99,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
                 int totalMonths = (ageYears *12) + ageMonths;
                 Log.i(TAG,"total months=" + totalMonths);
                 int grade = Integer.parseInt(mEtGrade.getText().toString());
-                mStudentId= DbCRUD.insertStudent(mEtFirstName.getText().toString(),
+                mStudentId= DbCRUD.insertStudent(mStudentId, mEtFirstName.getText().toString(),
                                                  mEtLastName.getText().toString(),
                                                  mEtDateOfBirth.getText().toString(),
                                                  mEtHearingDate.getText().toString(),

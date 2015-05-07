@@ -214,7 +214,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     @Override
     public void onScreeningOverviewButtonClicked(Screening screening) {
         Log.i(TAG, "onScreeningOverviewsButtonClicked called. Screening id = " + screening.getId());
-        displayScreeningOverviewFragment(screening.getId(), screening.getFirstName() + " " +  screening.getLastName());
+        displayScreeningOverviewFragment(screening.getId(), screening.getFirstName() + " " + screening.getLastName());
     }
 
     @Override
@@ -236,18 +236,22 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     }
 
     private void showRequestedFragment(Intent data){
-        switch (data.getIntExtra(FlowControlActivity.REQUESTED_ACTION_KEY,0)){
-            case FlowControlActivity.SHOW_OVERVIEW:
-                int screeningId = data.getIntExtra(FlowControlActivity.SCREENING_ID_TAG,-1);
-                String studentName = data.getStringExtra(FlowControlActivity.SCREENING_STUDENT_NAME_TAG);
-                Log.i(TAG,"screeningId = " + screeningId +"  student name= " + studentName);
-                displayScreeningOverviewFragment(screeningId, studentName);
-                break;
-            case FlowControlActivity.SHOW_RESULTS:
-                Log.i(TAG, "Show Results");
-                break;
-            case FlowControlActivity.SHOW_SCREENINGS:
-                displayShowScreeningsFragment();
+        if (data == null){
+            displayShowScreeningsFragment();
+        }else {
+            switch (data.getIntExtra(FlowControlActivity.REQUESTED_ACTION_KEY, 0)) {
+                case FlowControlActivity.SHOW_OVERVIEW:
+                    int screeningId = data.getIntExtra(FlowControlActivity.SCREENING_ID_TAG, -1);
+                    String studentName = data.getStringExtra(FlowControlActivity.SCREENING_STUDENT_NAME_TAG);
+                    Log.i(TAG, "screeningId = " + screeningId + "  student name= " + studentName);
+                    displayScreeningOverviewFragment(screeningId, studentName);
+                    break;
+                case FlowControlActivity.SHOW_RESULTS:
+                    Log.i(TAG, "Show Results");
+                    break;
+                case FlowControlActivity.SHOW_SCREENINGS:
+                    displayShowScreeningsFragment();
+            }
         }
     }
 }

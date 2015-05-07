@@ -1,24 +1,28 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
+import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 /**
  * Created by Karl on 4/7/2015.
  */
 public class SemanticsAttributesFragment extends  QuestionsBaseFragment {
 
-    TextView mTvQuestion;
-    Button mBtnNext;
+    private ImageView mIvPicture;
+    private boolean mFirstTime= true;
 
     public static SemanticsAttributesFragment newInstance(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
 
@@ -27,30 +31,59 @@ public class SemanticsAttributesFragment extends  QuestionsBaseFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mQuestionId = getArguments().getInt(QUESTION_ID_KEY);
-        mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.test_fragment, container, false);
+        View v = inflater.inflate(R.layout.question_one_picture, container, false);
 
-        mTvQuestion = (TextView)v.findViewById(R.id.tvTestQuestion);
-        mBtnNext = (Button)v.findViewById(R.id.btnTestNext);
-        Cursor c = DbCRUD.getQuestionData(mQuestionId);
-        c.moveToNext();
-        mTvQuestion.setText(c.getString(1));
-        c.close();
-        mBtnNext.setOnClickListener(new View.OnClickListener() {
+        mCategoryType = ScreeningContract.QuestionCategoriesEntry.SEMANTICS;
+
+        setupBaseViews(v, 3);
+        setupWindow();
+
+        mIvPicture = (ImageView)v.findViewById(R.id.ivPicture);
+        mGvIconAnswers.setVisibility(View.GONE);
+        for (int i = 0; i < mTvAnswerPrompts.size(); i++) {
+            mTvAnswerPrompts.get(i).setText(mContext.getString(R.string.answer) + (i + 1));
+        }
+
+
+        if (Utilities.getTestMode() == Utilities.TEXT_INPUT_ONLY){
+            mIvPicture.setVisibility(View.GONE);
+        }else {
+            Cursor filenameCursor = DbCRUD.getPictureFilenames(mQuestionId);
+            filenameCursor.moveToNext();
+            String drawableFileName = filenameCursor.getString(0);
+            filenameCursor.close();
+            int resId = getResources().getIdentifier(drawableFileName, "drawable", mContext.getPackageName());
+            mIvPicture.setImageResource(resId);
+        }
+
+        mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    InputMethodManager imm = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(mEtAnswers.get(0), InputMethodManager.SHOW_FORCED);
+                    mFirstTime= false;
+                }
             }
         });
         return v;
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.i(TAG,"mEtAnswers size= " + mEtAnswers.size() +"  $$$$$$$$$$$$$$$$$$$$$$$");
+        if (isVisibleToUser){
+            //mEtAnswers.get(0).performClick();
+        }
+    }
+
+    @Override
+    protected boolean answerCorrect(){
+        return false;
     }
 }

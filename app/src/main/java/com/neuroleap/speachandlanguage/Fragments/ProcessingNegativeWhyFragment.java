@@ -53,4 +53,9 @@ public class ProcessingNegativeWhyFragment extends  QuestionsBaseFragment {
         return v;
 
     }
+
+    @Override
+    protected boolean answerCorrect(){
+        return false;
+    }
 }

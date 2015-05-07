@@ -52,4 +52,9 @@ public class IdiomsFragment extends  QuestionsBaseFragment {
         return v;
 
     }
+
+    @Override
+    protected boolean answerCorrect(){
+        return false;
+    }
 }

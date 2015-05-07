@@ -15,6 +15,8 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersTextEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersEgEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersSpEntry;
 import com.neuroleap.speachandlanguage.Models.PressedIcon;
 import com.neuroleap.speachandlanguage.Models.StudentAnswerText;
 
@@ -133,6 +135,22 @@ public class DbCRUD {
         int age = c.getInt(0);
         c.close();
         return age;
+    }
+
+    public static Cursor getValidAnswersInCorrectLanguage(long questionId){
+        String columns[];
+        String tableName;
+        String idColumn;
+        if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH){
+            columns = new String[] {ValidAnswersEgEntry.TEXT};
+            tableName = ValidAnswersEgEntry.TABLE_NAME;
+            idColumn = ValidAnswersEgEntry.QUESTION_ID;
+        }else{
+            columns = new String[] {ValidAnswersSpEntry.TEXT};
+            tableName = ValidAnswersSpEntry.TABLE_NAME;
+            idColumn = ValidAnswersSpEntry.QUESTION_ID;
+        }
+        return mDB.query(tableName, columns, idColumn + " = " + questionId, null, null, null, null);
     }
 
     public static String getStudentNameStringFromScreeningId(long screeningId){
@@ -254,7 +272,7 @@ public class DbCRUD {
         return total;
     }
 
-    public static long insertStudent(String firstName, String lastName, String date_of_birth, String hearingScreenDate,
+    public static long insertStudent(long studentId, String firstName, String lastName, String date_of_birth, String hearingScreenDate,
                                      Boolean hearingPass, String visionScreenDate, boolean visionPass){
 
         ContentValues cv= new ContentValues();
@@ -266,7 +284,12 @@ public class DbCRUD {
         cv.put(StudentsEntry.VISION_TEST_DATE, Utilities.getLongDate(visionScreenDate));
         cv.put(StudentsEntry.VISION_PASS, visionPass);
 
-        return mDB.insert(StudentsEntry.TABLE_NAME, null, cv);
+        if (studentId == -1) {
+            return mDB.insert(StudentsEntry.TABLE_NAME, null, cv);
+        }else{
+            mDB.update(StudentsEntry.TABLE_NAME, cv, StudentsEntry._ID + " = " + studentId, null);
+            return studentId;
+        }
     }
 
     public static void insertScreening(long student_id, String testDate, int mode, int language, int age, String room, int grade, String teacher){
@@ -281,7 +304,16 @@ public class DbCRUD {
         cv.put(ScreeningsEntry.TEACHER, teacher);
         cv.put(ScreeningsEntry.COMPLETION_STATE, Utilities.SCREENING_NOT_STARTED);
 
-        mDB.insert(ScreeningsEntry.TABLE_NAME, null, cv);
+        String sql = "SELECT _ID " +
+                     " FROM " + ScreeningsEntry.TABLE_NAME +
+                     " WHERE " + ScreeningsEntry.STUDENT_ID + "=" + student_id;
+        Cursor c = mDB.rawQuery(sql, null);
+        if (c.getCount() == 0) {
+            mDB.insert(ScreeningsEntry.TABLE_NAME, null, cv);
+        }else{
+            c.moveToNext();
+            mDB.update(ScreeningsEntry.TABLE_NAME, cv, ScreeningsEntry._ID + "=" + c.getLong(0), null);
+        }
     }
 
     public static void enterAnswerText(long answerId, ArrayList<StudentAnswerText> alAnswerText){

@@ -1,10 +1,10 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -46,6 +46,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     protected long[] mOriginalPressedIconIds = new long [20];
     protected int mOriginalPressedIconIdsCount = 0;
     protected IconAnswersGridViewAdapter mIconAnswersGridViewAdapter;
+    protected Resources mResources;
     protected static final String QUESTION_ID_KEY = "question_id_key";
     protected static final String SCREENING_ID_KEY = "screening_id_key";
     protected static final String VIEW_PAGER_POSITION_KEY = "view_pager_position_key";
@@ -68,6 +69,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
         mViewPagerPosition = getArguments().getInt(VIEW_PAGER_POSITION_KEY);
         mGroupPosition = getArguments().getInt(GROUP_POSITION_KEY);
+        mResources = getResources();
     }
 
     @Override
@@ -85,7 +87,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.i(TAG, "Fragment for question " + mQuestionId +" is visible= " + isVisibleToUser +"  mCommitted= " + mCommitted + "   mIconGridViewAdapter= " + mIconAnswersGridViewAdapter);
+        Log.i(TAG, "Fragment for question " + mQuestionId +" is visible= " + isVisibleToUser +"  mCommitted= " + mCommitted + "   mIconGridViewAdapter= " + mIconAnswersGridViewAdapter
+                 + "  mEtAnswers size= " + mEtAnswers.size());
         if ( ! isVisibleToUser) {
             if ( ! mCommitted)  {
 
@@ -220,7 +223,11 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, mViewPagerPosition, mGroupPosition);
+                boolean isCorrect = answerCorrect();
+                long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, isCorrect, mCategoryType);
+                enterTextAnswers(answerId);
+                mCommitted=true;
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition);
             }
         });
 
@@ -298,7 +305,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                         mTvAnswerPrompts.get(i).setVisibility(View.VISIBLE);
                     }
                 }
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
                 break;
 
             case Utilities.BOTH_SCORING_BUTTONS_AND_TEXT:

@@ -1,6 +1,7 @@
 package com.neuroleap.speachandlanguage.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.neuroleap.speachandlanguage.Listeners.OnIconButtonClickedListener;
 import com.neuroleap.speachandlanguage.Models.AnswerIcon;
 import com.neuroleap.speachandlanguage.R;
+import com.neuroleap.speachandlanguage.Utility.Utilities;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
     private OnIconButtonClickedListener mOnIconButtonClickedListener;
     private boolean mFirstTime = true;
     private Drawable mDefaultBackground;
+    private Resources mResources;
     private static final String IdTag = "idtag";
     private static final String TAG = "## My Info ##";
 
@@ -33,7 +36,7 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
         mContext = context;
         mAnswerIcons = answerIcons;
         mOnIconButtonClickedListener = onIconButtonClickedListener;
-
+        mResources = mContext.getResources();
     }
 
     @Override
@@ -62,10 +65,11 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
                 mFirstTime = false;
             }
         }
-        int resId = mContext.getResources().getIdentifier(mAnswerIcons.get(position).getFilename(), "drawable", mContext.getPackageName());
+        int resId = mResources.getIdentifier(mAnswerIcons.get(position).getFilename(), "drawable", mContext.getPackageName());
         Log.i(TAG, "IconAnswerGridViewAdapter filename= " + mAnswerIcons.get(position).getFilename() + "  Position= " + position + "  resid = " + resId);
         ibIcon= (ImageButton)convertView.findViewById(R.id.ibIcon);
-        ibIcon.setImageResource(resId);
+        Log.i(TAG,"IconAnswerGridViewAdapter image button height= " + ibIcon.getMeasuredHeight()+ "  width= " + ibIcon.getMeasuredWidth());
+        ibIcon.setImageBitmap(Utilities.decodeSampledBitmapFromResource(mResources, resId, 50, 50));
         RelativeLayout rlIconContainer = (RelativeLayout)convertView.findViewById(R.id.rlIconContainer);
         if (mAnswerIcons.get(position).isClicked()){
             Log.i(TAG, "position " + position + " is clicked");
@@ -104,4 +108,7 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
         });*/
         return convertView;
     }
+
+
+
 }

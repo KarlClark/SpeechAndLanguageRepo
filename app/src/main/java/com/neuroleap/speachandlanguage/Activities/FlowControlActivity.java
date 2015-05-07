@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ExpandableListView;
 
@@ -69,6 +70,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         //Log.i(TAG, "start onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_control);
+        if (Utilities.getTestMode() == Utilities.TEXT_INPUT_ONLY) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }else{
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        }
         mInputMethodManager =(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         //ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
         //DbCRUD.setDatabase(dbHelper.getWritableDatabase());
@@ -86,7 +92,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         setUpDrawer();
         setUpRootViewListener();
         displayFirstQuestion();
-        lowerKeyboard();
+
         //Log.i(TAG,"end onCreate");
     }
 
@@ -135,6 +141,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mQuestionFragmentPagerAdapter.notifyDataSetChanged();
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         invalidateOptionsMenu();
+        if (Utilities.getTestMode() == Utilities.TEXT_INPUT_ONLY ){
+            raiseKeyBoard();
+        }else {
+            lowerKeyboard();
+        }
     }
 
     private void setupViewPager(){
@@ -144,7 +155,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                lowerKeyboard();
+                if (Utilities.getTestMode() == Utilities.TEXT_INPUT_ONLY ){
+                    raiseKeyBoard();
+                }else {
+                    lowerKeyboard();
+                }
             }
 
             @Override
@@ -273,6 +288,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 //raiseKeyBoard();
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
+                if (Utilities.getTestMode() == Utilities.TEXT_INPUT_ONLY){
+                    raiseKeyBoard();
+                }
                 //mDrawerList.collapseGroup(mOpenGroup);
             }
         };
@@ -346,7 +364,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             case QuestionsBaseFragment.SHOW_NEXT_FRAGMENT:
                 mViewPagerQuestions.get((int) args[1]).setDone(true);
                 if (groupIsCompleted((int) args[2])) {
-                    mQuestionCategories.get((int) args[1]).setDone(true);
+                    mQuestionCategories.get((int) args[2]).setDone(true);
                 }
                 if ((int) args[0] + 1 < mViewPagerQuestions.size()) {
                     mViewPager.setCurrentItem((int) args[1] + 1);
@@ -361,6 +379,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 String name = DbCRUD.getStudentNameStringFromScreeningId(mScreeningId);
                 i.putExtra(SCREENING_STUDENT_NAME_TAG, name);
                 setResult(RESULT_OK, i);
+                lowerKeyboard();
                 finish();
                 break;
             case QuestionsBaseFragment.RESULTS_BUTTON_CLICKED:
@@ -378,6 +397,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         Intent i = new Intent();
         i.putExtra(REQUESTED_ACTION_KEY, nextAction);
         setResult(RESULT_OK, i);
+        lowerKeyboard();
         finish();
     }
 

@@ -53,4 +53,9 @@ public class SentenceRepetitionFragment extends  QuestionsBaseFragment {
         return v;
 
     }
+
+    @Override
+    protected boolean answerCorrect(){
+        return false;
+    }
 }
