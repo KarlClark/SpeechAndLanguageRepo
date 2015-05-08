@@ -456,7 +456,7 @@ Semantics/Attributes,,SemanticsAttributesFragment,0,0,,
 ,,wings,,,,
 ,,wing,,,,
 ,,legs,,,,
-,,tentacles,,,,
+,,antenna,,,,
 ,,body,,,,
 ,,eyes,,,,
 ,,likes flowers,,,,
@@ -527,49 +527,82 @@ Semantics/Analogies,,SemanticsAnalogiesFragment,0,0,,
 Processing/Situational,,ProcessingSituationalFragment,0,1,,
 ,You are riding your bicycle and are a long way from home.  You hear a hissing sound. What do you think happened?,,,,riding bike,
 ,,flat tire,,,,
+,,,,bicycle_rider,,
+,,,,,flat_tire,flat tire
 ,Should you ride it home?,,,,ride home?,
 ,,no,,,,
+,,,,bicycle_rider,,
+,,,,,yes,yes
+,,,,,no,no
 ,Why?,,,,why?,
 ,,can't ride on flat tire,,,,
 ,,tire will come off,,,,
-,,iruin the tire,,,,
+,,ruin the tire,,,,
 ,How will you get home?,,,,how to get home,
 ,,walk,,,,
 ,,push bike,,,,
 ,,call mom,,,,
 ,,call dad,,,,
+,,,,home,,
+,,,,,walk,walk
+,,,,,push_bike,push the bicycle
+,,,,,use_phone,call someone on phone
 ,You go to a service station.  What do you say to the attendant?,,,,service station,
 ,,fix tire,,,,
 ,,use phone,,,,
+,,,,,fix_flat,fix my flat tire
+,,,,,blow_up_tire,blow up my tire
+,,,,,use_phone,ask to use the phone
 Processing/Negative why,,ProcessingNegativeWhyFragment,0,1,,
 ,Why do you not leave your house  unlocked?,,,,house unlocked,
 ,,burglar,,,,
 ,,robber,,,,
 ,,stolen,,,,
+,,,,house_unlocked,,
+,,,,,robber,keep robber out
+,,,,,burgular,keep burgular out
+,,,,,prevent_stealing,prevent stealing
 ,Why won't everyone in an accident have to go to the hosipital?,,,,go to hosipital,
 ,,some aren't hurt,,,,
 ,,some are dead,,,,
 Inferences,,InferencesFragment,0,2,,
+,,,,ambulance,,
+,,,,,some_arent_hurt,Some aren't hurt
+,,,,,some_are_dead,Some are dead
 ,How do you know your mom finished dinner?,,,,dinner ready,
 ,,smell food,,,,
 ,,she tells you,,,,
 ,,set the table,,,,
 ,,food is on table,,,,
+,,,,dinner,,
+,,,,,food_is_on_table,food is on the table
+,,,,,she_tells_you,she tells you
+,,,,,smell_food,you smell food
+,,,,,told_to_set_table,you are told to set the table
 ,How do you know a child is hurt?,,,,child hurt,
 ,,crying,,,,
 ,,screeming,,,,
 ,,bawling,,,,
 ,,bleeding,,,,
+,,,,pain,,
+,,,,,crying,Child is crying
+,,,,,bleeding,Child is bleeding
 Idioms,,IdiomsFragment,72,3,,
 ,"What does ""quiet as a mouse"" mean",,,,quite as a mouse,
 ,,very quiet,,,,
 ,,silent,,,,
 ,,can't be heard,,,,
 ,,don't talk,,,,
+,,,,mouse,,
+,,,,,very_quiet,very quiet
+,,,,,silent,silent
+,,,,,dont_talk,don't talk
 ,"What does ""break a leg"" mean?",,,,break a leg,
 ,,Wish a performer good luck,,,,
+,,,,broken_leg,,
+,,,,,wish_actor_luck,wish a performer good luck
 Syntax/Sentence repetition,,SentenceRepetitionFragment,0,4,,
-,Write in the field: Their horses are under the trees.,,,,horses under trees,
+,Repeat:  Their horses are under the trees.,,,,horses under trees,
 ,,Their horses are under the trees.,,,,
-,Write in the field: His bike is beside the house.,,,,bike beside house,
+,Repeat:  His bike is beside the house.,,,,bike beside house,
 ,,His bike is beside the house.,,,,

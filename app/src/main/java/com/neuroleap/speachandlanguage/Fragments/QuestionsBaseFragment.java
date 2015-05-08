@@ -1,10 +1,12 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -33,6 +35,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     protected int mCategoryType;
     protected int mAnswerNumber = 1;
     protected boolean mCommitted=false;
+    private boolean mNeedAnswerText= false;
     protected TextView mTvQuestion;
     protected Button mBtnZero, mBtnOne, mBtnNext, mBtnScreenings, mBtnResults, mBtnOverview;
     protected ArrayList<EditText> mEtAnswers = new ArrayList<EditText>();
@@ -179,23 +182,35 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mGvIconAnswers =(GridView)v.findViewById(R.id.gvIconAnswers);
         Cursor ic_Cursor = DbCRUD.getIconFilenames(mQuestionId);
         AnswerIcon ai;
+        if (ic_Cursor.getCount() > 0 && Utilities.getTestMode() == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT) {
 
-        while(ic_Cursor.moveToNext()){
-            ai = new AnswerIcon(ic_Cursor.getLong(0), ic_Cursor.getString(1));
-            if (idIsaPressedIcon(ai.getAnswerIconId())){
-                Log.i(TAG,"setting clicked true for id " + ai.getAnswerIconId());
-                ai.setClicked(true);
+            while (ic_Cursor.moveToNext()) {
+                ai = new AnswerIcon(ic_Cursor.getLong(0), ic_Cursor.getString(1));
+                if (idIsaPressedIcon(ai.getAnswerIconId())) {
+                    Log.i(TAG, "setting clicked true for id " + ai.getAnswerIconId());
+                    ai.setClicked(true);
+                }
+                mAnswerIcons.add(ai);
             }
-            mAnswerIcons.add(ai);
-        }
-        ic_Cursor.close();
-        for (int i = 0; i < mAnswerIcons.size(); i++ ){
-            mOriginalClicked[i] = mAnswerIcons.get(i).isClicked();
-        }
+            ic_Cursor.close();
+            for (int i = 0; i < mAnswerIcons.size(); i++) {
+                mOriginalClicked[i] = mAnswerIcons.get(i).isClicked();
+            }
 
-        if(Utilities.getTestMode() == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT) {
             mIconAnswersGridViewAdapter = new IconAnswersGridViewAdapter(mContext, this, mAnswerIcons);
             mGvIconAnswers.setAdapter(mIconAnswersGridViewAdapter);
+        }else{
+            mGvIconAnswers.setVisibility(View.GONE);
+            mNeedAnswerText = true;
+            mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(hasFocus){
+                        InputMethodManager imm = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(mEtAnswers.get(0), InputMethodManager.SHOW_FORCED);
+                    }
+                }
+            });
         }
 
         mBtnZero.setOnClickListener(new View.OnClickListener() {
@@ -313,8 +328,19 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                 mBtnOne.setVisibility(View.VISIBLE);
                 mBtnZero.setVisibility(View.VISIBLE);
                 mGvIconAnswers.setVisibility(View.VISIBLE);
-                for(TextView tv : mTvAnswerPrompts){
-                    tv.setVisibility(View.VISIBLE);
+                if(mNeedAnswerText) {
+                    if (mTvAnswerPrompts.size() == 1){
+                        mTvAnswerPrompts.get(0).setText(mContext.getString(R.string.answer));
+                    } else {
+                        for (int i = 0; i < mTvAnswerPrompts.size(); i++) {
+                            mTvAnswerPrompts.get(i).setText(mContext.getString(R.string.answer) + (i + 1));
+                            mTvAnswerPrompts.get(i).setVisibility(View.VISIBLE);
+                        }
+                    }
+                }else {
+                    for (TextView tv : mTvAnswerPrompts) {
+                        tv.setVisibility(View.VISIBLE);
+                    }
                 }
         }
     }

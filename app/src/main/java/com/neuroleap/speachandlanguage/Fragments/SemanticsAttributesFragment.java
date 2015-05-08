@@ -1,6 +1,5 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.neuroleap.speachandlanguage.Data.ScreeningContract;
@@ -59,16 +57,15 @@ public class SemanticsAttributesFragment extends  QuestionsBaseFragment {
             mIvPicture.setImageResource(resId);
         }
 
-        mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
                     InputMethodManager imm = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(mEtAnswers.get(0), InputMethodManager.SHOW_FORCED);
-                    mFirstTime= false;
                 }
             }
-        });
+        });*/
         return v;
 
     }
