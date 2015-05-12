@@ -8,7 +8,7 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
 public class Question {
     private int mId;
     private int mCategoryId;
-    private int mCategoryType;
+    private long mScreeningCategoryId;
     private int mColor=Utilities.CHILD_DEFAULT_COLOR;
     private String mText;
     private boolean mDone = false;
@@ -41,8 +41,8 @@ public class Question {
         }
     }
 
-    public int getCategoryType() {
-        return mCategoryType;
+    public long getScreeningCategoryId() {
+        return mScreeningCategoryId;
     }
 
     public int getId() {
@@ -73,7 +73,7 @@ public class Question {
         return mGroupPosition;
     }
 
-    public Question(int id, int categoryId, int categoryType,  String text, int color, String fragmentName,
+    public Question(int id, int categoryId, long screeningCategoryId,  String text, int color, String fragmentName,
                     int viewPagerPosition, int childPosition, int groupPosition, boolean done, boolean correct){
         mId = id;
         mCategoryId = categoryId;
@@ -88,6 +88,7 @@ public class Question {
             setColor(Utilities.CHILD_COMPLETED_COLOR);
         }
         mCorrect = correct;
-        mCategoryType = categoryType;
+        mScreeningCategoryId = screeningCategoryId;
+
     }
 }

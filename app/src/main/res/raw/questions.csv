@@ -1,608 +1,613 @@
-%Question categories start in column A followed by Questions starting in column B.  Each question is followed by English answers in coloum C  followed by Spanish answers in column D which are followed by picture filenames in column  E followed by icon answer filenames in column F.,,,,,,
-Semantics/Body parts,,SemanticsBodyPartsFragment,0,0,,
-,Name the body part.,spanish,audio EN,audio SP,nose,nariz
-,,nose,,ans sp,,
-,,,nariz,,,
-,,,,nose,,
-,,,,,nose,nose
-,Name the body part.,,,,knee,rodilla
-,,knee,,,,
-,,,rodilla,,,
-,,,,knee,,
-,,,,,knee,knee
-,Name the body part.,,,,chin,barbilla
-,,chin,,,,
-,,,barbilla,,,
-,,,,chin,,
-,,,,,chin,chin
-,Name the body part.,,,,wrist,muneca
-,,wrist,,,,
-,,,muneca,,,
-,,,,wrist,,
-,,,,,wrist,wrist
-,Name the body part.,,,,elbow,codo
-,,elbow,,,,
-,,,codo,,,
-,,,,elbow,,
-,,,,,elbow,elbow
-,Name the body part.,,,,shoulder,hombro
-,,shoulder,,,,
-,,,hombro,,,
-,,,,shoulder,,
-,,,,,shoulder,shoulder
-,Name the body part.,,,,mouth,boca
-,,mouth,,,,
-,,,boca,,,
-,,,,mouth,,
-,,,,,mouth,mouth
-,Name the body part.,,,,thumb,pulgar
-,,thumb,,,,
-,,,pulgar,,,
-,,,,thumb,,
-,,,,,thumb,thumb
-,Name the body part.,,,,ankle,tobilla
-,,ankle,,,,
-,,,tobillo,,,
-,,,,ankle,,
-,,,,,ankle,ankle
-,Name the body part.,,,,foot,pie
-,,foot,,,,
-,,,pie,,,
-,,,,foot,,
-,,,,,foot,foot
-Semantics/Categories,,SemanticsCategoriesFragment,0,0,,
-,Tell me 2 kinds of shapes.,,,,shapes,
-,,triangle,,,,
-,,cylinder,,,,
-,,circle,,,,
-,,cube,,,,
-,,rectangle,,,,
-,,square,,,,
-,,oval,,,,
-,,hexagon,,,,
-,,pentagon,,,,
-,,diamond,,,,
-,,fullerene,,,,
-,,,,shapes,,
-,,,,,triangle,triangle
-,,,,,circle,circle
-,,,,,square,square
-,,,,,rectangle,rectangle
-,,,,,oval,oval
-,,,,,cube,cube
-,,,,,cylinder,cylinder
-,,,,,diamond,diamond
-,,,,,pentagon,pentagon
-,Tell me 2 kinds of fruits.,,,,fruits,
-,,mango,,,,
-,,strawberry,,,,
-,,orange,,,,
-,,banana,,,,
-,,apple,,,,
-,,raspberry,,,,
-,,lingonberry,,,,
-,,gooseberry,,,,
-,,blackberry,,,,
-,,melon,,,,
-,,watermelon,,,,
-,,cloudberry,,,,
-,,mini strawberry,,,,
-,,peach,,,,
-,,plum,,,,
-,,grape,,,,
-,,grapes,,,,
-,,pear,,,,
-,,nectarene,,,,
-,,cantelope,,,,
-,,,,fruit,,
-,,,,,apple,apple
-,,,,,orange,orange
-,,,,,banana,banana
-,,,,,pear,pear
-,,,,,watermelon,watermelon
-,,,,,grapes,grapes
-,,,,,plum,plum
-,,,,,strawberry,strawberry
-,,,,,blueberry,blueberry
-,Tell me 2 kinds of furniture,,,,furniture,
-,,desk,,,,
-,,table,,,,
-,,bed,,,,
-,,drawer,,,,
-,,dresser,,,,
-,,wardrobe,,,,
-,,bookshelf,,,,
-,,sofa,,,,
-,,couch,,,,
-,,chair,,,,
-,,armoire,,,,
-,,tv stand,,,,
-,,tv-stand,,,,
-,,,,furniture,,
-,,,,,chair,chair
-,,,,,table,table
-,,,,,bed,bed
-,,,,,desk,desk
-,,,,,dresser,dresser
-,,,,,chest_of_drawers,chest of drawers
-,,,,,sofa,couch
-,,,,,bookcase,bookcase
-,Tell me 2 kinds of clothing.,,,,clothing,
-,,shirt,,,,
-,,dress,,,,
-,,shirt,,,,
-,,necktie,,,,
-,,tie,,,,
-,,skirt,,,,
-,,one-piece,,,,
-,,panties,,,,
-,,pants,,,,
-,,jeans,,,,
-,,t-shirt,,,,
-,,tshirt,,,,
-,,tank-top,,,,
-,,socks,,,,
-,,sock,,,,
-,,gloves,,,,
-,,glove,,,,
-,,jacket,,,,
-,,coat,,,,
-,,underpants,,,,
-,,underwear,,,,
-,,hat,,,,
-,,scarf,,,,
-,,shoe,,,,
-,,shoes,,,,
-,,beanie,,,,
-,,sweater,,,,
-,,sweatshirt,,,,
-,,sweat shirt,,,,
-,,raincoat,,,,
-,,rain coat,,,,
-,,,,clothing,,
-,,,,,pants,pants
-,,,,,shirt,shirt
-,,,,,dress,dress
-,,,,,skirt,skirt
-,,,,,shoes,shoes
-,,,,,socks,socks
-,,,,,hat,hat
-,,,,,underwear,underwear
-,,,,,jacket,jacket
-Semantics/Comprehension,,SemanticsComprehensionFragment,0,0,,
-,Where do you keep your cloths?,,,,keep cloths?,
-,,in a drawer,,,,
-,,in a dresser,,,,
-,,in a wardrobe,,,,
-,,in a closet,,,,
-,,in a box,,,,
-,,under the bed,,,,
-,,on a table,,,,
-,,under a table,,,,
-,,,,closet,,
-,,,,,closet,closet
-,,,,,dresser,dresser
-,,,,,chest_of_drawers,chest of drawers
-,,,,,chest,chest
-,,,,,wardrobe,wardrobe
-,How do you wash your hands?,,,,wash hands?,
-,,Turn on water/wet you hands/apply soap/ rub hands/ wash off soap/turn off water/dry hands,,,,
-,,Wet hands/rub soap/rub hands/rinse off soap/dry hands with towel,,,,
-,,,,rinse_hands,,
-,,,,,faucet_on,turn on faucet
-,,,,,wet_hands,wet hands
-,,,,,soap,use soap
-,,,,,rub_hands,rub hands
-,,,,,rinse_hands,rinse hand
-,,,,,faucet_off,turn off faucet
-,,,,,towel,dry hands
-,What do you ride?,,,,ride?,
-,,horse,,,,
-,,car,,,,
-,,lorry,,,,
-,,truck,,,,
-,,buss,,,,
-,,pickup,,,,
-,,pickup truck,,,,
-,,school bus,,,,
-,,pony,,,,
-,,daddy's car,,,,
-,,mommy's car,,,,
-,,tank,,,,
-,,helicopter,,,,
-,,airplane,,,,
-,,jet_ski,,,,
-,,surfboard,,,,
-,,body board,,,,
-,,boggie board,,,,
-,,windsurfing board,,,,
-,,long board,,,,
-,,jetplane,,,,
-,,spaceship,,,,
-,,the falcon,,,,
-,,x-wing,,,,
-,,go cart,,,,
-,,go-cart,,,,
-,,skateboard,,,,
-,,bicycle,,,,
-,,motorcycle,,,,
-,,train,,,,
-,,bike,,,,
-,,tricycle,,,,
-,,trike,,,,
-,,scooter,,,,
-,,,,bicycle_rider,,
-,,,,,car,car
-,,,,,bus,bus
-,,,,,school_bus,school bus
-,,,,,bicycle,bicycle
-,,,,,motorcycle,motorcycle
-,,,,,skateboard,skateboard
-,,,,,tricycle,tricycle
-,,,,,pickup,pickup truck
-,,,,,scooter,scooter
-,Who lives with you?,,,,lives with you?,
-,,daddy,,,,
-,,dad,,,,
-,,father,,,,
-,,mom,,,,
-,,mommy,,,,
-,,mother,,,,
-,,sister,,,,
-,,brother,,,,
-,,uncle,,,,
-,,aunt,,,,
-,,baby sitter,,,,
-,,aupair,,,,
-,,butler,,,,
-,,servant,,,,
-,,friend,,,,
-,,friends,,,,
-,,grandma,,,,
-,,grandmother,,,,
-,,grandpa,,,,
-,,granddad,,,,
-,,grandfather,,,,
-,,,,family,,
-,,,,,father,father
-,,,,,mother,mother
-,,,,,sister,sister
-,,,,,brother,brother
-,,,,,grandmother,grandmother
-,,,,,grandfather,grandfather
-,Why do you take a bath?,,,,why take bath?,
-,,to be clean,,,,
-,,to not be dirty,,,,
-,,mommy says so,,,,
-,,daddy says so,,,,
-,,to play with bath toys,,,,
-,,to take away itching body,,,,
-,,,,bathtub,,
-,,,,,to_be_clean,To be clean.
-,,,,,to_not_be_dirty,To not be dirty.
-,,,,,mother_says_so,Mother says so.
-,,,,,father_says_so,Father says so.
-,,,,,play_with_bath_toys,To play with bath toys.
-,,,,,take_away_itchy_skin,To take away itchy skin.
-Semantics/Prepositions,,SemanticsPrepositionsFragment,0,0,,
-,Tell me where the duck is?,,,,on top,
-,,on a table,,,,
-,,,,duck_on_top_of_table,,
-,,,,,duck_on_top_of_table,On
-,Tell me where the duck is?,,,,behind,
-,,behind chair,,,,
-,,,,duck_behind_chair,,
-,,,,,duck_behind_chair,Behind
-,Tell me where the duck is?,,,,over,
-,,over table,,,,
-,,,,duck_over_the_table,,
-,,,,,duck_over_the_table,Over
-,Tell me where the duck is?,,,,under,
-,,under table,,,,
-,,on floor,,,,
-,,,,duck_under_the_table,,
-,,,,,duck_under_the_table,Under
-,tell me where the man is?,,,,between,
-,,between desk chair,,,,
-,,inbetween desk chair,,,,
-,,between chair desk,,,,
-,,inbetween desk chair,,,,
-,,,,man_between_chair_desk,,
-,,,,,man_between_chair_desk,Between
-,Tell me where the duck is?,,,,beside,
-,,beside books,,,,
-,,,,duck_besides_books,,
-,,,,,duck_besides_books,Beside
-Semantics/Associations,,SemanticsAssociationsFragment,0,0,,
-,Which one does not belong? Car/Bus/Hamburger/Plane,,,,car/bus ect.,
-,,hamburger,,,,
-,,,,car,,
-,,,,bus,,
-,,,,hamburger,,
-,,,,airplane,,
-,,,,,car,car
-,,,,,bus,bus
-,,,,,hamburger,hamburger
-,,,,,airplane,airplane
-,Which does not belong? Baseball/Cat/Tennis/Golf,,,,baseball/cat ect.,
-,,cat,,,,
-,,,,baseball,,
-,,,,cat,,
-,,,,tennis,,
-,,,,golf,,
-,,,,,baseball,baseball
-,,,,,cat,cat
-,,,,,tennis,tennis
-,,,,,golf,golf
-,Which does not belong? Cat/Dog/Tircycle/Fish,,,,cat/dog ect.,
-,,Tricycle,,,,
-,,,,cat,,
-,,,,dog,,
-,,,,tricycle,,
-,,,,fish,,
-,,,,,cat,cat
-,,,,,dog,dog
-,,,,,tricycle,tricycle
-,,,,,fish,fish
-,How are bananas and oranges alike?,,,,alike bananas/oranges,
-,,fruit,,,,
-,,yummy,,,,
-,,taste good,,,,
-,,taste bad,,,,
-,,have colors,,,,
-,,rot,,,,
-,,allergic,,,,
-,,grocery store,,,,
-,,bought by mom,,,,
-,,bought by dad,,,,
-,,come from ground,,,,
-,,grow on trees,,,,
-,,,,banana,,
-,,,,orange,,
-,How are shirt and shoes alike?,,,,alike shirt/shoes,
-,,clothes,,,,
-,,worn,,,,
-,,clothing,,,,
-,,start with letter s,,,,
-,,both start with sh,,,,
-,,in clothing store,,,,
-,,wear,,,,
-,,,,shirt,,
-,,,,shoes,,
-,How are pen and pencil alike?,,,,alike pen/pencil,
-,,write with,,,,
-,,cylinderical,,,,
-,,both start with letter p,,,,
-,,both start with pen,,,,
-,,draw with,,,,
-,,hard,,,,
-,,long,,,,
-,,,,pen,,
-,,,,pencil,,
-Semantics/Antonyms/Synonyms,,SemanticsAntonymsSynonymsFragment,0,0,,
-,What is the opposite of sad?,,,,opposite sad,
-,,happy,,,,
-,,glad,,,,
-,,pleased,,,,
-,,,,happy_face,,
-,,,,,sad_face,sad
-,What is the opposite of enemy,,,,opposite enemy,
-,,friend,,,,
-,,ally,,,,
-,,buddy,,,,
-,,pal,,,,
-,,,,enemy,,
-,,,,,friend,friend
-,What is the opposite of over?,,,,opposite over,
-,,under,,,,
-,,below,,,,
-,,beneath,,,,
-,,underneath,,,,
-,,,,duck_over_the_table,,
-,,,,,duck_under_the_table,under
-,What is similar to clever?,,,,similar clever,
-,,smart,,,,
-,,intelligent,,,,
-,,bright,,,,
-,,,,same_as_clever,,
-,,,,,smart,smart
-,,,,,intelligent,intelligent
-,,,,,bright,bright
-,What is similar to shout?,,,,similar shout,
-,,yell,,,,
-,,scream,,,,
-,,holler,,,,
-,,bellow,,,,
-,,,,same_as_shout,,
-,,,,,yell,yell
-,,,,,scream,scream
-,,,,,holler,holler
-,,,,,bellow,bellow
-,What is similar to end?,,,,similar finish,
-,,finish,,,,
-,,closure,,,,
-,,done,,,,
-,,complete,,,,
-,,completed,,,,
-,,,,same_as_end,,
-,,,,,finish,finish
-,,,,,done,done
-,,,,,complete,complete
-,What is similar to hard?,,,,similar difficult,
-,,difficult,,,,
-,,overwhelming,,,,
-,,exhausting,,,,
-,,tiresome,,,,
-,,pain in the behind,,,,
-,,,,same_as_hard,,
-,,,,,difficult,difficult
-,What is similar to big?,,,,similar huge,
-,,huge,,,,
-,,large,,,,
-,,humongous,,,,
-,,giant,,,,
-,,,,same_as_big,,
-,,,,,huge_text,huge
-,,,,,large,large
-,,,,,giant,giant
-,What is similar to assistant?,,,,similar assistant,
-,,helper,,,,
-,,supporter,,,,
-,,,,same_as_assistant,,
-,,,,,helper,helper
-,,,,,supporter,supporter
-Semantics/Attributes,,SemanticsAttributesFragment,0,0,,
-,Tell me three things about a butterfly,,,,about butterfly,
-,,wings,,,,
-,,wing,,,,
-,,legs,,,,
-,,antenna,,,,
-,,body,,,,
-,,eyes,,,,
-,,likes flowers,,,,
-,,eats nectar,,,,
-,,,,butterfly,,
-,Tell me three things about a car.,,,,about car,
-,,goes wroom,,,,
-,,runs,,,,
-,,goes on the street,,,,
-,,ride in it,,,,
-,,made out of metal,,,,
-,,seats,,,,
-,,handle,,,,
-,,steering wheel,,,,
-,,brakes,,,,
-,,doors,,,,
-,,wheels,,,,
-,,can run fast or slow,,,,
-,,can turn,,,,
-,,dad has one,,,,
-,,mom has one.,,,,
-,,windshield,,,,
-,,engine,,,,
-,,motor,,,,
-,,trunk,,,,
-,,lights,,,,
-,,,,car,,
-,Tell me three things about a forest.,,,,about forest,
-,,trees,,,,
-,,animals,,,,
-,,green,,,,
-,,insects,,,,
-,,dark,,,,
-,,,,forest,,
-Semantics/Analogies,,SemanticsAnalogiesFragment,0,0,,
-,Piano is to keys and violin is to,,,,piano/violin,
-,,strings,,,,
-,,,,piano,,
-,,,,,strings,strings
-,A tree is to leaves as flower is to,,,,tree/flower,
-,,pedals,,,,
-,,peduncle,,,,
-,,receptacle,,,,
-,,sepal,,,,
-,,stamen,,,,
-,,anther,,,,
-,,pistil,,,,
-,,stigma,,,,
-,,,,tree,,
-,,,,,petal,petal
-,Milk is to carton as jelly is to ,,,,milk/jelly,
-,,jar,,,,
-,,can,,,,
-,,,,milk_carton,,
-,,,,,jar,jar
-,Nurses are to needles as mechanics are to,,,,nurses/mechanics,
-,,tools,,,,
-,,wrench,,,,
-,,hammer,,,,
-,,pliers,,,,
-,,screwdriver,,,,
-,,,,nurse_with_needle,,
-,,,,,tools,tools
-,,,,,wrench,wrench
-,,,,,screwdriver,screwdriver
-,,,,,hammer,hammer
-,,,,,pliers,pliers
-Processing/Situational,,ProcessingSituationalFragment,0,1,,
-,You are riding your bicycle and are a long way from home.  You hear a hissing sound. What do you think happened?,,,,riding bike,
-,,flat tire,,,,
-,,,,bicycle_rider,,
-,,,,,flat_tire,flat tire
-,Should you ride it home?,,,,ride home?,
-,,no,,,,
-,,,,bicycle_rider,,
-,,,,,yes,yes
-,,,,,no,no
-,Why?,,,,why?,
-,,can't ride on flat tire,,,,
-,,tire will come off,,,,
-,,ruin the tire,,,,
-,How will you get home?,,,,how to get home,
-,,walk,,,,
-,,push bike,,,,
-,,call mom,,,,
-,,call dad,,,,
-,,,,home,,
-,,,,,walk,walk
-,,,,,push_bike,push the bicycle
-,,,,,use_phone,call someone on phone
-,You go to a service station.  What do you say to the attendant?,,,,service station,
-,,fix tire,,,,
-,,use phone,,,,
-,,,,,fix_flat,fix my flat tire
-,,,,,blow_up_tire,blow up my tire
-,,,,,use_phone,ask to use the phone
-Processing/Negative why,,ProcessingNegativeWhyFragment,0,1,,
-,Why do you not leave your house  unlocked?,,,,house unlocked,
-,,burglar,,,,
-,,robber,,,,
-,,stolen,,,,
-,,,,house_unlocked,,
-,,,,,robber,keep robber out
-,,,,,burgular,keep burgular out
-,,,,,prevent_stealing,prevent stealing
-,Why won't everyone in an accident have to go to the hosipital?,,,,go to hosipital,
-,,some aren't hurt,,,,
-,,some are dead,,,,
-Inferences,,InferencesFragment,0,2,,
-,,,,ambulance,,
-,,,,,some_arent_hurt,Some aren't hurt
-,,,,,some_are_dead,Some are dead
-,How do you know your mom finished dinner?,,,,dinner ready,
-,,smell food,,,,
-,,she tells you,,,,
-,,set the table,,,,
-,,food is on table,,,,
-,,,,dinner,,
-,,,,,food_is_on_table,food is on the table
-,,,,,she_tells_you,she tells you
-,,,,,smell_food,you smell food
-,,,,,told_to_set_table,you are told to set the table
-,How do you know a child is hurt?,,,,child hurt,
-,,crying,,,,
-,,screeming,,,,
-,,bawling,,,,
-,,bleeding,,,,
-,,,,pain,,
-,,,,,crying,Child is crying
-,,,,,bleeding,Child is bleeding
-Idioms,,IdiomsFragment,72,3,,
-,"What does ""quiet as a mouse"" mean",,,,quite as a mouse,
-,,very quiet,,,,
-,,silent,,,,
-,,can't be heard,,,,
-,,don't talk,,,,
-,,,,mouse,,
-,,,,,very_quiet,very quiet
-,,,,,silent,silent
-,,,,,dont_talk,don't talk
-,"What does ""break a leg"" mean?",,,,break a leg,
-,,Wish a performer good luck,,,,
-,,,,broken_leg,,
-,,,,,wish_actor_luck,wish a performer good luck
-Syntax/Sentence repetition,,SentenceRepetitionFragment,0,4,,
-,Repeat:  Their horses are under the trees.,,,,horses under trees,
-,,Their horses are under the trees.,,,,
-,Repeat:  His bike is beside the house.,,,,bike beside house,
-,,His bike is beside the house.,,,,
+%Screenings categories start in column A  followed by Question categories  in column B followed by Questions starting in column C.  Each question is followed by English answers in coloum D  followed by Spanish answers in column E which are followed by picture filenames in column  F followed by icon answer filenames in column G.,,,,,,,
+Semantics,,,,,,,
+,Semantics/Body parts,,SemanticsBodyPartsFragment,0,,,
+,,Name the body part.,spanish,audio EN,audio SP,nose,nariz
+,,,nose,,ans sp,,
+,,,,nariz,,,
+,,,,,nose,,
+,,,,,,nose,nose
+,,Name the body part.,,,,knee,rodilla
+,,,knee,,,,
+,,,,rodilla,,,
+,,,,,knee,,
+,,,,,,knee,knee
+,,Name the body part.,,,,chin,barbilla
+,,,chin,,,,
+,,,,barbilla,,,
+,,,,,chin,,
+,,,,,,chin,chin
+,,Name the body part.,,,,wrist,muneca
+,,,wrist,,,,
+,,,,muneca,,,
+,,,,,wrist,,
+,,,,,,wrist,wrist
+,,Name the body part.,,,,elbow,codo
+,,,elbow,,,,
+,,,,codo,,,
+,,,,,elbow,,
+,,,,,,elbow,elbow
+,,Name the body part.,,,,shoulder,hombro
+,,,shoulder,,,,
+,,,,hombro,,,
+,,,,,shoulder,,
+,,,,,,shoulder,shoulder
+,,Name the body part.,,,,mouth,boca
+,,,mouth,,,,
+,,,,boca,,,
+,,,,,mouth,,
+,,,,,,mouth,mouth
+,,Name the body part.,,,,thumb,pulgar
+,,,thumb,,,,
+,,,,pulgar,,,
+,,,,,thumb,,
+,,,,,,thumb,thumb
+,,Name the body part.,,,,ankle,tobilla
+,,,ankle,,,,
+,,,,tobillo,,,
+,,,,,ankle,,
+,,,,,,ankle,ankle
+,,Name the body part.,,,,foot,pie
+,,,foot,,,,
+,,,,pie,,,
+,,,,,foot,,
+,,,,,,foot,foot
+,Semantics/Categories,,SemanticsCategoriesFragment,0,,,
+,,Tell me 2 kinds of shapes.,,,,shapes,
+,,,triangle,,,,
+,,,cylinder,,,,
+,,,circle,,,,
+,,,cube,,,,
+,,,rectangle,,,,
+,,,square,,,,
+,,,oval,,,,
+,,,hexagon,,,,
+,,,pentagon,,,,
+,,,diamond,,,,
+,,,fullerene,,,,
+,,,,,shapes,,
+,,,,,,triangle,triangle
+,,,,,,circle,circle
+,,,,,,square,square
+,,,,,,rectangle,rectangle
+,,,,,,oval,oval
+,,,,,,cube,cube
+,,,,,,cylinder,cylinder
+,,,,,,diamond,diamond
+,,,,,,pentagon,pentagon
+,,Tell me 2 kinds of fruits.,,,,fruits,
+,,,mango,,,,
+,,,strawberry,,,,
+,,,orange,,,,
+,,,banana,,,,
+,,,apple,,,,
+,,,raspberry,,,,
+,,,lingonberry,,,,
+,,,gooseberry,,,,
+,,,blackberry,,,,
+,,,melon,,,,
+,,,watermelon,,,,
+,,,cloudberry,,,,
+,,,mini strawberry,,,,
+,,,peach,,,,
+,,,plum,,,,
+,,,grape,,,,
+,,,grapes,,,,
+,,,pear,,,,
+,,,nectarene,,,,
+,,,cantelope,,,,
+,,,,,fruit,,
+,,,,,,apple,apple
+,,,,,,orange,orange
+,,,,,,banana,banana
+,,,,,,pear,pear
+,,,,,,watermelon,watermelon
+,,,,,,grapes,grapes
+,,,,,,plum,plum
+,,,,,,strawberry,strawberry
+,,,,,,blueberry,blueberry
+,,Tell me 2 kinds of furniture,,,,furniture,
+,,,desk,,,,
+,,,table,,,,
+,,,bed,,,,
+,,,drawer,,,,
+,,,dresser,,,,
+,,,wardrobe,,,,
+,,,bookshelf,,,,
+,,,sofa,,,,
+,,,couch,,,,
+,,,chair,,,,
+,,,armoire,,,,
+,,,tv stand,,,,
+,,,tv-stand,,,,
+,,,,,furniture,,
+,,,,,,chair,chair
+,,,,,,table,table
+,,,,,,bed,bed
+,,,,,,desk,desk
+,,,,,,dresser,dresser
+,,,,,,chest_of_drawers,chest of drawers
+,,,,,,sofa,couch
+,,,,,,bookcase,bookcase
+,,Tell me 2 kinds of clothing.,,,,clothing,
+,,,shirt,,,,
+,,,dress,,,,
+,,,shirt,,,,
+,,,necktie,,,,
+,,,tie,,,,
+,,,skirt,,,,
+,,,one-piece,,,,
+,,,panties,,,,
+,,,pants,,,,
+,,,jeans,,,,
+,,,t-shirt,,,,
+,,,tshirt,,,,
+,,,tank-top,,,,
+,,,socks,,,,
+,,,sock,,,,
+,,,gloves,,,,
+,,,glove,,,,
+,,,jacket,,,,
+,,,coat,,,,
+,,,underpants,,,,
+,,,underwear,,,,
+,,,hat,,,,
+,,,scarf,,,,
+,,,shoe,,,,
+,,,shoes,,,,
+,,,beanie,,,,
+,,,sweater,,,,
+,,,sweatshirt,,,,
+,,,sweat shirt,,,,
+,,,raincoat,,,,
+,,,rain coat,,,,
+,,,,,clothing,,
+,,,,,,pants,pants
+,,,,,,shirt,shirt
+,,,,,,dress,dress
+,,,,,,skirt,skirt
+,,,,,,shoes,shoes
+,,,,,,socks,socks
+,,,,,,hat,hat
+,,,,,,underwear,underwear
+,,,,,,jacket,jacket
+,Semantics/Comprehension,,SemanticsComprehensionFragment,0,,,
+,,Where do you keep your cloths?,,,,keep cloths?,
+,,,in a drawer,,,,
+,,,in a dresser,,,,
+,,,in a wardrobe,,,,
+,,,in a closet,,,,
+,,,in a box,,,,
+,,,under the bed,,,,
+,,,on a table,,,,
+,,,under a table,,,,
+,,,,,closet,,
+,,,,,,closet,closet
+,,,,,,dresser,dresser
+,,,,,,chest_of_drawers,chest of drawers
+,,,,,,chest,chest
+,,,,,,wardrobe,wardrobe
+,,How do you wash your hands?,,,,wash hands?,
+,,,Turn on water/wet you hands/apply soap/ rub hands/ wash off soap/turn off water/dry hands,,,,
+,,,Wet hands/rub soap/rub hands/rinse off soap/dry hands with towel,,,,
+,,,,,rinse_hands,,
+,,,,,,faucet_on,turn on faucet
+,,,,,,wet_hands,wet hands
+,,,,,,soap,use soap
+,,,,,,rub_hands,rub hands
+,,,,,,rinse_hands,rinse hand
+,,,,,,faucet_off,turn off faucet
+,,,,,,towel,dry hands
+,,What do you ride?,,,,ride?,
+,,,horse,,,,
+,,,car,,,,
+,,,lorry,,,,
+,,,truck,,,,
+,,,buss,,,,
+,,,pickup,,,,
+,,,pickup truck,,,,
+,,,school bus,,,,
+,,,pony,,,,
+,,,daddy's car,,,,
+,,,mommy's car,,,,
+,,,tank,,,,
+,,,helicopter,,,,
+,,,airplane,,,,
+,,,jet_ski,,,,
+,,,surfboard,,,,
+,,,body board,,,,
+,,,boggie board,,,,
+,,,windsurfing board,,,,
+,,,long board,,,,
+,,,jetplane,,,,
+,,,spaceship,,,,
+,,,the falcon,,,,
+,,,x-wing,,,,
+,,,go cart,,,,
+,,,go-cart,,,,
+,,,skateboard,,,,
+,,,bicycle,,,,
+,,,motorcycle,,,,
+,,,train,,,,
+,,,bike,,,,
+,,,tricycle,,,,
+,,,trike,,,,
+,,,scooter,,,,
+,,,,,bicycle_rider,,
+,,,,,,car,car
+,,,,,,bus,bus
+,,,,,,school_bus,school bus
+,,,,,,bicycle,bicycle
+,,,,,,motorcycle,motorcycle
+,,,,,,skateboard,skateboard
+,,,,,,tricycle,tricycle
+,,,,,,pickup,pickup truck
+,,,,,,scooter,scooter
+,,Who lives with you?,,,,lives with you?,
+,,,daddy,,,,
+,,,dad,,,,
+,,,father,,,,
+,,,mom,,,,
+,,,mommy,,,,
+,,,mother,,,,
+,,,sister,,,,
+,,,brother,,,,
+,,,uncle,,,,
+,,,aunt,,,,
+,,,baby sitter,,,,
+,,,aupair,,,,
+,,,butler,,,,
+,,,servant,,,,
+,,,friend,,,,
+,,,friends,,,,
+,,,grandma,,,,
+,,,grandmother,,,,
+,,,grandpa,,,,
+,,,granddad,,,,
+,,,grandfather,,,,
+,,,,,family,,
+,,,,,,father,father
+,,,,,,mother,mother
+,,,,,,sister,sister
+,,,,,,brother,brother
+,,,,,,grandmother,grandmother
+,,,,,,grandfather,grandfather
+,,Why do you take a bath?,,,,why take bath?,
+,,,to be clean,,,,
+,,,to not be dirty,,,,
+,,,mommy says so,,,,
+,,,daddy says so,,,,
+,,,to play with bath toys,,,,
+,,,to take away itching body,,,,
+,,,,,bathtub,,
+,,,,,,to_be_clean,To be clean.
+,,,,,,to_not_be_dirty,To not be dirty.
+,,,,,,mother_says_so,Mother says so.
+,,,,,,father_says_so,Father says so.
+,,,,,,play_with_bath_toys,To play with bath toys.
+,,,,,,take_away_itchy_skin,To take away itchy skin.
+,Semantics/Prepositions,,SemanticsPrepositionsFragment,0,,,
+,,Tell me where the duck is?,,,,on top,
+,,,on a table,,,,
+,,,,,duck_on_top_of_table,,
+,,,,,,duck_on_top_of_table,On
+,,Tell me where the duck is?,,,,behind,
+,,,behind chair,,,,
+,,,,,duck_behind_chair,,
+,,,,,,duck_behind_chair,Behind
+,,Tell me where the duck is?,,,,over,
+,,,over table,,,,
+,,,,,duck_over_the_table,,
+,,,,,,duck_over_the_table,Over
+,,Tell me where the duck is?,,,,under,
+,,,under table,,,,
+,,,on floor,,,,
+,,,,,duck_under_the_table,,
+,,,,,,duck_under_the_table,Under
+,,tell me where the man is?,,,,between,
+,,,between desk chair,,,,
+,,,inbetween desk chair,,,,
+,,,between chair desk,,,,
+,,,inbetween desk chair,,,,
+,,,,,man_between_chair_desk,,
+,,,,,,man_between_chair_desk,Between
+,,Tell me where the duck is?,,,,beside,
+,,,beside books,,,,
+,,,,,duck_besides_books,,
+,,,,,,duck_besides_books,Beside
+,Semantics/Associations,,SemanticsAssociationsFragment,0,,,
+,,Which one does not belong? Car/Bus/Hamburger/Plane,,,,car/bus ect.,
+,,,hamburger,,,,
+,,,,,car,,
+,,,,,bus,,
+,,,,,hamburger,,
+,,,,,airplane,,
+,,,,,,car,car
+,,,,,,bus,bus
+,,,,,,hamburger,hamburger
+,,,,,,airplane,airplane
+,,Which does not belong? Baseball/Cat/Tennis/Golf,,,,baseball/cat ect.,
+,,,cat,,,,
+,,,,,baseball,,
+,,,,,cat,,
+,,,,,tennis,,
+,,,,,golf,,
+,,,,,,baseball,baseball
+,,,,,,cat,cat
+,,,,,,tennis,tennis
+,,,,,,golf,golf
+,,Which does not belong? Cat/Dog/Tircycle/Fish,,,,cat/dog ect.,
+,,,Tricycle,,,,
+,,,,,cat,,
+,,,,,dog,,
+,,,,,tricycle,,
+,,,,,fish,,
+,,,,,,cat,cat
+,,,,,,dog,dog
+,,,,,,tricycle,tricycle
+,,,,,,fish,fish
+,,How are bananas and oranges alike?,,,,alike bananas/oranges,
+,,,fruit,,,,
+,,,yummy,,,,
+,,,taste good,,,,
+,,,taste bad,,,,
+,,,have colors,,,,
+,,,rot,,,,
+,,,allergic,,,,
+,,,grocery store,,,,
+,,,bought by mom,,,,
+,,,bought by dad,,,,
+,,,come from ground,,,,
+,,,grow on trees,,,,
+,,,,,banana,,
+,,,,,orange,,
+,,How are shirt and shoes alike?,,,,alike shirt/shoes,
+,,,clothes,,,,
+,,,worn,,,,
+,,,clothing,,,,
+,,,start with letter s,,,,
+,,,both start with sh,,,,
+,,,in clothing store,,,,
+,,,wear,,,,
+,,,,,shirt,,
+,,,,,shoes,,
+,,How are pen and pencil alike?,,,,alike pen/pencil,
+,,,write with,,,,
+,,,cylinderical,,,,
+,,,both start with letter p,,,,
+,,,both start with pen,,,,
+,,,draw with,,,,
+,,,hard,,,,
+,,,long,,,,
+,,,,,pen,,
+,,,,,pencil,,
+,Semantics/Antonyms/Synonyms,,SemanticsAntonymsSynonymsFragment,0,,,
+,,What is the opposite of sad?,,,,opposite sad,
+,,,happy,,,,
+,,,glad,,,,
+,,,pleased,,,,
+,,,,,happy_face,,
+,,,,,,sad_face,sad
+,,What is the opposite of enemy,,,,opposite enemy,
+,,,friend,,,,
+,,,ally,,,,
+,,,buddy,,,,
+,,,pal,,,,
+,,,,,enemy,,
+,,,,,,friend,friend
+,,What is the opposite of over?,,,,opposite over,
+,,,under,,,,
+,,,below,,,,
+,,,beneath,,,,
+,,,underneath,,,,
+,,,,,duck_over_the_table,,
+,,,,,,duck_under_the_table,under
+,,What is similar to clever?,,,,similar clever,
+,,,smart,,,,
+,,,intelligent,,,,
+,,,bright,,,,
+,,,,,same_as_clever,,
+,,,,,,smart,smart
+,,,,,,intelligent,intelligent
+,,,,,,bright,bright
+,,What is similar to shout?,,,,similar shout,
+,,,yell,,,,
+,,,scream,,,,
+,,,holler,,,,
+,,,bellow,,,,
+,,,,,same_as_shout,,
+,,,,,,yell,yell
+,,,,,,scream,scream
+,,,,,,holler,holler
+,,,,,,bellow,bellow
+,,What is similar to end?,,,,similar finish,
+,,,finish,,,,
+,,,closure,,,,
+,,,done,,,,
+,,,complete,,,,
+,,,completed,,,,
+,,,,,same_as_end,,
+,,,,,,finish,finish
+,,,,,,done,done
+,,,,,,complete,complete
+,,What is similar to hard?,,,,similar difficult,
+,,,difficult,,,,
+,,,overwhelming,,,,
+,,,exhausting,,,,
+,,,tiresome,,,,
+,,,pain in the behind,,,,
+,,,,,same_as_hard,,
+,,,,,,difficult,difficult
+,,What is similar to big?,,,,similar huge,
+,,,huge,,,,
+,,,large,,,,
+,,,humongous,,,,
+,,,giant,,,,
+,,,,,same_as_big,,
+,,,,,,huge_text,huge
+,,,,,,large,large
+,,,,,,giant,giant
+,,What is similar to assistant?,,,,similar assistant,
+,,,helper,,,,
+,,,supporter,,,,
+,,,,,same_as_assistant,,
+,,,,,,helper,helper
+,,,,,,supporter,supporter
+,Semantics/Attributes,,SemanticsAttributesFragment,0,,,
+,,Tell me three things about a butterfly,,,,about butterfly,
+,,,wings,,,,
+,,,wing,,,,
+,,,legs,,,,
+,,,antenna,,,,
+,,,body,,,,
+,,,eyes,,,,
+,,,likes flowers,,,,
+,,,eats nectar,,,,
+,,,,,butterfly,,
+,,Tell me three things about a car.,,,,about car,
+,,,goes wroom,,,,
+,,,runs,,,,
+,,,goes on the street,,,,
+,,,ride in it,,,,
+,,,made out of metal,,,,
+,,,seats,,,,
+,,,handle,,,,
+,,,steering wheel,,,,
+,,,brakes,,,,
+,,,doors,,,,
+,,,wheels,,,,
+,,,can run fast or slow,,,,
+,,,can turn,,,,
+,,,dad has one,,,,
+,,,mom has one.,,,,
+,,,windshield,,,,
+,,,engine,,,,
+,,,motor,,,,
+,,,trunk,,,,
+,,,lights,,,,
+,,,,,car,,
+,,Tell me three things about a forest.,,,,about forest,
+,,,trees,,,,
+,,,animals,,,,
+,,,green,,,,
+,,,insects,,,,
+,,,dark,,,,
+,,,,,forest,,
+,Semantics/Analogies,,SemanticsAnalogiesFragment,0,,,
+,,Piano is to keys and violin is to,,,,piano/violin,
+,,,strings,,,,
+,,,,,piano,,
+,,,,,,strings,strings
+,,A tree is to leaves as flower is to,,,,tree/flower,
+,,,pedals,,,,
+,,,peduncle,,,,
+,,,receptacle,,,,
+,,,sepal,,,,
+,,,stamen,,,,
+,,,anther,,,,
+,,,pistil,,,,
+,,,stigma,,,,
+,,,,,tree,,
+,,,,,,petal,petal
+,,Milk is to carton as jelly is to ,,,,milk/jelly,
+,,,jar,,,,
+,,,can,,,,
+,,,,,milk_carton,,
+,,,,,,jar,jar
+,,Nurses are to needles as mechanics are to,,,,nurses/mechanics,
+,,,tools,,,,
+,,,wrench,,,,
+,,,hammer,,,,
+,,,pliers,,,,
+,,,screwdriver,,,,
+,,,,,nurse_with_needle,,
+,,,,,,tools,tools
+,,,,,,wrench,wrench
+,,,,,,screwdriver,screwdriver
+,,,,,,hammer,hammer
+,,,,,,pliers,pliers
+Processing,,,,,,,
+,Processing/Situational,,ProcessingSituationalFragment,0,,,
+,,You are riding your bicycle and are a long way from home.  You hear a hissing sound. What do you think happened?,,,,riding bike,
+,,,flat tire,,,,
+,,,,,bicycle_rider,,
+,,,,,,flat_tire,flat tire
+,,Should you ride it home?,,,,ride home?,
+,,,no,,,,
+,,,,,bicycle_rider,,
+,,,,,,yes,yes
+,,,,,,no,no
+,,Why?,,,,why?,
+,,,can't ride on flat tire,,,,
+,,,tire will come off,,,,
+,,,ruin the tire,,,,
+,,How will you get home?,,,,how to get home,
+,,,walk,,,,
+,,,push bike,,,,
+,,,call mom,,,,
+,,,call dad,,,,
+,,,,,home,,
+,,,,,,walk,walk
+,,,,,,push_bike,push the bicycle
+,,,,,,use_phone,call someone on phone
+,,You go to a service station.  What do you say to the attendant?,,,,service station,
+,,,fix tire,,,,
+,,,use phone,,,,
+,,,,,,fix_flat,fix my flat tire
+,,,,,,blow_up_tire,blow up my tire
+,,,,,,use_phone,ask to use the phone
+,Processing/Negative why,,ProcessingNegativeWhyFragment,0,,,
+,,Why do you not leave your house  unlocked?,,,,house unlocked,
+,,,burglar,,,,
+,,,robber,,,,
+,,,stolen,,,,
+,,,,,house_unlocked,,
+,,,,,,robber,keep robber out
+,,,,,,burgular,keep burgular out
+,,,,,,prevent_stealing,prevent stealing
+,,Why won't everyone in an accident have to go to the hosipital?,,,,go to hosipital,
+,,,some aren't hurt,,,,
+,,,some are dead,,,,
+Inferences,,,,,,,
+,Inferences,,InferencesFragment,0,,,
+,,,,,ambulance,,
+,,,,,,some_arent_hurt,Some aren't hurt
+,,,,,,some_are_dead,Some are dead
+,,How do you know your mom finished dinner?,,,,dinner ready,
+,,,smell food,,,,
+,,,she tells you,,,,
+,,,set the table,,,,
+,,,food is on table,,,,
+,,,,,dinner,,
+,,,,,,food_is_on_table,food is on the table
+,,,,,,she_tells_you,she tells you
+,,,,,,smell_food,you smell food
+,,,,,,told_to_set_table,you are told to set the table
+,,How do you know a child is hurt?,,,,child hurt,
+,,,crying,,,,
+,,,screeming,,,,
+,,,bawling,,,,
+,,,bleeding,,,,
+,,,,,pain,,
+,,,,,,crying,Child is crying
+,,,,,,bleeding,Child is bleeding
+Idioms,,,,,,,
+,Idioms,,IdiomsFragment,72,,,
+,,"What does ""quiet as a mouse"" mean",,,,quite as a mouse,
+,,,very quiet,,,,
+,,,silent,,,,
+,,,can't be heard,,,,
+,,,don't talk,,,,
+,,,,,mouse,,
+,,,,,,very_quiet,very quiet
+,,,,,,silent,silent
+,,,,,,dont_talk,don't talk
+,,"What does ""break a leg"" mean?",,,,break a leg,
+,,,Wish a performer good luck,,,,
+,,,,,broken_leg,,
+,,,,,,wish_actor_luck,wish a performer good luck
+Syntax,,,,,,,
+,Syntax/Sentence repetition,,SentenceRepetitionFragment,0,,,
+,,Repeat:  Their horses are under the trees.,,,,horses under trees,
+,,,Their horses are under the trees.,,,,
+,,Repeat:  His bike is beside the house.,,,,bike beside house,
+,,,His bike is beside the house.,,,,

@@ -12,10 +12,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.neuroleap.speachandlanguage.Data.ScreeningContract;
+import com.neuroleap.speachandlanguage.Models.ScreeningCategory;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
+
+import java.util.ArrayList;
 
 /**
  * Created by Karl on 4/15/2015.
@@ -24,17 +26,18 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
 
     private TableLayout mTblMainMenu;
     private int mScreeningId;
+    private ArrayList<ScreeningCategory> mScreeningCategories = new ArrayList<>();
     private static final String ID_TAG = "id_tag";
     private static final String SCREENING_ID_TAG = "screening_id_tag";
     private static final String STUDENT_NAME_TAG = "student_name_tag";
-    private int[] mCategoryTypes = new int[] {ScreeningContract.QuestionCategoriesEntry.SEMANTICS,
+    /*private int[] mCategoryTypes = new int[] {ScreeningContract.QuestionCategoriesEntry.SEMANTICS,
                                               ScreeningContract.QuestionCategoriesEntry.PROCESSING,
                                               ScreeningContract.QuestionCategoriesEntry.INFERENCES,
                                               ScreeningContract.QuestionCategoriesEntry.IDIOMS,
                                               ScreeningContract.QuestionCategoriesEntry.SYNTAX,
                                               ScreeningContract.QuestionCategoriesEntry.AUDITORY_PROCESSING,
                                               ScreeningContract.QuestionCategoriesEntry.AUDITORY_MEMORY,
-                                              ScreeningContract.QuestionCategoriesEntry.UNKNOWN};
+                                              ScreeningContract.QuestionCategoriesEntry.UNKNOWN};*/
     private static final String TAG = "## My Info ##";
 
     public static ScreeningOverviewFragment newInstance(int id, int screeningId, String studentName){
@@ -45,6 +48,12 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         ScreeningOverviewFragment fragment = new ScreeningOverviewFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getScreeningCategories();
     }
 
     @Override
@@ -73,56 +82,43 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         setupButtons();
     }
 
+    private void getScreeningCategories(){
+        Cursor c = DbCRUD.getScreeningCategories();
+        while(c.moveToNext()){
+            mScreeningCategories.add(new ScreeningCategory(c.getLong(0), c.getString(1), c.getString(2)));
+        }
+        c.close();
+    }
+
     private void setupButtons(){
         Button b;
 
-
-
         int buttonCnt=0;
-        int index;
+        //int index;
         for (int row = 1; row <=3; row++){
             for (int column = 0; column <=2; column++){
                 b= (Button)((TableRow)mTblMainMenu.getChildAt(row)).getChildAt(column);
-                index = Math.min(buttonCnt, mCategoryTypes.length-1);
-                Cursor c = DbCRUD.getStudentAnswersForCategoryType(mScreeningId , mCategoryTypes[index]);
-                if (c.getCount() > 0) {
-                    if (checkAnswer(c,mCategoryTypes[index])){
-                        b.setBackgroundResource(R.drawable.button_green_shadowed);
-                    } else {
-                        b.setBackgroundResource(R.drawable.button_red_shadowed);
+                if (buttonCnt < mScreeningCategories.size()) {
+                    long screeningCategoryId = mScreeningCategories.get(buttonCnt).getScreeningCategoryId();
+                    Cursor c = DbCRUD.getStudentAnswersForScreeningCategoryId(mScreeningId, screeningCategoryId);
+                    if (c.getCount() > 0) {
+                        if (checkAnswer(c, screeningCategoryId)) {
+                            b.setBackgroundResource(R.drawable.button_green_shadowed);
+                        } else {
+                            b.setBackgroundResource(R.drawable.button_red_shadowed);
+                        }
                     }
-                }
-                c.close();
-                b.setTag(mCategoryTypes[index]);
-                b.setOnClickListener(this);
-                switch (buttonCnt) {
-                    case 0:
-                        b.setText("Semantics");
-                        break;
-                    case 1:
-                        b.setText("Processing");
-                        break;
-                    case 2:
-                        b.setText("Inferences");
-                        break;
-                    case 3:
-                        b.setText("Idioms");
-                        break;
-                    case 4:
-                        b.setText("Syntax");
-                        break;
-                    case 5:
-                        b.setText("Auditory Processing");
-                        break;
-                    case 6:
-                        b.setText("Auditory Memory");
-                        break;
-                    case 7:
-                        b.setText("Unknown");
-                        break;
-                    case 8:
-                        b.setText("Unknown");
-                        break;
+                    c.close();
+                    b.setTag(screeningCategoryId);
+                    b.setOnClickListener(this);
+                    if (Utilities.getAppLanguage() == Utilities.ENGLISH) {
+                        b.setText(mScreeningCategories.get(buttonCnt).getName_Eg());
+                    }else{
+                        b.setText(mScreeningCategories.get(buttonCnt).getName_Sp());
+                    }
+                }else{
+                    b.setTag(-1);
+                    b.setText("Unknown");
                 }
                 buttonCnt++;
             }
@@ -133,14 +129,14 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         mOnFragmentInteractionListener.onFragmentInteraction(mId, mScreeningId, v.getTag());
     }
 
-    private boolean checkAnswer(Cursor c, int categoryType){
+    private boolean checkAnswer(Cursor c, long screeningCategoryId){
         float rightAnswers=0;
         while(c.moveToNext()){
             if (c.getInt(0) == 1) {
                 rightAnswers++;
             }
         }
-        int totalQuestions = DbCRUD.getNumberOfQuestionsForCategoryType(categoryType);
+        int totalQuestions = DbCRUD.getNumberOfQuestionsForScreeningCategoryId(screeningCategoryId);
         Log.i(TAG, "totalQuestions= " + totalQuestions +"  %%%%%%%%%%%%%%%%%%%");
         return rightAnswers/totalQuestions >= 0.8;
 

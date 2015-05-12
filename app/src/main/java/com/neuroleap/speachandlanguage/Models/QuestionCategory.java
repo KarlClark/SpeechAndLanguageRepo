@@ -5,7 +5,7 @@ package com.neuroleap.speachandlanguage.Models;
  */
 public class QuestionCategory {
     private int mId;
-    private int mCategoryType;
+    private int mScreeningCategoryId;
     int mColor;
     private String mText;
     private boolean mDone = false;
@@ -36,8 +36,8 @@ public class QuestionCategory {
         mDone = done;
     }
 
-    public int  getCategoryType(){
-        return mCategoryType;
+    public int  getScreeningCategoryId(){
+        return mScreeningCategoryId;
     }
 
     public int getId() {
@@ -52,11 +52,11 @@ public class QuestionCategory {
         return mPosition;
     }
 
-    public QuestionCategory(int id, int categoryType, String text, int color, int position){
+    public QuestionCategory(int id, int screeningCategoryId, String text, int color, int position){
         mId = id;
         mText = text;
         mColor = color;
         mPosition = position;
-        mCategoryType = categoryType;
+        mScreeningCategoryId = screeningCategoryId;
     }
 }

@@ -128,11 +128,11 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
                 displayScreeningMainMenuFragment((int)args[0], (String)args[1] + " " +  (String)args[2]);
                 break;*/
             case SCREENING_OVERVIEW_FRAGMENT_ID:
-                if((int)args[1] == Utilities.SCREENINGS){
+                if((long)args[1] == Utilities.SCREENINGS){
                     displayShowScreeningsFragment();
                 }else {
-                    Log.i(TAG, "screening id = " + (int) args[0] + "  category= " + (int) args[1]);
-                    startFlowControlActivity((int)args[0], (int)args[1]);
+                    Log.i(TAG, "screening id = " + (int) args[0] + "  category= " + (long) args[1]);
+                    startFlowControlActivity((int)args[0], (long)args[1]);
                 }
         }
     }
@@ -181,10 +181,10 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mShowScreeningsFragment = null;
     }
 
-    private void startFlowControlActivity(int screeningId, int categoryRequest){
+    private void startFlowControlActivity(int screeningId, long screeningCategoryRequest){
         Intent i = new Intent(this, FlowControlActivity.class);
         i.putExtra(FlowControlActivity.SCREENING_ID_KEY, screeningId);
-        i.putExtra(FlowControlActivity.CATEGORY_REQUEST_KEY, categoryRequest);
+        i.putExtra(FlowControlActivity.SCREENING_CATEGORY_REQUEST_KEY, screeningCategoryRequest);
         startActivityForResult(i, FLOW_CONTROL_ACTIVITY_TAG);
     }
 

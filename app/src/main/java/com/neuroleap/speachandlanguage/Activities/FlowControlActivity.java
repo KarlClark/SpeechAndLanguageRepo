@@ -53,10 +53,10 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private int mScreeningId;
     private int mAge;
     private int mCompletionState= Utilities.SCREENING_NOT_STARTED;
-    private int mCategoryRequest;
+    private long mScreeningCategoryRequest;
     private boolean mKeyboardUp = false;
     public static final String SCREENING_ID_KEY = "screening_id_key";
-    public static final String CATEGORY_REQUEST_KEY = "category_request_key";
+    public static final String SCREENING_CATEGORY_REQUEST_KEY = "category_request_key";
     public static final String REQUESTED_ACTION_KEY ="requested_fragment_key";
     public static final String SCREENING_ID_TAG = "screening-id_tag";
     public static final String SCREENING_STUDENT_NAME_TAG = "screening_student_name_tag";
@@ -71,9 +71,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_control);
         if (Utilities.getTestMode() == Utilities.TEXT_INPUT_ONLY) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE |
+                                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
         }else{
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN |
+                                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
         }
         mInputMethodManager =(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         //ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
@@ -83,7 +85,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mCompletionState = DbCRUD.getScreeningCompletionState(mScreeningId);
         mIndex = new int[ DbCRUD.getQuestionCount() + 1 ];
         Log.i(TAG, "Screening id= " + mScreeningId);
-        mCategoryRequest= getIntent().getIntExtra(CATEGORY_REQUEST_KEY, -1);
+        mScreeningCategoryRequest= getIntent().getLongExtra(SCREENING_CATEGORY_REQUEST_KEY, -1);
         //Utilities.setTotalQuestions(DbCRUD.getQuestionCount());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         loadLists();
@@ -457,12 +459,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     private void displayFirstQuestion() {
         Question question;
-        Log.i(TAG,"mCategoryRequest= " + mCategoryRequest + "  ############################");
-        if (mCategoryRequest >=0 ){
+        Log.i(TAG,"mCategoryRequest= " + mScreeningCategoryRequest + "  ############################");
+        if (mScreeningCategoryRequest >=0 ){
             int firstIndex = -1;
             for(int i = 0; i < mViewPagerQuestions.size(); i++){
                 question = mViewPagerQuestions.get(i);
-                if (question.getCategoryType() == mCategoryRequest){
+                if (question.getScreeningCategoryId() == mScreeningCategoryRequest){
                     if (firstIndex == -1){
                         Log.i(TAG ,"here1");
                         firstIndex = i;

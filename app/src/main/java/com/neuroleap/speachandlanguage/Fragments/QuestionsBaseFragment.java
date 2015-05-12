@@ -32,7 +32,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     protected int mScreeningId;
     protected int mViewPagerPosition;
     protected int mGroupPosition;
-    protected int mCategoryType;
+    //protected int mCategoryType;
+    protected long mScreeningCategoryId;
     protected int mAnswerNumber = 1;
     protected boolean mCommitted=false;
     private boolean mNeedAnswerText= false;
@@ -52,6 +53,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     protected Resources mResources;
     protected static final String QUESTION_ID_KEY = "question_id_key";
     protected static final String SCREENING_ID_KEY = "screening_id_key";
+    protected static final String SCREENING_CATEGORY_ID_KEY = "screening_category_id_key";
     protected static final String VIEW_PAGER_POSITION_KEY = "view_pager_position_key";
     protected static final String GROUP_POSITION_KEY = "group_position_key";
     protected static final String ICON_BUTTON_TAG_KEY = "icon_button_tag_key";
@@ -70,6 +72,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mQuestionId = getArguments().getInt(QUESTION_ID_KEY);
         Log.i(TAG,"fragment for question " + mQuestionId + "  onCreate called");
         mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
+        mScreeningCategoryId = getArguments().getLong(SCREENING_CATEGORY_ID_KEY);
         mViewPagerPosition = getArguments().getInt(VIEW_PAGER_POSITION_KEY);
         mGroupPosition = getArguments().getInt(GROUP_POSITION_KEY);
         mResources = getResources();
@@ -118,10 +121,11 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         }
     }
 
-    protected static Bundle createBundle(Integer questionId, Integer screeningId, Integer pageViewerPosition, Integer groupPosition){
+    protected static Bundle createBundle(Integer questionId, Integer screeningId, Long screeningCategoryId, Integer pageViewerPosition, Integer groupPosition){
         Bundle args = new Bundle();
         args.putInt(QUESTION_ID_KEY, questionId);
         args.putInt (SCREENING_ID_KEY , screeningId);
+        args.putLong(SCREENING_CATEGORY_ID_KEY, screeningCategoryId);
         Log.i(TAG, "QuestionBaseFragment screeningid= " + screeningId);
         args.putInt(VIEW_PAGER_POSITION_KEY, pageViewerPosition);
         args.putInt(GROUP_POSITION_KEY, groupPosition);
@@ -200,7 +204,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             mIconAnswersGridViewAdapter = new IconAnswersGridViewAdapter(mContext, this, mAnswerIcons);
             mGvIconAnswers.setAdapter(mIconAnswersGridViewAdapter);
         }else{
-            mGvIconAnswers.setVisibility(View.GONE);
+            //mGvIconAnswers.setVisibility(View.GONE);
+            mGvIconAnswers.setBackgroundResource(0);
             mNeedAnswerText = true;
             mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -216,7 +221,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mBtnZero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, false, mCategoryType);
+                long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, false, mScreeningCategoryId);
                 enterIconAnswers(answerId);
                 enterTextAnswers(answerId);
                 mCommitted = true;
@@ -227,7 +232,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mBtnOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, true, mCategoryType);
+                long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, true, mScreeningCategoryId);
                 enterIconAnswers(answerId);
                 enterTextAnswers(answerId);
                 mCommitted=true;
@@ -239,7 +244,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             @Override
             public void onClick(View v) {
                 boolean isCorrect = answerCorrect();
-                long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, isCorrect, mCategoryType);
+                long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, isCorrect, mScreeningCategoryId);
                 enterTextAnswers(answerId);
                 mCommitted=true;
                 mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition);

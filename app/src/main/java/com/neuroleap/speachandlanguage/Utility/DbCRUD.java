@@ -11,6 +11,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerIconEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.PicturesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersTextEntry;
@@ -42,10 +43,10 @@ public class DbCRUD {
         String[] categoryColumns;
         if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH) {
             categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG, QuestionCategoriesEntry.CUTOFF_AGE,
-                                           QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.CATEGORY_TYPE};
+                                           QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.SCREENING_CATEGORY_ID};
         }else{
             categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP, QuestionCategoriesEntry.CUTOFF_AGE,
-                                           QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.CATEGORY_TYPE};
+                                           QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.SCREENING_CATEGORY_ID};
         }
 
         return mDB.query(QuestionCategoriesEntry.TABLE_NAME, categoryColumns, null, null, null, null, null);
@@ -102,7 +103,7 @@ public class DbCRUD {
         String sql = "SELECT "
                      + StudentAnswersEntry._ID + " , "
                      + StudentAnswersEntry.CORRECT + " , "
-                     + StudentAnswersEntry.CATEGORY_TYPE
+                     + StudentAnswersEntry.SCREENING_CATEGORY_ID
                      + " FROM " + StudentAnswersEntry.TABLE_NAME
                      + " WHERE " + StudentAnswersEntry.QUESTION_ID + "=" + question_id
                      + " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;
@@ -132,15 +133,22 @@ public class DbCRUD {
         return mDB.rawQuery(sql , null);
     }
 
-    public static Cursor getStudentAnswersForCategoryType(long screening_id, int categoryType){
+    public static Cursor getStudentAnswersForScreeningCategoryId(long screening_id, long screeningCategoryId){
         String sql =  "SELECT "
                 + StudentAnswersEntry.CORRECT + " , "
-                + StudentAnswersEntry.CATEGORY_TYPE
+                + StudentAnswersEntry.SCREENING_CATEGORY_ID
                 + " FROM " + StudentAnswersEntry.TABLE_NAME
-                + " WHERE " + StudentAnswersEntry.CATEGORY_TYPE + "=" + categoryType
+                + " WHERE " + StudentAnswersEntry.SCREENING_CATEGORY_ID + "=" + screeningCategoryId
                 + " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;
 
         return mDB.rawQuery(sql, null);
+    }
+
+    public static Cursor getScreeningCategories(){
+        String[] columns = new String[] {ScreeningCategoriesEntry._ID,
+                                         ScreeningCategoriesEntry.NAME_EG,
+                                         ScreeningCategoriesEntry.NAME_SP};
+        return mDB.query(ScreeningCategoriesEntry.TABLE_NAME, columns, null, null, null, null, null);
     }
 
     public static Cursor getAllCompletedQuestionsIds(long screeningId){
@@ -205,7 +213,7 @@ public class DbCRUD {
         return questionId;
     }
 
-    public static int getLastAnsweredQuestionId(long screeningId, int categoryType){
+    /*public static int getLastAnsweredQuestionId(long screeningId, int categoryType){
         String sql = "SELECT MAX (" + StudentAnswersEntry.QUESTION_ID + ") FROM " + StudentAnswersEntry.TABLE_NAME +
                      " WHERE " + StudentAnswersEntry.SCREENING_ID + " = " +  screeningId +
                      " AND " + StudentAnswersEntry.CATEGORY_TYPE + " = " + categoryType;
@@ -235,7 +243,7 @@ public class DbCRUD {
         Log.i(TAG, "category id= " + categoryId);
         c.close();
         return getFirstQuestion(categoryId);
-    }
+    }*/
 
     public static Cursor getQuestionData(long questionId){
         String[] columns = new String[] {QuestionsEntry.CATEGORY_ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.TEXT_SPANISH,
@@ -276,11 +284,11 @@ public class DbCRUD {
         return count;
     }
 
-    public static int getNumberOfQuestionsForCategoryType(int categoryType){
+    public static int getNumberOfQuestionsForScreeningCategoryId(long screeningCategoryId){
         int total = 0;
         String sql;
         String[] columns = new String[] {"_ID"};
-        Cursor categoryIds = mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, QuestionCategoriesEntry.CATEGORY_TYPE + "=" + categoryType, null, null, null,null);
+        Cursor categoryIds = mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, QuestionCategoriesEntry.SCREENING_CATEGORY_ID + "=" + screeningCategoryId, null, null, null,null);
         while (categoryIds.moveToNext()){
             sql = "SELECT COUNT(*) FROM " + QuestionsEntry.TABLE_NAME + " WHERE " + QuestionsEntry.CATEGORY_ID + " = " + categoryIds.getInt(0);
             Cursor count = mDB.rawQuery(sql , null);
@@ -346,12 +354,12 @@ public class DbCRUD {
         }
     }
 
-    public static long enterAnswer(long question_id, long screening_id, boolean correct, int categoryType){
+    public static long enterAnswer(long question_id, long screening_id, boolean correct, long screeningCategoryId){
         ContentValues cv = new ContentValues();
         cv.put(StudentAnswersEntry.QUESTION_ID, question_id);
         cv.put(StudentAnswersEntry.SCREENING_ID, screening_id);
         cv.put(StudentAnswersEntry.CORRECT, correct);
-        cv.put(StudentAnswersEntry.CATEGORY_TYPE, categoryType);
+        cv.put(StudentAnswersEntry.SCREENING_CATEGORY_ID, screeningCategoryId);
 
         String sql = "SELECT _ID " +
                      " FROM " + StudentAnswersEntry.TABLE_NAME +

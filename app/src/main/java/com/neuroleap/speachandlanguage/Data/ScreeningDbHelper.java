@@ -17,6 +17,7 @@ import com.neuroleap.speachandlanguage.Data.ScreeningContract.ValidAnswersSpEntr
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerIconEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.AnswerButtonsPressedEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersTextEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningCategoriesEntry;
 import com.neuroleap.speachandlanguage.R;
 
 import java.io.BufferedReader;
@@ -68,13 +69,21 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 StudentsEntry.TABLE_NAME +" (" + StudentsEntry._ID + ") " +
                 " );";
 
+        final String SQL_CREATE_SCREENING_CATEGORIES_TABEL = "CREATE TABLE " + ScreeningContract.ScreeningCategoriesEntry.TABLE_NAME + " (" +
+                ScreeningCategoriesEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                ScreeningCategoriesEntry.NAME_EG + " TEXT NOT NULL, " +
+                ScreeningCategoriesEntry.NAME_SP + " TEXT " +
+                " );";
+
         final String SQL_CREATE_QUESTION_CATEGORIES_TABLE = "CREATE TABLE " + QuestionCategoriesEntry.TABLE_NAME + " (" +
                 QuestionCategoriesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                QuestionCategoriesEntry.SCREENING_CATEGORY_ID + " INTEGER NOT NULL, " +
                 QuestionCategoriesEntry.CATEGORY_NAME_EG + " TEXT NOT NULL, " +
                 QuestionCategoriesEntry.CATEGORY_NAME_SP + " TEXT, " +
                 QuestionCategoriesEntry.FRAGMENT_NAME + " TEXT NOT NULL, " +
                 QuestionCategoriesEntry.CUTOFF_AGE + " INTEGER NOT NULL, " +
-                QuestionCategoriesEntry.CATEGORY_TYPE +" INTEGER NOT NULL " +
+                " FOREIGN KEY (" + QuestionCategoriesEntry.SCREENING_CATEGORY_ID + ") REFERENCES " +
+                ScreeningCategoriesEntry.TABLE_NAME + " (" + ScreeningCategoriesEntry._ID + ")" +
                 " );";
 
         final String SQL_CREATE_QUESTIONS_TABLE = "CREATE TABLE " + QuestionsEntry.TABLE_NAME + " (" +
@@ -128,8 +137,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 StudentAnswersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 StudentAnswersEntry.QUESTION_ID + " INTEGER NOT NULL, " +
                 StudentAnswersEntry.SCREENING_ID + " INTEGER NOT NULL, " +
+                StudentAnswersEntry.SCREENING_CATEGORY_ID + " INTEGER NOT NULL, " +
                 StudentAnswersEntry.CORRECT +" BOOLEAN, " +
-                StudentAnswersEntry.CATEGORY_TYPE +" INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + StudentAnswersEntry.QUESTION_ID +") REFERENCES " +
                 QuestionsEntry.TABLE_NAME + " (" + QuestionsEntry._ID + "), " +
                 " FOREIGN KEY (" + StudentAnswersEntry.SCREENING_ID + ") REFERENCES " +
@@ -158,6 +167,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(SQL_CREATE_STUDENTS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_SCREENINGS_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_SCREENING_CATEGORIES_TABEL);
         sqLiteDatabase.execSQL(SQL_CREATE_QUESTION_CATEGORIES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_QUESTIONS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_VALID_ANSWERS_EG_TABLE);
@@ -183,6 +193,7 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         InputStream inputStream = context.getResources().openRawResource(R.raw.questions);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         ContentValues cv= new ContentValues();
+        long screening_Category_Id = 0;
         long categoryId=0;
         long categoryType=0;
         long quetionId=0;
@@ -201,66 +212,76 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                         }
                         cv.clear();
 
-                        if ( ! row[0].equals("")) {  // First column has something in it so this must be question category row
-                            cv.put(QuestionCategoriesEntry.CATEGORY_NAME_EG , row[0]);
-                            if ( ! row[1].equals("")){
-                                cv.put(QuestionCategoriesEntry.CATEGORY_NAME_SP , row[1]);
+                        if ( ! row[0].equals("")) { //First column has something in it so this must be screening category row
+                            cv.put(ScreeningCategoriesEntry.NAME_EG , row[0]);
+                            if (row.length > 1 ){
+                                cv.put(ScreeningCategoriesEntry.NAME_SP , row[1]);
                             }
-                            cv.put(QuestionCategoriesEntry.FRAGMENT_NAME , row[2]);
-                            cv.put(QuestionCategoriesEntry.CUTOFF_AGE, Long.parseLong(row[3]));
-                            cv.put(QuestionCategoriesEntry.CATEGORY_TYPE, Long.parseLong(row[4]));
+                            screening_Category_Id = db.insert(ScreeningCategoriesEntry.TABLE_NAME, null, cv);
+                            continue whileLoop;
+                        }
+
+                        if ( ! row[1].equals("")) {  // First column was null but 2nd column has something in it so this must be question category row
+                            cv.put(QuestionCategoriesEntry.SCREENING_CATEGORY_ID, screening_Category_Id);
+                            cv.put(QuestionCategoriesEntry.CATEGORY_NAME_EG , row[1]);
+                            if ( ! row[1].equals("")){
+                                cv.put(QuestionCategoriesEntry.CATEGORY_NAME_SP , row[2]);
+                            }
+                            cv.put(QuestionCategoriesEntry.FRAGMENT_NAME , row[3]);
+                            cv.put(QuestionCategoriesEntry.CUTOFF_AGE, Long.parseLong(row[4]));
                             categoryId = db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
                             continue whileLoop;
                         }
 
-                        if ( ! row[1].equals("")) { // First column was null but 2nd column has something so this must be a question row.
+                        if ( ! row[2].equals("")) { // First 2 column were null but 3rd column has something so this must be a question row.
                             cv.put(QuestionsEntry.CATEGORY_ID , categoryId);
-                            cv.put(QuestionsEntry.TEXT_ENGLISH , row[1]);
-                            Log.i(TAG,"question = " + row[1]);
+                            cv.put(QuestionsEntry.TEXT_ENGLISH , row[2]);
+                            Log.i(TAG,"question = " + row[2]);
                             if ( ! row[2].equals("")  ) {
-                                cv.put(QuestionsEntry.TEXT_SPANISH , row[2]);
+                                cv.put(QuestionsEntry.TEXT_SPANISH , row[3]);
                             }
                             if (! row[3].equals("")){
-                                cv.put(QuestionsEntry.AUDIO_ENGLISH , row[3]);
+                                cv.put(QuestionsEntry.AUDIO_ENGLISH , row[4]);
                             }
                             if (! row[4].equals("")) {
-                                cv.put(QuestionsEntry.AUDIO_SPANISH , row[4]);
+                                cv.put(QuestionsEntry.AUDIO_SPANISH , row[5]);
                             }
 
-                            cv.put(QuestionsEntry.PROMPT_ENGLISH, row[5]);
+                            cv.put(QuestionsEntry.PROMPT_ENGLISH, row[6]);
 
-                            if (row.length > 6) {
-                                cv.put(QuestionsEntry.PROMPT_SPANISH, row[6]);
+                            if (row.length > 7 ){
+                                cv.put(QuestionsEntry.PROMPT_SPANISH, row[7]);
                             }
 
                             quetionId = db.insert(QuestionsEntry.TABLE_NAME, null, cv);
                             continue whileLoop;
                         }
 
-                        if ( ! row[2].equals("")){ // First two columns are null but 3rd columns has something so this must be an English answer.
+                        if ( ! row[3].equals("")){ // First three columns are null but 4th columns has something so this must be an English answer.
                             cv.put(ValidAnswersEgEntry.QUESTION_ID , quetionId);
-                            cv.put(ValidAnswersEgEntry.TEXT , row[2]);
+                            cv.put(ValidAnswersEgEntry.TEXT , row[3]);
                             db.insert(ValidAnswersEgEntry.TABLE_NAME, null, cv);
                             continue whileLoop;
                         }
 
-                        if ( row.length > 3 && ! row[3].equals("")){// First 3 columns null so this is a Spanish answer.
+                        if ( row.length > 4 && ! row[4].equals("")){// First 4 columns null so this is a Spanish answer.
                             cv.put(ValidAnswersSpEntry.QUESTION_ID, quetionId);
-                            cv.put(ValidAnswersSpEntry.TEXT , row [3]);
+                            cv.put(ValidAnswersSpEntry.TEXT , row [4]);
                             db.insert(ValidAnswersSpEntry.TABLE_NAME, null, cv);
                             continue whileLoop;
                         }
 
-                        if (row.length > 4 && ! row[4].equals("")) { // first 4 columns null so this must be picture filename
+                        if (row.length > 5 && ! row[5].equals("")) { // first 5 columns null so this must be picture filename
                             cv.put(PicturesEntry.QUESTION_ID , quetionId);
-                            cv.put(PicturesEntry.FILENAME , row[4]);
+                            cv.put(PicturesEntry.FILENAME , row[5]);
                             db.insert(PicturesEntry.TABLE_NAME, null, cv);
+                            continue whileLoop;
                         }
 
-                        if (row.length > 5) { // first 5 columns null so this must be an answer icon filename
+                        if (row.length > 6) { // first 6 columns null so this must be an answer icon filename
                             cv.put(AnswerIconEntry.QUESTION_ID, quetionId);
-                            cv.put(AnswerIconEntry.FILENAME, row[5]);
-                            cv.put(AnswerIconEntry.DESCRIPTION, row[6]);
+                            cv.put(AnswerIconEntry.FILENAME, row[6]);
+                            cv.put(AnswerIconEntry.DESCRIPTION, row[7]);
                             db.insert(AnswerIconEntry.TABLE_NAME, null, cv);
                         }
                     }

@@ -43,8 +43,8 @@ public class ScreeningContract {
 
         public static final String QUESTION_ID = "question_id";
         public static final String SCREENING_ID = "screening_id";
+        public static final String SCREENING_CATEGORY_ID = "screening_category_id";
         public static final String CORRECT = "correct";
-        public static final String CATEGORY_TYPE = "category_type";
     }
 
     public static final class StudentAnswersTextEntry implements BaseColumns{
@@ -65,9 +65,16 @@ public class ScreeningContract {
         public static final String ANSWER_NUMBER = "answer_number";
     }
 
+    public static final class ScreeningCategoriesEntry implements BaseColumns{
+        public static final String TABLE_NAME = " screening_categories";
+
+        public static final String NAME_EG ="name_eg";
+        public static final String NAME_SP = "name_sp";
+    }
+
     public static final class QuestionCategoriesEntry implements BaseColumns{
 
-        public static final int SEMANTICS = 0;
+       /* public static final int SEMANTICS = 0;
         public static final int PROCESSING = 1;
         public static final int INFERENCES = 2;
         public static final int IDIOMS = 3;
@@ -76,13 +83,17 @@ public class ScreeningContract {
         public static final int AUDITORY_MEMORY = 6;
         public static final int UNKNOWN = 7;
 
+        public static final String[] categoryNames= new String[] {"Semantics" , "Processing" , "Inferences" ,
+                                                                  "Idioms" , "Syntax" , "Auditory Processing" ,
+                                                                  "Auditory Memory" , "Unknown" , "Unknown"};*/
+
         public static final String TABLE_NAME = "question_categories";
 
+        public static final String SCREENING_CATEGORY_ID = "screening_category_id";
         public static final String CATEGORY_NAME_EG = "category_name_eg";
         public static final String CATEGORY_NAME_SP = "category_name_sp";
         public static final String FRAGMENT_NAME ="fragment_name";
         public static final String CUTOFF_AGE = "cutoff_age";
-        public static final String CATEGORY_TYPE = "category_type";
     }
 
     public static final class QuestionsEntry implements BaseColumns {

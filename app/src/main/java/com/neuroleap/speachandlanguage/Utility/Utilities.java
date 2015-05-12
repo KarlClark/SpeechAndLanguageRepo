@@ -23,9 +23,9 @@ public class Utilities {
     public static final String PREFS_QUESTIONS_LANGUAGE = "prefs_app_language";
     public static final int ENGLISH = 0;
     public static final int SPANISH = 1;
-    private static int mAppLanguage= ENGLISH;
-    private static int mQuestionsLanguage = ENGLISH;
-    private static SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+    private static  int mAppLanguage= ENGLISH;
+    private static  int mQuestionsLanguage = ENGLISH;
+    private static  SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
     private static String mPackageName;
     //private static int mTotalQuestions;
     public static final String PREFS_TEST_MODE = "prefs_test_mode";
@@ -110,10 +110,11 @@ public class Utilities {
         return 0L;
     }
 
-    public static String toLowerCaseAndTrim(String s){
+    public static String toLowerCaseAndTrim(String s) {
         String newS = s.trim();
         return newS.toLowerCase();
     }
+
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
