@@ -26,6 +26,8 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
 
     private TableLayout mTblMainMenu;
     private int mScreeningId;
+    private String mStudentName;
+    private Button mBtnScreenings, mBtnResults;
     private ArrayList<ScreeningCategory> mScreeningCategories = new ArrayList<>();
     private static final String ID_TAG = "id_tag";
     private static final String SCREENING_ID_TAG = "screening_id_tag";
@@ -62,15 +64,24 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         mId = getArguments().getInt(ID_TAG);
         mScreeningId = getArguments().getInt(SCREENING_ID_TAG);
         TextView tvStudentName = (TextView)v.findViewById(R.id.tvStudentName);
-        tvStudentName.setText(getArguments().getString(STUDENT_NAME_TAG));
+        mStudentName = getArguments().getString(STUDENT_NAME_TAG);
+        tvStudentName.setText(mStudentName);
         mTblMainMenu = (TableLayout)v.findViewById(R.id.tblMainMenu);
-        Button b= (Button)v.findViewById(R.id.btnScreenings);
-        b.setTag(Utilities.SCREENINGS);
-        b.setOnClickListener(this);
+        mBtnScreenings= (Button)v.findViewById(R.id.btnScreenings);
+        mBtnScreenings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnFragmentInteractionListener.onFragmentInteraction(mId, mScreeningId, Utilities.SCREENINGS);
+            }
+        });
 
-        b = (Button)v.findViewById(R.id.btnResults);
-        b.setTag(Utilities.RESULTS);
-        b.setOnClickListener(this);
+        mBtnResults = (Button)v.findViewById(R.id.btnResults);
+        mBtnResults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnFragmentInteractionListener.onFragmentInteraction(mId, mScreeningId, Utilities.RESULTS, mStudentName);
+            }
+        });
         //setupButtons();
         return v;
     }
@@ -138,7 +149,6 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         }
         int totalQuestions = DbCRUD.getNumberOfQuestionsForScreeningCategoryId(screeningCategoryId);
         Log.i(TAG, "totalQuestions= " + totalQuestions +"  %%%%%%%%%%%%%%%%%%%");
-        return rightAnswers/totalQuestions >= 0.8;
-
+        return rightAnswers/totalQuestions >= Utilities.PASSING_FRACTION;
     }
 }

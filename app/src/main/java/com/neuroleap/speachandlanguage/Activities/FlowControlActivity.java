@@ -52,12 +52,14 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private Question mCurrentHighLightedQuestion, mPreviousHighLightedQuestiion;
     private int mScreeningId;
     private int mAge;
+    private String mStudentName;
     private int mCompletionState= Utilities.SCREENING_NOT_STARTED;
     private long mScreeningCategoryRequest;
     private boolean mKeyboardUp = false;
     public static final String SCREENING_ID_KEY = "screening_id_key";
     public static final String SCREENING_CATEGORY_REQUEST_KEY = "category_request_key";
     public static final String REQUESTED_ACTION_KEY ="requested_fragment_key";
+    public static final String STUDENT_NAME_KEY = "student_name_key";
     public static final String SCREENING_ID_TAG = "screening-id_tag";
     public static final String SCREENING_STUDENT_NAME_TAG = "screening_student_name_tag";
     public static final int SHOW_SCREENINGS = 0;
@@ -82,6 +84,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         //DbCRUD.setDatabase(dbHelper.getWritableDatabase());
         mScreeningId = getIntent().getIntExtra(SCREENING_ID_KEY, 0);
         mAge = DbCRUD.getAge(mScreeningId);
+        mStudentName = DbCRUD.getStudentNameStringFromScreeningId(mScreeningId);
         mCompletionState = DbCRUD.getScreeningCompletionState(mScreeningId);
         mIndex = new int[ DbCRUD.getQuestionCount() + 1 ];
         Log.i(TAG, "Screening id= " + mScreeningId);
@@ -386,7 +389,14 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 break;
             case QuestionsBaseFragment.RESULTS_BUTTON_CLICKED:
                 Log.i(TAG, "Results Button pressed");
-                callSetResult(SHOW_RESULTS);
+                Intent intent = new Intent();
+                intent.putExtra(REQUESTED_ACTION_KEY, SHOW_RESULTS);
+                intent.putExtra(SCREENING_ID_TAG, mScreeningId);
+                String studentName = DbCRUD.getStudentNameStringFromScreeningId(mScreeningId);
+                intent.putExtra(SCREENING_STUDENT_NAME_TAG, studentName);
+                setResult(RESULT_OK, intent);
+                lowerKeyboard();
+                finish();
                 break;
             case QuestionsBaseFragment.SCREENINGS_BUTTON_CLICKED:
                 Log.i(TAG, " Screenings button pressed");

@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.neuroleap.speachandlanguage.Data.ScreeningDbHelper;
+import com.neuroleap.speachandlanguage.Fragments.ResultsSummaryFragment;
 import com.neuroleap.speachandlanguage.Fragments.ScreeningOverviewFragment;
 import com.neuroleap.speachandlanguage.Fragments.ShowScreeningsFragment;
 import com.neuroleap.speachandlanguage.Fragments.SplashFragment_1;
@@ -37,14 +38,17 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private ShowScreeningsFragment mShowScreeningsFragment;
     private StudentInfoFragment mStudentInfoFragment;
     private ScreeningOverviewFragment mScreeningOverviewFragment;
+    private ResultsSummaryFragment mResultsSummaryFragment;
     private boolean mShowSettingOption = false;
     private boolean mShowNewOption = false;
     private boolean mReturningWithResult = false;
+    private boolean mNeedScreeningsFragment= false;
     private Intent mResultIntent= null;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
     private static final int SHOW_SCREENINGS_FRAGMENT_ID = 1002;
     private static final int STUDENT_INFO_FRAGMENT_ID = 1003;
     private static final int SCREENING_OVERVIEW_FRAGMENT_ID = 1004;
+    private static final int RESULTS_SUMMARY_FRAGMENT_ID = 1005;
     private static final int FLOW_CONTROL_ACTIVITY_TAG = 0;
     private static final int SETTINGS_ACTIVITY_TAG = 1;
     private static final String TAG = "## My Info ##";
@@ -68,6 +72,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     @Override
     protected void onPostResume(){
         super.onPostResume();
+        Log.i(TAG,"Startup activity onPostResume called");
         if (mReturningWithResult) {
             showRequestedFragment(mResultIntent);
             mReturningWithResult = false;
@@ -117,6 +122,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     }
 
     public void onFragmentInteraction(int id, Object ... args){
+        Log.i(TAG, "StartUpActivity onFragmentInteraction called. id= " + id);
         switch (id){
             case SPLASH_FRAGMENT_1_ID:
                 displayShowScreeningsFragment();
@@ -128,11 +134,30 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
                 displayScreeningMainMenuFragment((int)args[0], (String)args[1] + " " +  (String)args[2]);
                 break;*/
             case SCREENING_OVERVIEW_FRAGMENT_ID:
-                if((long)args[1] == Utilities.SCREENINGS){
+                if(args[1] == Utilities.SCREENINGS){
                     displayShowScreeningsFragment();
                 }else {
-                    Log.i(TAG, "screening id = " + (int) args[0] + "  category= " + (long) args[1]);
-                    startFlowControlActivity((int)args[0], (long)args[1]);
+                    if ( args[1] == Utilities.RESULTS) {
+                        displayResultsSummaryFragment((int)args[0], (String)args[2]);
+                    } else {
+                        Log.i(TAG, "screening id = " + (int) args[0] + "  category= " + (long) args[1]);
+                        startFlowControlActivity((int) args[0], (long) args[1]);
+                    }
+                }
+                break;
+            case RESULTS_SUMMARY_FRAGMENT_ID:
+                switch ((int)args[0]){
+                    case Utilities.SCREENINGS:
+                        displayShowScreeningsFragment();
+                        break;
+                    case Utilities.PROFILE:
+                        displayStudentInfoFragment((int)args[1]);
+                        break;
+                    case Utilities.QUESTIONS:
+                        startFlowControlActivity((int)args[1], -1);
+                        break;
+                    case Utilities.OVERVIEW:
+                        displayScreeningOverviewFragment((int)args[1], (String)args[2]);
                 }
         }
     }
@@ -153,7 +178,11 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         invalidateOptionsMenu();
         mShowScreeningsFragment = new ShowScreeningsFragment();
         mShowScreeningsFragment.setId(SHOW_SCREENINGS_FRAGMENT_ID);
-        mFragmentManager.beginTransaction().replace(frContainerId,mShowScreeningsFragment, "TAG").commit();
+        try {
+            mFragmentManager.beginTransaction().replace(frContainerId, mShowScreeningsFragment, "TAG").commit();
+        }catch(IllegalStateException e){
+            e.printStackTrace();
+        }
         mSplashFragment_1 = null;
         mStudentInfoFragment = null;
         mScreeningOverviewFragment = null;
@@ -179,6 +208,17 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         //mScreeningOverviewFragment.setId(SCREENING_OVERVIEW_FRAGMENT_ID);
         mFragmentManager.beginTransaction().replace(frContainerId, mScreeningOverviewFragment, "TAG").commit();
         mShowScreeningsFragment = null;
+    }
+
+    private void displayResultsSummaryFragment(int screeningId, String studentName){
+        mShowNewOption = false;
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle(getString(R.string.results_summary));
+        invalidateOptionsMenu();
+        mResultsSummaryFragment = ResultsSummaryFragment.newInstance(RESULTS_SUMMARY_FRAGMENT_ID, screeningId, studentName);
+        mFragmentManager.beginTransaction().replace(frContainerId, mResultsSummaryFragment, "TAG").commit();
+        mShowScreeningsFragment = null;
+        mScreeningOverviewFragment = null;
     }
 
     private void startFlowControlActivity(int screeningId, long screeningCategoryRequest){
@@ -218,6 +258,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     @Override
     public void onScreeningResultsButtonClicked(Screening screening) {
         Log.i(TAG, "onScreeningResultsButtonClicked called. Screening id = " + screening.getId());
+        displayResultsSummaryFragment(screening.getId(), screening.getFirstName() + " " + screening.getLastName());
     }
 
     @Override
@@ -263,6 +304,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
                     break;
                 case FlowControlActivity.SHOW_RESULTS:
                     Log.i(TAG, "Show Results");
+                    screeningId = data.getIntExtra(FlowControlActivity.SCREENING_ID_TAG, -1);
+                    studentName = data.getStringExtra(FlowControlActivity.SCREENING_STUDENT_NAME_TAG);
+                    displayResultsSummaryFragment(screeningId, studentName);
                     break;
                 case FlowControlActivity.SHOW_SCREENINGS:
                     displayShowScreeningsFragment();

@@ -165,6 +165,15 @@ public class DbCRUD {
         return age;
     }
 
+    public static int getStudentId(int screeningId){
+        String[] columns = new String[] {ScreeningsEntry.STUDENT_ID};
+        Cursor c = mDB.query(ScreeningsEntry.TABLE_NAME, columns, "_ID = " + screeningId, null, null, null, null);
+        c.moveToNext();
+        int studentId = c.getInt(0);
+        c.close();
+        return studentId;
+    }
+
     public static Cursor getValidAnswersInCorrectLanguage(long questionId){
         String columns[];
         String tableName;

@@ -93,5 +93,11 @@
     <string name="other">Other</string>
     <string name="answer">"Answer "</string>
     <string name="profile">Profile</string>
+    <string name="results_summary">Results Summary</string>
+    <string name="completed">Completed</string>
+    <string name="not_completed">Not completed</string>
+    <string name="passed">Passed</string>
+    <string name="failed">Failed</string>
+    <string name="total">Total</string>
 
 </resources>
