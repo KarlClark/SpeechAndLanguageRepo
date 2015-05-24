@@ -1,6 +1,7 @@
 package com.neuroleap.speachandlanguage.Fragments;
 
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -46,6 +47,12 @@ public class SemanticsBodyPartsFragment extends QuestionsBaseFragment {
         mIvPicture.setImageBitmap(Utilities.decodeSampledBitmapFromResource(mResources, resId, 200, 200));
 
         return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((BitmapDrawable)mIvPicture.getDrawable()).getBitmap().recycle();
     }
 
     @Override
