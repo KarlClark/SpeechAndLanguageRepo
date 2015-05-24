@@ -18,14 +18,14 @@
             android:text="Large Text "
             android:id="@+id/tvDate"
             style = "@style/TextColor"
-            android:layout_weight="0.8"/>
+            android:layout_weight="0.9"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/tvTeacher"
-            android:layout_weight="1.2"
+            android:layout_weight="1.1"
             android:layout_gravity="right"
             style = "@style/TextColor"
             android:gravity="right"/>

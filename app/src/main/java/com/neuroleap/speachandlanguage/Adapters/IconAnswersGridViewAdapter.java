@@ -66,9 +66,9 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
             }
         }
         int resId = mResources.getIdentifier(mAnswerIcons.get(position).getFilename(), "drawable", mContext.getPackageName());
-        Log.i(TAG, "IconAnswerGridViewAdapter filename= " + mAnswerIcons.get(position).getFilename() + "  Position= " + position + "  resid = " + resId);
+        //Log.i(TAG, "IconAnswerGridViewAdapter filename= " + mAnswerIcons.get(position).getFilename() + "  Position= " + position + "  resid = " + resId);
         ibIcon= (ImageButton)convertView.findViewById(R.id.ibIcon);
-        Log.i(TAG,"IconAnswerGridViewAdapter image button height= " + ibIcon.getMeasuredHeight()+ "  width= " + ibIcon.getMeasuredWidth());
+        //Log.i(TAG,"IconAnswerGridViewAdapter image button height= " + ibIcon.getMeasuredHeight()+ "  width= " + ibIcon.getMeasuredWidth());
         ibIcon.setImageBitmap(Utilities.decodeSampledBitmapFromResource(mResources, resId, 50, 50));
         RelativeLayout rlIconContainer = (RelativeLayout)convertView.findViewById(R.id.rlIconContainer);
         if (mAnswerIcons.get(position).isClicked()){
@@ -109,6 +109,8 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-
+    public void nullOutListener(){
+        mOnIconButtonClickedListener = null;
+    }
 
 }

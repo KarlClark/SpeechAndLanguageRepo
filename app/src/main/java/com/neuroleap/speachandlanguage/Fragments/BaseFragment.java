@@ -27,4 +27,11 @@ public class BaseFragment extends Fragment {
         mOnFragmentInteractionListener = (OnFragmentInteractionListener)activity;
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //mOnFragmentInteractionListener=null;
+       // mContext = null;
+    }
 }

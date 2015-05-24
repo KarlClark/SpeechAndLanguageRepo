@@ -52,7 +52,7 @@ public class SemanticsAttributesFragment extends  QuestionsBaseFragment {
             String drawableFileName = filenameCursor.getString(0);
             filenameCursor.close();
             int resId = getResources().getIdentifier(drawableFileName, "drawable", mContext.getPackageName());
-            mIvPicture.setImageResource(resId);
+            mIvPicture.setImageBitmap(Utilities.decodeSampledBitmapFromResource(mResources, resId, 200, 200));
         }
 
         /*mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {

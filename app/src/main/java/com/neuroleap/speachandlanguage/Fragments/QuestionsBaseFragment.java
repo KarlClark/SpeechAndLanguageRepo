@@ -70,7 +70,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         super.onCreate(savedInstanceState);
 
         mQuestionId = getArguments().getInt(QUESTION_ID_KEY);
-        Log.i(TAG,"fragment for question " + mQuestionId + "  onCreate called");
+        //Log.i(TAG,"fragment for question " + mQuestionId + "  onCreate called");
         mScreeningId = getArguments().getInt(SCREENING_ID_KEY);
         mScreeningCategoryId = getArguments().getLong(SCREENING_CATEGORY_ID_KEY);
         mViewPagerPosition = getArguments().getInt(VIEW_PAGER_POSITION_KEY);
@@ -91,10 +91,18 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "Fragment for question " + mQuestionId+" onDestroy Called");
+        //mIconAnswersGridViewAdapter.nullOutListener();
+        //mIconAnswersGridViewAdapter = null;
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.i(TAG, "Fragment for question " + mQuestionId +" is visible= " + isVisibleToUser +"  mCommitted= " + mCommitted + "   mIconGridViewAdapter= " + mIconAnswersGridViewAdapter
-                 + "  mEtAnswers size= " + mEtAnswers.size());
+        //Log.i(TAG, "Fragment for question " + mQuestionId +" is visible= " + isVisibleToUser +"  mCommitted= " + mCommitted + "   mIconGridViewAdapter= " + mIconAnswersGridViewAdapter
+         //        + "  mEtAnswers size= " + mEtAnswers.size());
         if ( ! isVisibleToUser) {
             if ( ! mCommitted)  {
 
@@ -103,7 +111,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                 }
 
                 for (int i = 0; i < mAnswerIcons.size(); i++) {
-                    Log.i(TAG,"i= " + i + "  mOriginal click= " + mOriginalClicked[i]);
+                    //Log.i(TAG,"i= " + i + "  mOriginal click= " + mOriginalClicked[i]);
                     mAnswerIcons.get(i).setClicked(mOriginalClicked[i]);
                 }
 
@@ -113,7 +121,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                 }
 
                 if (mIconAnswersGridViewAdapter != null) {
-                    Log.i(TAG, "Calling notifyDataSetChanged for question " + mQuestionId);
+                    //Log.i(TAG, "Calling notifyDataSetChanged for question " + mQuestionId);
                     mIconAnswersGridViewAdapter.notifyDataSetChanged();
                 }
             }
@@ -126,7 +134,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         args.putInt(QUESTION_ID_KEY, questionId);
         args.putInt (SCREENING_ID_KEY , screeningId);
         args.putLong(SCREENING_CATEGORY_ID_KEY, screeningCategoryId);
-        Log.i(TAG, "QuestionBaseFragment screeningid= " + screeningId);
+        //Log.i(TAG, "QuestionBaseFragment screeningid= " + screeningId);
         args.putInt(VIEW_PAGER_POSITION_KEY, pageViewerPosition);
         args.putInt(GROUP_POSITION_KEY, groupPosition);
         return args;
@@ -172,7 +180,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             c_text.close();
 
             Cursor c_answerIcons = DbCRUD.getStudentAnswersIcons(c_answer.getLong(0));
-            Log.i(TAG,"c_answersIcons size= " + c_answerIcons.getCount());
+            //Log.i(TAG,"c_answersIcons size= " + c_answerIcons.getCount());
             while (c_answerIcons.moveToNext()){
                 Log.i(TAG, "answerIconsId= " + c_answerIcons.getLong(1));
                 mPressedIconIds.add(c_answerIcons.getLong(1));
@@ -191,7 +199,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             while (ic_Cursor.moveToNext()) {
                 ai = new AnswerIcon(ic_Cursor.getLong(0), ic_Cursor.getString(1));
                 if (idIsaPressedIcon(ai.getAnswerIconId())) {
-                    Log.i(TAG, "setting clicked true for id " + ai.getAnswerIconId());
+                    //Log.i(TAG, "setting clicked true for id " + ai.getAnswerIconId());
                     ai.setClicked(true);
                 }
                 mAnswerIcons.add(ai);
@@ -353,7 +361,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
 
     @Override
     public void onIconButtonClicked(AnswerIcon answerIcon){
-        Log.i(TAG, "QuestionBaseFragment onIconButtonClicked called, answerIconId= " + answerIcon.getAnswerIconId()+ "  isClicked= " + answerIcon.isClicked());
+        //Log.i(TAG, "QuestionBaseFragment onIconButtonClicked called, answerIconId= " + answerIcon.getAnswerIconId()+ "  isClicked= " + answerIcon.isClicked());
         //mPressedIcons.add(new PressedIcon(answerIconId, mAnswerNumber));
         if (answerIcon.isClicked()){
             mPressedIconIds.add(answerIcon.getAnswerIconId());

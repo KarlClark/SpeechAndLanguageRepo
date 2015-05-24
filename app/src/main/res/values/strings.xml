@@ -16,7 +16,7 @@
     <string name="screening">Screening</string>
     <string name="continuing">Continuing</string>
     <string name="newbtn">New</string>
-    <string name="student_info">Student Information:</string>
+    <string name="student_info">Student Profile:</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="date_of_birth">Date of birth</string>
@@ -80,13 +80,13 @@
     <string name="screening_completed">Completed</string>
     <string name="screening_not_completed">Not completed</string>
     <string name="screening_not_started">Not started</string>
-    <string name="student_info_title">Student Info</string>
+    <string name="student_info_title">Student Profile</string>
     <string name="test_mode_spn">Test mode:</string>
     <string name="years">years</string>
     <string name="months">months</string>
     <string name="cancel">Cancel</string>
     <string name="no_screenings">No screenings.  Press  NEW  to create a new screening.</string>
-    <string name="main_menu">Main Menu</string>
+    <string name="main_menu">Overview</string>
     <string name="overview">Overview</string>
     <string name="questions">Questions</string>
     <string name="results">Results</string>

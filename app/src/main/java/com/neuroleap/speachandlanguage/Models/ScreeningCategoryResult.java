@@ -22,7 +22,7 @@ public class ScreeningCategoryResult {
         mNumberCorrectAnswers = numberCorrectAnswers;
         mNumberOfQuestions =  numberOfQuestions;
         mPassed = numberCorrectAnswers/numberOfQuestions >= Utilities.PASSING_FRACTION;
-        mPercentCorrect = mNumberCorrectAnswers/mNumberOfQuestions;
+        mPercentCorrect = mNumberCorrectAnswers/mNumberOfQuestions * 100.0f;
     }
 
     public String getScreeningCategoryNameEg() {
