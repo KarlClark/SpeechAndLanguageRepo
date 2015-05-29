@@ -20,6 +20,7 @@ import android.widget.ExpandableListView;
 import com.neuroleap.speachandlanguage.Adapters.DrawerListAdapter;
 import com.neuroleap.speachandlanguage.Adapters.QuestionFragmentPagerAdapter;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
+import com.neuroleap.speachandlanguage.Fragments.NoSdCardDialogFragment;
 import com.neuroleap.speachandlanguage.Fragments.QuestionsBaseFragment;
 import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
 import com.neuroleap.speachandlanguage.Models.Question;
@@ -93,6 +94,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         setUpDrawer();
         setUpRootViewListener();
         displayFirstQuestion();
+        checkSdCard();
 
         //Log.i(TAG,"end onCreate");
     }
@@ -171,6 +173,8 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private void setUpRootViewListener(){
+        //Changes in GlobalLayout may mean the virtual keyboard has be raised or lower.
+        //Try to determine id keyboard is up or down.
         mDrawerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -276,7 +280,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.test_1,R.string.test_2){
             @Override
             public void onDrawerOpened(View drawerView) {
-                lowerKeyboard();
+                //When the drawer is opened we want to expand the depending on which question category
+                //the user is currently working on.  We want to set the colors of the drawer items
+                //depending on which questions have been answered and which categories have been completed.
+
+                lowerKeyboard(); // so drawer can use whole screen.
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
                 Question q = mViewPagerQuestions.get(mViewPager.getCurrentItem());
@@ -298,23 +306,22 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); //Required to show hamburger icon
 
+        //Create the draw list adapter and set it on the drawer list.
         mDrawerListAdapter = new DrawerListAdapter(this,mQuestionCategories, mDrawerQuestions);
         mDrawerList.setAdapter(mDrawerListAdapter);
 
         mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                //Log.i(TAG, "Group expanded = " + parent.isGroupExpanded(groupPosition));
                 if ( ! parent.isGroupExpanded(groupPosition)) {
-                    //Log.i(TAG,"mOpenGroup= " + mOpenGroup);
-
+                    //Set the color of the list items and display the fragment for the first
+                    //unanswered question in the group.
                     setGroupColor(groupPosition);
                     Question q = getUnansweredChild(groupPosition);
                     setChildColors(groupPosition, q.getChildPosition());
                     mViewPager.setCurrentItem(q.getViewPagerPosition());
-                    //Log.i(TAG, "here 1");
                 }
                 return false;
             }
@@ -325,9 +332,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             @Override
             public void onGroupExpand(int groupPosition) {
                 if (mOpenGroup != groupPosition) {
+                    //Collapse previously o[en group.
                     mDrawerList.collapseGroup(mOpenGroup);
                 }
 
+                //Make sure the list item for the current question is visible on the screen.
+                //Do this in a delayed handler so that UI can complete collapseGroup from above.
                 mOpenGroup = groupPosition;
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -348,8 +358,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mDrawerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                //Log.i(TAG, "Child clicked, category= " + mQuestionCategories.get(groupPosition).getText()+
-                 //       "  prompt=  " + mDrawerQuestions.get(groupPosition).get(childPosition).getText());
+                //Display fragment for selected question.
                 setChildColors(groupPosition, childPosition);
                 mViewPager.setCurrentItem(mDrawerQuestions.get(groupPosition).get(childPosition).getViewPagerPosition());
                 return true;
@@ -359,19 +368,20 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     @Override
     public void onFragmentInteraction(int id, Object ... args){
+        //Call back from question fragments
         switch ((int)args[0]) {
             case QuestionsBaseFragment.SHOW_NEXT_FRAGMENT:
-                mViewPagerQuestions.get((int) args[1]).setDone(true);
-                if (groupIsCompleted((int) args[2])) {
+                //args[1] = ViewPager position, args[2] = group position
+                mViewPagerQuestions.get((int) args[1]).setDone(true);  //Question has been answered
+                if (groupIsCompleted((int) args[2])) {  //Check id all questions in group are answered
                     mQuestionCategories.get((int) args[2]).setDone(true);
                 }
                 if ((int) args[0] + 1 < mViewPagerQuestions.size()) {
-                    mViewPager.setCurrentItem((int) args[1] + 1);
+                    mViewPager.setCurrentItem((int) args[1] + 1); //Display fragment for next question
                 }
                 break;
             case QuestionsBaseFragment.OVERVIEW_BUTTON_CLICKED:
-                Log.i(TAG,"Overview Button pressed");
-
+                // Return to StartUpActivity and display overview fragment.
                 Intent i = new Intent();
                 i.putExtra(REQUESTED_ACTION_KEY, SHOW_OVERVIEW);
                 i.putExtra(SCREENING_ID_TAG, mScreeningId);
@@ -382,7 +392,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 finish();
                 break;
             case QuestionsBaseFragment.RESULTS_BUTTON_CLICKED:
-                Log.i(TAG, "Results Button pressed");
+                //Return to StartUpActivity and display results fragment.
                 Intent intent = new Intent();
                 intent.putExtra(REQUESTED_ACTION_KEY, SHOW_RESULTS);
                 intent.putExtra(SCREENING_ID_TAG, mScreeningId);
@@ -393,7 +403,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 finish();
                 break;
             case QuestionsBaseFragment.SCREENINGS_BUTTON_CLICKED:
-                Log.i(TAG, " Screenings button pressed");
+                //Return to StartUpActivity and display screenings fragment.
                 callSetResult(SHOW_SCREENINGS);
         }
 
@@ -408,6 +418,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private void setChildColors(int groupPosition, int childPosition){
+        //The current question has its own highlight color.  Set the color of the previous
+        //highlighted question back to its normal color. Then set the color of the current
+        //question to the highlight color.
         if (mPreviousHighLightedQuestiion != null) {
             if (mPreviousHighLightedQuestiion.isDone()) {
                 mPreviousHighLightedQuestiion.setColor(Utilities.CHILD_COMPLETED_COLOR);
@@ -422,6 +435,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private void setGroupColor(int position){
+        //Group color is set to one color if no questions have be answered.
+        //If some questions in the group have been answered the color is set
+        //depending on whether the student is passing or not.
         ArrayList<Question> al = mDrawerQuestions.get(position);
         int doneCount = 0;
         float correctCount = 0;
@@ -440,7 +456,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             return;
         }
 
-        if (correctCount/total >= 0.8) {
+        if (correctCount/total >= Utilities.PASSING_FRACTION) {
             mQuestionCategories.get(position).setColor(Utilities.GROUP_PASSING_COLOR);
         }else{
             mQuestionCategories.get(position).setColor(Utilities.GROUP_FAILING_COLOR);
@@ -452,6 +468,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private boolean groupIsCompleted(int groupPosition){
+        //Check to see if all questions in the group have been answered.
         ArrayList<Question> al = mDrawerQuestions.get(groupPosition);
         for (int i = 0; i < al.size(); i++){
             if ( ! al.get(i).isDone()){
@@ -463,19 +480,19 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
     private void displayFirstQuestion() {
         Question question;
-        Log.i(TAG,"mCategoryRequest= " + mScreeningCategoryRequest + "  ############################");
         if (mScreeningCategoryRequest >=0 ){
+            //We have a requested category from the Overview screen. Move to first
+            //unanswered question in category. If all questions in category are
+            //answered, the move to first question in category.
             int firstIndex = -1;
             for(int i = 0; i < mViewPagerQuestions.size(); i++){
                 question = mViewPagerQuestions.get(i);
                 if (question.getScreeningCategoryId() == mScreeningCategoryRequest){
                     if (firstIndex == -1){
-                        Log.i(TAG ,"here1");
                         firstIndex = i;
                     }
                     if ( ! question.isDone()) {
                         mViewPager.setCurrentItem(i);
-                        Log.i(TAG,"here2");
                         return;
                     }
                 }
@@ -485,6 +502,8 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             return;
         }
 
+        //No category request, so move to first unanswered question, or first
+        //question if all questions are answered.
         for (int i = 0; i < mViewPagerQuestions.size(); i++){
             question = mViewPagerQuestions.get(i);
             if ( ! question.isDone()){
@@ -496,6 +515,9 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private Question getUnansweredChild(int groupPosition){
+        //Find first unanswered question n the group. If all
+        //questions in group are answered, return the first question
+        // in the group.
         ArrayList<Question> aq = mDrawerQuestions.get(groupPosition);
         for (int i = 0; i < aq.size(); i++){
             if( ! aq.get(i).isDone()){
@@ -505,4 +527,20 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         return(aq.get(0));
     }
 
+    public void onNoSdCardDialogYesClick(){
+        Log.i(TAG,"Alert dialog yes click");
+    }
+
+    public void onNoSdCardDialogNoClick(){
+        Log.i(TAG,"Alert dialog no click");
+        callSetResult(SHOW_SCREENINGS);
+    }
+
+    private void checkSdCard(){
+        if (Utilities.getAudioRecordMode() == Utilities.ON &&
+            ! Utilities.externalStorageIsWritable()){
+            NoSdCardDialogFragment diaFrag = new NoSdCardDialogFragment();
+            diaFrag.show(getSupportFragmentManager(), "dialog");
+        }
+    }
 }

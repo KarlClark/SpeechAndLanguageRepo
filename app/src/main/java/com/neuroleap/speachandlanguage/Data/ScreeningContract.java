@@ -4,6 +4,8 @@ import android.provider.BaseColumns;
 
 /**
  * Created by Karl on 3/5/2015.
+ * A typical Android database contract class.  Each static inner class describes one of the
+ * database tables.
  */
 public class ScreeningContract {
 

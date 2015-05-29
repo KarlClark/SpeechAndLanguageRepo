@@ -7,7 +7,7 @@
     tools:context="com.neuroleap.speachandlanguage.Activities.SettingsActivity">
 
     <TextView
-        android:layout_width="150sp"
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_language"
@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:gravity="right" />
+        android:gravity="left" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
         android:layout_below="@+id/line1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:gravity="right"
+        android:gravity="left"
         style = "@style/TextColor"
         android:layout_toStartOf="@+id/spnAppLanguage"
         android:layout_toLeftOf="@+id/spnAppLanguage"/>
@@ -55,7 +55,8 @@
         android:id="@+id/spnQuestionsLanguage"
         android:layout_alignBottom="@+id/tvQuestionsLanguage"
         android:layout_toRightOf="@+id/tvQuestionsLanguage"
-        android:layout_toEndOf="@+id/tvQuestionsLanguage"/>
+        android:layout_toEndOf="@+id/tvQuestionsLanguage"
+        android:spinnerMode="dropdown"/>
 
     <View
         android:layout_width="match_parent"
@@ -76,7 +77,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/tvQuestionsLanguage"
-        android:gravity="right"
         style = "@style/TextColor"
         android:layout_alignEnd="@+id/tvQuestionsLanguage"/>
 
@@ -86,7 +86,8 @@
         android:id="@+id/spnTestMode"
         android:layout_alignBottom="@+id/tvTestMode"
         android:layout_toRightOf="@+id/tvQuestionsLanguage"
-        android:layout_toEndOf="@+id/tvQuestionsLanguage"/>
+        android:layout_toEndOf="@+id/tvQuestionsLanguage"
+        android:spinnerMode="dropdown"/>
 
     <View
         android:layout_width="match_parent"

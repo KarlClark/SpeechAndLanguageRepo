@@ -33,7 +33,7 @@ public class ShowScreeningsFragment extends BaseFragment {
         mLvScreenings = (ListView)v.findViewById(R.id.lvScreenings);
         mTvNoScreenings = (TextView)v.findViewById((R.id.tvNoScreenings));
         fillList();
-        mScreeningsArrayAdapter = new ScreeningsArrayAdapter(mContext, mScreenings);
+        mScreeningsArrayAdapter = new ScreeningsArrayAdapter(getActivity(), mScreenings);
         mLvScreenings.setAdapter(mScreeningsArrayAdapter);
         /*mLvScreenings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

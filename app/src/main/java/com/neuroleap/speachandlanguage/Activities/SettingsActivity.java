@@ -18,43 +18,49 @@ import java.util.Locale;
 
 public class SettingsActivity extends ActionBarActivity {
 
-    private Spinner mSpnAppLanguage, mSpnQuestionsLanguage, mSpnTestMode;
-    private TextView mTvAppLanguage, mTvQuestionsLanguage, mTvTestMode;
+    private Spinner mSpnAppLanguage, mSpnQuestionsLanguage, mSpnTestMode, mSpnAudioRecord;
+    private TextView mTvAppLanguage, mTvQuestionsLanguage, mTvTestMode, mTvAudioRecord;
     private SharedPreferences mPrefs;
-    private ArrayAdapter<String> mAppLanguageAdapter, mQuestionsLanguageAdapter, mTestModeAdapter;
-    private String[] mAppLanguageChoices, mQuestionsLanguageChoices, mTestModeChoices;
+    private ArrayAdapter<String> mAppLanguageAdapter, mQuestionsLanguageAdapter, mTestModeAdapter, mAudioRecordAdapter;
+    private String[] mAppLanguageChoices, mQuestionsLanguageChoices, mTestModeChoices, mAudioRecordChoices;
     private int mCallCount = 0;
-    private int mAppLanguage, mQuestionsLanguage, mTestMode;
+    private int mAppLanguage, mQuestionsLanguage, mTestMode, mAudioRecordMode;
     private static final String TAG = "## My Info ##";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG,"Settings Activity onCreate called");
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_settings_2);
 
+        //Get current settings from shared preferences so we can display them.
         mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
         mAppLanguage = mPrefs.getInt(Utilities.PREFS_APP_LANGUAGE, Utilities.ENGLISH);
         mQuestionsLanguage = mPrefs.getInt(Utilities.PREFS_QUESTIONS_LANGUAGE, Utilities.ENGLISH);
         mTestMode = mPrefs.getInt(Utilities.PREFS_TEST_MODE, Utilities.BOTH_SCORING_BUTTONS_AND_TEXT);
+        mAudioRecordMode = mPrefs.getInt(Utilities.PREFS_RECORD_AUDIO_MODE, Utilities.ON);
+
         getViews();
         setupAppLanguageSpinner();
         setupQuestionsLanguageSpinner();
         setupTestModeSpinner();
-
+        setupAudioRecordSpinner();
     }
 
     private void getViews(){
         mTvAppLanguage = (TextView)findViewById(R.id.tvAppLanguage);
         mTvQuestionsLanguage = (TextView)findViewById(R.id.tvQuestionsLanguage);
         mTvTestMode = (TextView)findViewById(R.id.tvTestMode);
+        mTvAudioRecord = (TextView)findViewById(R.id.tvAudioRecord);
         mSpnAppLanguage= (Spinner)findViewById(R.id.spnAppLanguage);
         mSpnQuestionsLanguage = (Spinner)findViewById(R.id.spnQuestionsLanguage);
         mSpnTestMode = (Spinner)findViewById(R.id.spnTestMode);
+        mSpnAudioRecord = (Spinner)findViewById(R.id.spnAudioRecord);
 
     }
 
     private void setupTestModeSpinner(){
+        //Spinner for choosing test mode
         mTvTestMode.setText(getResources().getString(R.string.test_mode_spn));
         mTestModeChoices = getResources().getStringArray(R.array.test_mode);
         mTestModeAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner, mTestModeChoices);
@@ -87,7 +93,39 @@ public class SettingsActivity extends ActionBarActivity {
         });
     }
 
+    private void setupAudioRecordSpinner(){
+        mTvAudioRecord.setText(getResources().getString(R.string.audio_record));
+        mAudioRecordChoices = getResources().getStringArray(R.array.audio_record);
+        mAudioRecordAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner, mAudioRecordChoices);
+        mAudioRecordAdapter.setDropDownViewResource((R.layout.custom_spinner_dropdown));
+        mSpnAudioRecord.setAdapter(mAudioRecordAdapter);
+        if (mAudioRecordMode == Utilities.ON){
+            mSpnAudioRecord.setSelection(0);
+        }else{
+            mSpnAudioRecord.setSelection(1);
+        }
+        mSpnAudioRecord.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SharedPreferences.Editor prefsEditor = mPrefs.edit();
+                if (position == 0){
+                    prefsEditor.putInt(Utilities.PREFS_RECORD_AUDIO_MODE, Utilities.ON).commit();
+                    Utilities.setAudioRecordMode(Utilities.ON);
+                }else{
+                    prefsEditor.putInt(Utilities.PREFS_RECORD_AUDIO_MODE, Utilities.OFF).commit();
+                    Utilities.setAudioRecordMode(Utilities.OFF);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
     private void setupQuestionsLanguageSpinner(){
+        //Spinner for choosing which language to use for the questions.
         mTvQuestionsLanguage.setText(getResources().getString(R.string.questions_language));
         mQuestionsLanguageChoices = getResources().getStringArray(R.array.languages);
         mQuestionsLanguageAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner, mQuestionsLanguageChoices);
@@ -117,6 +155,8 @@ public class SettingsActivity extends ActionBarActivity {
     }
 
     private void setupAppLanguageSpinner(){
+        //Spinner to choose the language to use for the app.  Also redo this screen
+        //so that all text matches the language chosen here.
         mTvAppLanguage.setText(getResources().getString(R.string.app_language));
         mAppLanguageChoices = getResources().getStringArray(R.array.languages);
         mAppLanguageAdapter = new ArrayAdapter<String>(this,R.layout.custom_spinner, mAppLanguageChoices);

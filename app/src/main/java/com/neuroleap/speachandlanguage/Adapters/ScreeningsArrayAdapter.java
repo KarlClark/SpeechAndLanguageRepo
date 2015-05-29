@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Karl on 4/2/2015.
+ * Adapter use for the list of screenings.
  */
 public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
     Context mContext;
@@ -41,6 +42,8 @@ public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_screenings_item, parent, false);
         }
+
+        //Get the views and fill them in with data from the Screening model.
         TextView tvName = (TextView)convertView.findViewById(R.id.tvName);
         TextView tvDate = (TextView)convertView.findViewById(R.id.tvDate);
         TextView tvTeacher = (TextView)convertView.findViewById(R.id.tvTeacher);
@@ -68,6 +71,11 @@ public class ScreeningsArrayAdapter extends ArrayAdapter<Screening> {
                 tvScreeningState.setText("");
         }
 
+        //Each list item has four buttons. For each button store the Screening object in its
+        //tag.  Then set an onClick listener on it. In the onClick listener call the appropriate
+        //method from the mOnScreeningsListButtonsListener that was passed in in the constructor.
+        //In this case the listener will actually be the Activity hosting the fragment that is
+        //using this adapter.
         btnResults.setTag(screening);
         btnResults.setOnClickListener(new View.OnClickListener() {
             @Override

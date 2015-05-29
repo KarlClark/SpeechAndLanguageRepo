@@ -57,9 +57,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_up);
-        frContainerId = R.id.frContainer;
+        frContainerId = R.id.frContainer;  //Used to hold fragments.
         ScreeningDbHelper dbHelper = new ScreeningDbHelper(this);
-        DbCRUD.setDatabase(dbHelper.getWritableDatabase());
+        DbCRUD.setDatabase(dbHelper.getWritableDatabase());  //Pass the database to the DbCRUD class.
         mPrefs = getSharedPreferences(Utilities.PREFS_NAME, Activity.MODE_PRIVATE);
         checkLanguagePreference();
         checkTestModePreference();
@@ -74,6 +74,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         super.onPostResume();
         Log.i(TAG,"Startup activity onPostResume called");
         if (mReturningWithResult) {
+            //Can't start a fragment from onActivityResult so we saved necessary
+            //data to start next fragment here.
             showRequestedFragment(mResultIntent);
             mReturningWithResult = false;
         }
@@ -81,7 +83,10 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        //Show Settings and NEW on action bar depending on values
+        //of mShowSettingsOption and mShowNewOption which are
+        //changed through out the activity depending on what
+        //fragment is being displayed.
         getMenuInflater().inflate(R.menu.menu_start_up, menu);
         MenuItem settingsItem = menu.findItem(R.id.action_settings);
         MenuItem newItem = menu.findItem(R.id.new_screening);
@@ -92,9 +97,6 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -113,6 +115,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
 
     @Override
     public void onBackPressed() {
+        //If we are on the screenings fragment, end the program. If we are on
+        //any other fragment then display the screenings fragment
         Fragment fragment = mFragmentManager.findFragmentById(R.id.frContainer);
         if (fragment instanceof ShowScreeningsFragment) {
             super.onBackPressed();
@@ -122,25 +126,24 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     }
 
     public void onFragmentInteraction(int id, Object ... args){
-        Log.i(TAG, "StartUpActivity onFragmentInteraction called. id= " + id);
+        //Fragment use this method to call back to this activity.
         switch (id){
-            case SPLASH_FRAGMENT_1_ID:
+            case SPLASH_FRAGMENT_1_ID:  //Splash screen is done. Show Screenings fragment
                 displayShowScreeningsFragment();
                 break;
-            case STUDENT_INFO_FRAGMENT_ID:
+            case STUDENT_INFO_FRAGMENT_ID:  //User finished student input. Show Screenings fragment.
                 displayShowScreeningsFragment();
                 break;
-            /*case SHOW_SCREENINGS_FRAGMENT_ID:
-                displayScreeningMainMenuFragment((int)args[0], (String)args[1] + " " +  (String)args[2]);
-                break;*/
             case SCREENING_OVERVIEW_FRAGMENT_ID:
-                if(args[1] == Utilities.SCREENINGS){
+                if(args[1] == Utilities.SCREENINGS){ //User hit Screenings button on Overview screen.
                     displayShowScreeningsFragment();
                 }else {
-                    if ( args[1] == Utilities.RESULTS) {
+                    if ( args[1] == Utilities.RESULTS) { //User hit Results button on Overview screen.
                         displayResultsSummaryFragment((int)args[0], (String)args[2]);
                     } else {
                         Log.i(TAG, "screening id = " + (int) args[0] + "  category= " + (long) args[1]);
+                        //User selected a category from the overview screen. args[0] = screening id.
+                        //args[1] = requested category id.
                         startFlowControlActivity((int) args[0], (long) args[1]);
                     }
                 }
@@ -151,12 +154,13 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
                         displayShowScreeningsFragment();
                         break;
                     case Utilities.PROFILE:
-                        displayStudentInfoFragment((int)args[1]);
+                        displayStudentInfoFragment((int)args[1]); //args[1] = student id
                         break;
                     case Utilities.QUESTIONS:
-                        startFlowControlActivity((int)args[1], -1);
+                        startFlowControlActivity((int)args[1], -1); //args[1] = screening id
                         break;
                     case Utilities.OVERVIEW:
+                        //args[1] = screening id, args[2] = student name.
                         displayScreeningOverviewFragment((int)args[1], (String)args[2]);
                 }
         }
@@ -171,11 +175,14 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
 
 
     private void displayShowScreeningsFragment(){
+
+        //setup action bar
         mShowNewOption = true;
         mShowSettingOption = true;
         ActionBar ab = getSupportActionBar();
         ab.setTitle(getString(R.string.screenings_title));
         invalidateOptionsMenu();
+
         mShowScreeningsFragment = new ShowScreeningsFragment();
         mShowScreeningsFragment.setId(SHOW_SCREENINGS_FRAGMENT_ID);
         try {
@@ -230,8 +237,10 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
 
     private void checkLanguagePreference() {
 
+        //Get app language from shared preferences.
         int appLanguage = mPrefs.getInt(Utilities.PREFS_APP_LANGUAGE, -1);
         if (appLanguage == -1) {
+            //no language preference, so set it to English unless the Locale language is actually Spanish.
             Log.i (TAG, "locale language= " + Locale.getDefault().getLanguage());
             if(Locale.getDefault().getLanguage().equals("es")){
                 appLanguage = Utilities.SPANISH;
@@ -239,6 +248,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
                 appLanguage = Utilities.ENGLISH;
             }
         }
+
+        //set the Locale based on app language.
         Utilities.setAppLanguage(appLanguage);
         if (appLanguage == Utilities.ENGLISH){
             Utilities.setLocale(getBaseContext(), "en");
@@ -286,6 +297,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
             case SETTINGS_ACTIVITY_TAG:
                 break;
             case FLOW_CONTROL_ACTIVITY_TAG:
+                //Can't start a fragment from here because of state loss. So
+                //save data and start fragment in onPostResume.
                 mReturningWithResult = true;
                 mResultIntent = data;
         }

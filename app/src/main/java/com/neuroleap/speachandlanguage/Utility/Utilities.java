@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 import com.neuroleap.speachandlanguage.R;
 
@@ -21,6 +22,10 @@ public class Utilities {
     public static final String PREFS_NAME = "pref_name";
     public static final String PREFS_APP_LANGUAGE = "prefs_app_language";
     public static final String PREFS_QUESTIONS_LANGUAGE = "prefs_app_language";
+    public static final String PREFS_TEST_MODE = "prefs_test_mode";
+    public static final String PREFS_RECORD_AUDIO_MODE = "prefs_record_audio_mode";
+    public static final int ON = 0;
+    public static final int OFF = 1;
     public static final int ENGLISH = 0;
     public static final int SPANISH = 1;
     private static  int mAppLanguage= ENGLISH;
@@ -28,11 +33,11 @@ public class Utilities {
     private static  SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
     private static String mPackageName;
     //private static int mTotalQuestions;
-    public static final String PREFS_TEST_MODE = "prefs_test_mode";
     //public static final int SCORING_BUTTONS_ONLY= 0;
     public static final int TEXT_INPUT_ONLY = 1;
     public static final int BOTH_SCORING_BUTTONS_AND_TEXT = 2;
     private static int mTestMode = BOTH_SCORING_BUTTONS_AND_TEXT;
+    private static int mAudioRecordMode = ON;
     public static final int SCREENING_NOT_STARTED = 0;
     public static final int SCREENING_NOT_COMPLETE = 1;
     public static final int SCREENING_COMPLETED = 2;
@@ -88,6 +93,14 @@ public class Utilities {
 
     public static void setTestMode(int testMode) {
         mTestMode = testMode;
+    }
+
+    public static int getAudioRecordMode() {
+        return mAudioRecordMode;
+    }
+
+    public static void setAudioRecordMode(int audioRecordMode) {
+        mAudioRecordMode = audioRecordMode;
     }
 
     public static void setLocale(Context context, String languageCode){
@@ -155,5 +168,16 @@ public class Utilities {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public static boolean externalStorageIsWritable(){
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    public static boolean externalStorageIsReadable(){
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 }

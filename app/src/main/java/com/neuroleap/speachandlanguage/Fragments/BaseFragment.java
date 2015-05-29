@@ -23,7 +23,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mContext = activity;
+        mContext = activity.getApplication();
         mOnFragmentInteractionListener = (OnFragmentInteractionListener)activity;
     }
 
@@ -31,7 +31,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //mOnFragmentInteractionListener=null;
-       // mContext = null;
+        mOnFragmentInteractionListener=null;
+        mContext = null;
     }
 }

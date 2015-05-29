@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by Karl on 3/20/2015.
+ * Adapter for the ExpandableList used in the slide out drawer
  */
 public class DrawerListAdapter extends BaseExpandableListAdapter {
     private Context mContext;
@@ -74,10 +75,11 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
         TextView tvGroupItem = (TextView)convertView.findViewById(R.id.tvGroupItem);
-        tvGroupItem.setText(mCategories.get(groupPosition).getText());
+        tvGroupItem.setText(mCategories.get(groupPosition).getText());  //Description of category
         ImageView ivSelector = (ImageView)convertView.findViewById(R.id.ivSelector);
-        String drawableFileName;
 
+        //Selector arrow indicates that group is expandable.
+        String drawableFileName;
             if(isExpanded){
                 drawableFileName = "down_arrow";
             }else{
@@ -86,6 +88,7 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
         int resId = mContext.getResources().getIdentifier(drawableFileName, "drawable", mContext.getPackageName());
         ivSelector.setImageResource(resId);
 
+        //Background color will reflect how well student is doing on answered questions.
         RelativeLayout rl = (RelativeLayout)convertView.findViewById(R.id.rlGroupItem);
         rl.setBackgroundResource(mCategories.get(groupPosition).getColor());
         return convertView;
@@ -98,7 +101,7 @@ public class DrawerListAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_item, parent, false);
         }
-        TextView tvListItem = (TextView)convertView.findViewById(R.id.tvListItem);
+        TextView tvListItem = (TextView)convertView.findViewById(R.id.tvListItem); //Description of question
         tvListItem.setText(mQuestions.get(groupPosition).get(childPosition).getText());
         int color = mQuestions.get(groupPosition).get(childPosition).getColor();
         tvListItem.setBackgroundResource(color);

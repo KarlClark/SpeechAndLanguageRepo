@@ -20,7 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-// ...
+/*
+* This date picker can display a title describing which date is being picked.  This is
+* important for this app because the user profile screen has four date fields on it.
+* Since the date picker obscures the fields the user can't tell for sure which
+* date he is entering.
+ */
 
 public class CustomDatePickerDialogFragment extends DialogFragment {
 
@@ -86,7 +91,7 @@ public class CustomDatePickerDialogFragment extends DialogFragment {
             tvTitle.setTextColor(mTitleColor);
         }
         mDatePicker=(DatePicker)v.findViewById(R.id.datePicker);
-        if ( ! mField.getText().toString().equals("")){
+        if ( ! mField.getText().toString().equals("")){ //set the date picker to the date already in the field.
             SimpleDateFormat dateFormat = new SimpleDateFormat(StudentInfoFragment.DATE_FORMAT_STRING);
             try {
                 Date date = dateFormat.parse(mField.getText().toString());

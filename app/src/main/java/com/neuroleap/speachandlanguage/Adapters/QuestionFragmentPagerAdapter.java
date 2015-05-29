@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Karl on 4/7/2015.
+ * Adapter used by the fragment PageViewer.
  */
 public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -33,8 +34,11 @@ public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
         Object frag = null;
         Class myFragmentClass;
         try {
+            //Use fragment filename to get the fragment class.
             myFragmentClass = Class.forName(Utilities.getPackageName() +".Fragments." + mQuestions.get(position).getFragmentName());
+            //Use the class to get the newInstance method.
             Method m = myFragmentClass.getMethod("newInstance", Integer.class, Integer.class, Long.class, Integer.class, Integer.class);
+            //Invoke newInstance method to create fragment object.
             frag = m.invoke(null, mQuestions.get(position).getId(), mScreeningId, mQuestions.get(position).getScreeningCategoryId(), position, mQuestions.get(position).getGroupPosition());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

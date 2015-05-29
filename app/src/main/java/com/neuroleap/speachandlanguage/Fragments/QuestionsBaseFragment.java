@@ -94,8 +94,11 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "Fragment for question " + mQuestionId+" onDestroy Called");
-        //mIconAnswersGridViewAdapter.nullOutListener();
-        //mIconAnswersGridViewAdapter = null;
+        if (mIconAnswersGridViewAdapter != null) {
+            mIconAnswersGridViewAdapter.nullOutListener();
+            mIconAnswersGridViewAdapter.notifyDataSetInvalidated();
+            mIconAnswersGridViewAdapter = null;
+        }
     }
 
     @Override
@@ -104,8 +107,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         //Log.i(TAG, "Fragment for question " + mQuestionId +" is visible= " + isVisibleToUser +"  mCommitted= " + mCommitted + "   mIconGridViewAdapter= " + mIconAnswersGridViewAdapter
          //        + "  mEtAnswers size= " + mEtAnswers.size());
         if ( ! isVisibleToUser) {
-            if ( ! mCommitted)  {
-
+            if ( ! mCommitted)  {// The user swiped the screen without committing an answer so
+                                 // set things back to the way they were before user interacted with UI
                 for(int i =0; i < mEtAnswers.size(); i++){
                     mEtAnswers.get(i).setText(mOriginalAnswers[i]);
                 }
@@ -130,6 +133,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     }
 
     protected static Bundle createBundle(Integer questionId, Integer screeningId, Long screeningCategoryId, Integer pageViewerPosition, Integer groupPosition){
+        // Subclass will call this from the newInstance method to create the bundle to pass data to fragment instance.
         Bundle args = new Bundle();
         args.putInt(QUESTION_ID_KEY, questionId);
         args.putInt (SCREENING_ID_KEY , screeningId);
@@ -148,15 +152,16 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mBtnOverview = (Button)v.findViewById(R.id.btnOverview);
         mBtnResults = (Button)v.findViewById(R.id.btnResults);
         mBtnScreenings = (Button)v.findViewById(R.id.btnScreenings);
-        mEtAnswers.add((EditText)v.findViewById(R.id.etAnswer1));
-        mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther1));
+        mEtAnswers.add((EditText)v.findViewById(R.id.etAnswer1));  //All questions have at least
+        mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther1)); //one view for a text answer.
 
-
+        //Get question from database and put it in text view.
         Cursor questionCursor = DbCRUD.getQuestionData(mQuestionId);
         questionCursor.moveToNext();
         mTvQuestion.setText(questionCursor.getString(1));
         questionCursor.close();
 
+        //Add extra text answer fields if question has more than one answer
         if (numberOfAnswers > 1) {
             mEtAnswers.add((EditText)v.findViewById(R.id.etAnswer2));
             mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther2));
@@ -166,6 +171,9 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther3));
         }
 
+        //If user has gone back to a previously answered question fill in the
+        //text he previously entered and make a list of the icon answer buttons
+        //he pressed.
         Cursor c_answer = DbCRUD.getStudentAnswer(mQuestionId, mScreeningId);
         if (c_answer.getCount() > 0) {
 
@@ -195,7 +203,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         Cursor ic_Cursor = DbCRUD.getIconFilenames(mQuestionId);
         AnswerIcon ai;
         if (ic_Cursor.getCount() > 0 && Utilities.getTestMode() == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT) {
-
+            // Need answer icon buttons.  Make a list of AnswerIcon models to use with the grid view adapter.
             while (ic_Cursor.moveToNext()) {
                 ai = new AnswerIcon(ic_Cursor.getLong(0), ic_Cursor.getString(1));
                 if (idIsaPressedIcon(ai.getAnswerIconId())) {
@@ -212,7 +220,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             mIconAnswersGridViewAdapter = new IconAnswersGridViewAdapter(mContext, this, mAnswerIcons);
             mGvIconAnswers.setAdapter(mIconAnswersGridViewAdapter);
         }else{
-            //mGvIconAnswers.setVisibility(View.GONE);
+            //In this mode we don't display icon answer button, so hide the gridview frame. Answers
+            // have to be entered manually, so raise the virtual keyboard.
             mGvIconAnswers.setBackgroundResource(0);
             mNeedAnswerText = true;
             mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -226,6 +235,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             });
         }
 
+        //If the user presses any of these buttons, then enter his answer/answers into the database.
         mBtnZero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,7 +269,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             }
         });
 
-        mBtnScreenings.setOnClickListener(new View.OnClickListener() {
+        mBtnScreenings.setOnClickListener(new View.OnClickListener() { //Go back to screenings page
             @Override
             public void onClick(View v) {
                 mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SCREENINGS_BUTTON_CLICKED);
@@ -268,20 +278,21 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
 
         mBtnResults.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //Go to results page
                 mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, RESULTS_BUTTON_CLICKED);
             }
         });
 
         mBtnOverview.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // Go to Overview page
                 mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, OVERVIEW_BUTTON_CLICKED);
             }
         });
     }
 
     private boolean idIsaPressedIcon(long iconId){
+        //Search the list of pressed icons to see if this icon is in it.
         for (long id : mPressedIconIds){
             if (id == iconId){
                 return true;
@@ -291,6 +302,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     }
 
     public void enterIconAnswers(long studentAnswerId){
+        //Enter icon answers into data base, including the order they were pressed in.
+        //Keep track of how many icons were pressed.
         mAnswerNumber= 1;
         for (long id : mPressedIconIds){
             mPressedIcons.add(new PressedIcon(id , mAnswerNumber++));
@@ -300,6 +313,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     }
 
     public void enterTextAnswers(long studentAnswerId){
+        //Enter any text answers into the data base.
         ArrayList<StudentAnswerText> sat = new ArrayList<>();
         for (EditText et : mEtAnswers){
             String s = et.getText().toString();
@@ -313,7 +327,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     }
 
     protected void setupWindow() {
-
+        //Different views are displayed depending on answer mode and number of answers
         for (EditText et : mEtAnswers){
             et.setVisibility(View.VISIBLE);
         }
@@ -325,6 +339,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                 mBtnOne.setVisibility(View.GONE);
                 mBtnZero.setVisibility(View.GONE);
                 mGvIconAnswers.setVisibility(View.GONE);
+                // If one answer field label it Answer otherwise label them Answer 1, Answer 2 etc.
                 if (mTvAnswerPrompts.size() == 1){
                     mTvAnswerPrompts.get(0).setText(mContext.getString(R.string.answer));
                 } else {
@@ -361,8 +376,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
 
     @Override
     public void onIconButtonClicked(AnswerIcon answerIcon){
-        //Log.i(TAG, "QuestionBaseFragment onIconButtonClicked called, answerIconId= " + answerIcon.getAnswerIconId()+ "  isClicked= " + answerIcon.isClicked());
-        //mPressedIcons.add(new PressedIcon(answerIconId, mAnswerNumber));
+        // If an icon has been pressed then add it to the list. If an
+        //already pressed icons has been re-pressed then delete it from the list.
         if (answerIcon.isClicked()){
             mPressedIconIds.add(answerIcon.getAnswerIconId());
         }else {

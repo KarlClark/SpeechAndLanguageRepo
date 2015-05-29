@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Karl on 4/21/2015.
+ * Adapter for the GridView that holds the answer icon buttons.
  */
 public class IconAnswersGridViewAdapter extends BaseAdapter {
 
@@ -35,6 +36,8 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
     public IconAnswersGridViewAdapter(Context context, OnIconButtonClickedListener onIconButtonClickedListener, ArrayList<AnswerIcon> answerIcons){
         mContext = context;
         mAnswerIcons = answerIcons;
+        //The following listener is implemented by QuestionBaseFragment so it can tell
+        //which icon buttons have be pressed by the user.
         mOnIconButtonClickedListener = onIconButtonClickedListener;
         mResources = mContext.getResources();
     }
@@ -61,30 +64,34 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_icon_item, parent, false);
             if (mFirstTime){
+                //Save the background of a normal container so we can reset the background if
+                //the user double clicks a button.
                 mDefaultBackground = convertView.findViewById(R.id.rlIconContainer).getBackground();
                 mFirstTime = false;
             }
         }
+        //get resource id of file that has picture for this ImageButton.
         int resId = mResources.getIdentifier(mAnswerIcons.get(position).getFilename(), "drawable", mContext.getPackageName());
-        //Log.i(TAG, "IconAnswerGridViewAdapter filename= " + mAnswerIcons.get(position).getFilename() + "  Position= " + position + "  resid = " + resId);
+        Log.i(TAG, "IconAnswerGridViewAdapter filename= " + mAnswerIcons.get(position).getFilename() + "  Position= " + position + "  resid = " + resId);
         ibIcon= (ImageButton)convertView.findViewById(R.id.ibIcon);
-        //Log.i(TAG,"IconAnswerGridViewAdapter image button height= " + ibIcon.getMeasuredHeight()+ "  width= " + ibIcon.getMeasuredWidth());
-        ibIcon.setImageBitmap(Utilities.decodeSampledBitmapFromResource(mResources, resId, 50, 50));
+        ibIcon.setImageBitmap(Utilities.decodeSampledBitmapFromResource(mResources, resId, 50, 50)); //Load a bitmap probably smaller than the file.
+
+        //Changing the color of the button's container creates a highlighted frame around it.
         RelativeLayout rlIconContainer = (RelativeLayout)convertView.findViewById(R.id.rlIconContainer);
         if (mAnswerIcons.get(position).isClicked()){
-            Log.i(TAG, "position " + position + " is clicked");
             rlIconContainer.setBackgroundColor(mContext.getResources().getColor(R.color.green));
         } else {
             rlIconContainer.setBackgroundDrawable(mDefaultBackground);
         }
+
+        //Store the AnswerIcon model object for this button in the button's tag so it can be retrieved later.
         ibIcon.setTag(mAnswerIcons.get(position));
 
         ibIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //v.setBackgroundResource(android.R.drawable.button_onoff_indicator_on);
-                //v.setPressed(true);
                 if (((AnswerIcon)v.getTag()).isClicked()){
+                    //Button was clicked before do un-click it
                     ((RelativeLayout)v.getParent()).setBackgroundDrawable(mDefaultBackground);
                     ((AnswerIcon)v.getTag()).setClicked(false);
                 }else {
@@ -92,20 +99,11 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
                     ((AnswerIcon)v.getTag()).setClicked(true);
                 }
 
+                //Tell listener (QuestionBaseFragment) which AnswerIcon was selected by
+                //passing back the tag that was set above.
                 mOnIconButtonClickedListener.onIconButtonClicked((AnswerIcon) v.getTag());
             }
         });
-
-        /*ibIcon.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //v.setPressed(true);
-                //mOnIconButtonClickedListener.onIconButtonClicked((Long) v.getTag());
-                //v.performClick();
-                Log.i(TAG, "is Pressed = " + v.isPressed());
-                return true;
-            }
-        });*/
         return convertView;
     }
 

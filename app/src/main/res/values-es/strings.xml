@@ -52,6 +52,10 @@
     <string name="passed">Passed</string>
     <string name="failed">Failed</string>
     <string name="total">Total</string>
+    <string name="audio_record">Audio Record</string>
+    <string name="no_sdcard">No SD card installed.  You will not be able to record audio.</string>
+    <string name="want_to_continue">Do you want to continue?</string>
+    <string name="yes">YES</string>
 
     <string-array name="languages">
         <item>English/Ingles</item>
@@ -62,6 +66,12 @@
         <item>Text input only_sp</item>
         <item>Text and scoring buttons_sp</item>
     </string-array>
+
+    <string-array name="audio_record">
+        <item>On</item>
+        <item>Off</item>
+    </string-array>
+
 
 
 
