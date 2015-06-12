@@ -3,7 +3,6 @@ package com.neuroleap.speachandlanguage.Adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,7 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
         }
         //get resource id of file that has picture for this ImageButton.
         int resId = mResources.getIdentifier(mAnswerIcons.get(position).getFilename(), "drawable", mContext.getPackageName());
-        Log.i(TAG, "IconAnswerGridViewAdapter filename= " + mAnswerIcons.get(position).getFilename() + "  Position= " + position + "  resid = " + resId);
+        //Log.i(TAG, "IconAnswerGridViewAdapter filename= " + mAnswerIcons.get(position).getFilename() + "  Position= " + position + "  resid = " + resId);
         ibIcon= (ImageButton)convertView.findViewById(R.id.ibIcon);
         ibIcon.setImageBitmap(Utilities.decodeSampledBitmapFromResource(mResources, resId, 50, 50)); //Load a bitmap probably smaller than the file.
 

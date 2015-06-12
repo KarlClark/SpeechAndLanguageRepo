@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.util.Log;
 
 import com.neuroleap.speachandlanguage.R;
 
@@ -53,6 +54,7 @@ public class Utilities {
     public static final int OVERVIEW = 23;
     public static final int QUESTIONS = 24;
     public static final float PASSING_FRACTION = 0.8f;
+    private static final String TAG = "## My Info ##";
 
 
    /* public static int getTotalQuestions() {
@@ -172,6 +174,7 @@ public class Utilities {
 
     public static boolean externalStorageIsWritable(){
         String state = Environment.getExternalStorageState();
+        Log.i(TAG,"Externalstorage state " + state);
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 

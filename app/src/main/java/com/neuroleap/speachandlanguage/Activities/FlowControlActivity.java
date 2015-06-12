@@ -2,7 +2,9 @@ package com.neuroleap.speachandlanguage.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -19,9 +21,12 @@ import android.widget.ExpandableListView;
 
 import com.neuroleap.speachandlanguage.Adapters.DrawerListAdapter;
 import com.neuroleap.speachandlanguage.Adapters.QuestionFragmentPagerAdapter;
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
-import com.neuroleap.speachandlanguage.Fragments.NoSdCardDialogFragment;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
+import com.neuroleap.speachandlanguage.Fragments.AlertDialogFragment;
 import com.neuroleap.speachandlanguage.Fragments.QuestionsBaseFragment;
+import com.neuroleap.speachandlanguage.Listeners.OnAlertDialogListener;
 import com.neuroleap.speachandlanguage.Listeners.OnFragmentInteractionListener;
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Models.QuestionCategory;
@@ -29,11 +34,15 @@ import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
-public class FlowControlActivity extends ActionBarActivity implements OnFragmentInteractionListener{
+public class FlowControlActivity extends ActionBarActivity implements OnFragmentInteractionListener, OnAlertDialogListener {
 
     private List<QuestionCategory> mQuestionCategories = new ArrayList<QuestionCategory>(); //Used with DrawListAdapter
     private List<ArrayList<Question>> mDrawerQuestions = new ArrayList<ArrayList<Question>>(); //Used with DrawListAdapter
@@ -50,7 +59,8 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private QuestionFragmentPagerAdapter mQuestionFragmentPagerAdapter;
     private int mOpenGroup = 0;
     private QuestionCategory mPreviousHighLightedCategory;
-    private Question mCurrentHighLightedQuestion, mPreviousHighLightedQuestiion;
+    private Question mCurrentHighLightedQuestion, mPreviousHighLightedQuestion;
+    private MediaRecorder mMediaRecorder;
     private int mScreeningId;
     private int mAge;
     private String mStudentName;
@@ -66,6 +76,10 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     public static final int SHOW_SCREENINGS = 0;
     public static final int SHOW_OVERVIEW = 1;
     public static final int SHOW_RESULTS = 2;
+    private static final int NO_SD_CARD_TAG = 0;
+    private static final int CANT_CREATE_DIRECTORY_TAG = 1;
+    private static final int CANT_PREPARE_MEDIA_RECORDER_TAG = 2;
+    private static final int RECORD_AUDIO_WARNING_TAG = 3;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -95,6 +109,10 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         setUpRootViewListener();
         displayFirstQuestion();
         checkSdCard();
+        if (Utilities.getAudioRecordMode() == Utilities.ON &&
+                Utilities.getTestMode() == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT){
+            startRecording();
+        }
 
         //Log.i(TAG,"end onCreate");
     }
@@ -104,6 +122,16 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         super.onPostCreate(savedInstanceState);
         //Sync the ActionBar indicator with the state of the drawer.
         mDrawerToggle.syncState();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mMediaRecorder != null) {
+            mMediaRecorder.stop();
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+        }
     }
 
     @Override
@@ -204,14 +232,14 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mViewPagerQuestions.clear();
 
         //Build a list of completed questions, and a matching list of whether the answer was correct.
-        Log.i(TAG,"mCompletionState= " + mCompletionState);
+        //Log.i(TAG,"mCompletionState= " + mCompletionState);
         if (mCompletionState == Utilities.SCREENING_NOT_COMPLETE) {
             Cursor allCompletedCursor = DbCRUD.getAllCompletedQuestionsIds(mScreeningId);
-            Log.i(TAG, "allCompletedCursor size= " + allCompletedCursor.getCount());
+            //Log.i(TAG, "allCompletedCursor size= " + allCompletedCursor.getCount());
             while (allCompletedCursor.moveToNext()) {
                 mAllCompletedQuestionIds.add(allCompletedCursor.getInt(allCompletedCursor.getColumnIndex(StudentAnswersEntry.QUESTION_ID)));
                 mAllCompletedQuestionIsCorrect.add(allCompletedCursor.getInt(allCompletedCursor.getColumnIndex(StudentAnswersEntry.CORRECT)) != 0);
-                Log.i(TAG, "add completed id " + allCompletedCursor.getInt(allCompletedCursor.getColumnIndex(StudentAnswersEntry.QUESTION_ID)));
+                //Log.i(TAG, "add completed id " + allCompletedCursor.getInt(allCompletedCursor.getColumnIndex(StudentAnswersEntry.QUESTION_ID)));
             }
         }
 
@@ -226,7 +254,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         Cursor categoryCursor = DbCRUD.getQuestionCategories();
         while (categoryCursor.moveToNext()){
             //Log.i(TAG, "categoryCursor . movetoNext");
-            Log.i(TAG , "mAge = " + mAge + "  cursor age = " + categoryCursor.getInt(2));
+            //Log.i(TAG , "mAge = " + mAge + "  cursor age = " + categoryCursor.getInt(2));
             if (mAge >= categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.CUTOFF_AGE))) {
                 categoryDone = true;
                 categoryId = categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry._ID));
@@ -242,7 +270,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                     //are complete (answered) the the entire category is complete.
                     boolean questionDone = ((index = mAllCompletedQuestionIds.indexOf
                             (questionCursor.getInt(questionCursor.getColumnIndex(QuestionsEntry._ID)))) >= 0);
-                    Log.i(TAG, "questionDone= "+ questionDone);
+                    //Log.i(TAG, "questionDone= "+ questionDone);
                     if (  questionDone){
                         isCorrect = mAllCompletedQuestionIsCorrect.get(index);
                     }else{
@@ -421,15 +449,15 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         //The current question has its own highlight color.  Set the color of the previous
         //highlighted question back to its normal color. Then set the color of the current
         //question to the highlight color.
-        if (mPreviousHighLightedQuestiion != null) {
-            if (mPreviousHighLightedQuestiion.isDone()) {
-                mPreviousHighLightedQuestiion.setColor(Utilities.CHILD_COMPLETED_COLOR);
+        if (mPreviousHighLightedQuestion != null) {
+            if (mPreviousHighLightedQuestion.isDone()) {
+                mPreviousHighLightedQuestion.setColor(Utilities.CHILD_COMPLETED_COLOR);
             }else{
-                mPreviousHighLightedQuestiion.setColor(Utilities.CHILD_DEFAULT_COLOR);
+                mPreviousHighLightedQuestion.setColor(Utilities.CHILD_DEFAULT_COLOR);
             }
         }
         mCurrentHighLightedQuestion = mDrawerQuestions.get(groupPosition).get(childPosition);
-        mPreviousHighLightedQuestiion = mCurrentHighLightedQuestion;
+        mPreviousHighLightedQuestion = mCurrentHighLightedQuestion;
         mCurrentHighLightedQuestion.setColor(Utilities.CHILD_HIGHLIGHT_COLOR);
         mDrawerListAdapter.notifyDataSetChanged();
     }
@@ -497,7 +525,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                     }
                 }
             }
-            Log.i(TAG,"FirstIndwx = " + firstIndex);
+            Log.i(TAG,"FirstIndex = " + firstIndex);
             mViewPager.setCurrentItem(firstIndex);
             return;
         }
@@ -527,20 +555,68 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         return(aq.get(0));
     }
 
-    public void onNoSdCardDialogYesClick(){
+    @Override
+    public void onAlertDialogPositiveClick(int tag){
         Log.i(TAG,"Alert dialog yes click");
     }
 
-    public void onNoSdCardDialogNoClick(){
+    @Override
+    public void onAlertDialogNegativeClick(int tag){
         Log.i(TAG,"Alert dialog no click");
         callSetResult(SHOW_SCREENINGS);
     }
 
     private void checkSdCard(){
         if (Utilities.getAudioRecordMode() == Utilities.ON &&
+            Utilities.getTestMode() == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT &&
             ! Utilities.externalStorageIsWritable()){
-            NoSdCardDialogFragment diaFrag = new NoSdCardDialogFragment();
+            AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.no_sdcard, R.string.want_to_continue,
+                    R.string.yes, R.string.no, NO_SD_CARD_TAG);
             diaFrag.show(getSupportFragmentManager(), "dialog");
         }
+    }
+
+    private void startRecording(){
+        if ( ! Utilities.externalStorageIsWritable()){
+            return; // User was already given error msg in checkSdCard
+        }
+        String underscoreName = new String(mStudentName);
+        underscoreName=underscoreName.replace(" " , "_");
+        Log.i(TAG, "underscoreName= "+ underscoreName );
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), getString(R.string.neuro_underscore_leap) +"/" + underscoreName);
+        Log.i(TAG, "storage directory = " + mediaStorageDir);
+        if ( ! mediaStorageDir.exists()) {
+            if ( ! mediaStorageDir.mkdirs()) {
+                Log.i(TAG, "couldn't make directory");
+                AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.cant_make_dir, R.string.want_to_continue,
+                        R.string.yes, R.string.no, CANT_CREATE_DIRECTORY_TAG);
+                diaFrag.show(getSupportFragmentManager(), "dialog");
+                return;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        long screeningDate = DbCRUD.getLongScreeningDate(mScreeningId);
+        String screeningDateString = new SimpleDateFormat("MMM_dd_yyyy").format(screeningDate);
+        Log.i(TAG, "time stamp= " + timeStamp +"  screening date= " + screeningDateString);
+        String filename = mediaStorageDir.getPath() + File.separator + underscoreName +"_" + screeningDateString + "_" + timeStamp + ".3gp";
+        Log.i(TAG, "filename= " + filename);
+        mMediaRecorder = new MediaRecorder();
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mMediaRecorder.setOutputFile(filename);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        try {
+            mMediaRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.cant_prepare, R.string.want_to_continue,
+                    R.string.yes, R.string.no, CANT_PREPARE_MEDIA_RECORDER_TAG);
+            diaFrag.show(getSupportFragmentManager(), "dialog");
+            return;
+        }
+        AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.program_will_record,0, R.string.ok , 0, RECORD_AUDIO_WARNING_TAG );
+        diaFrag.show(getSupportFragmentManager(), "dialog");
+        mMediaRecorder.start();
     }
 }

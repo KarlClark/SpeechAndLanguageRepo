@@ -56,6 +56,13 @@
     <string name="no_sdcard">No SD card installed.  You will not be able to record audio.</string>
     <string name="want_to_continue">Do you want to continue?</string>
     <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="neuro_underscore_leap">/Neuro_Leap/</string>
+    <string name="cant_prepare">Couldn\'t prepare media recorder.  Can\'t record audio.</string>
+    <string name="ok">OK</string>
+    <string name="audio_files">Audio Files</string>
+    <string name="no_audio_files">No Audio Files</string>
+    <string name="audio_unavailable">No SD Card installed. Audio files are unavailable</string>
 
     <string-array name="languages">
         <item>English/Ingles</item>

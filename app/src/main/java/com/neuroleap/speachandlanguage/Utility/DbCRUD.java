@@ -82,6 +82,15 @@ public class DbCRUD {
         return mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry.STUDENT_ID + "=" + studentId, null, null, null, null);
     }
 
+    public static long getLongScreeningDate(long screeningId){
+        String[] columns = new String [] {ScreeningsEntry.TEST_DATE};
+        Cursor c = mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry._ID + "=" + screeningId, null, null, null, null);
+        c.moveToNext();
+        long date = c.getLong(0);
+        c.close();
+        return date;
+    }
+
     public static Cursor getShortScreens (){
         String sql = "Select "
                       + ScreeningsEntry.TABLE_NAME + "._ID , "
@@ -97,6 +106,11 @@ public class DbCRUD {
                       + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.STUDENT_ID
                       + " ORDER BY " + ScreeningsEntry.TABLE_NAME + "." + ScreeningsEntry.TEST_DATE + " DESC";
         return mDB.rawQuery(sql,null);
+    }
+
+    public static Cursor getTestModeAndAge(long screeningId){
+        String[] columns = new String[] {ScreeningsEntry.TEST_MODE, ScreeningsEntry.AGE};
+        return mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry._ID + "=" + screeningId, null, null, null, null);
     }
 
     public static Cursor getStudentAnswer(long question_id, long screening_id){

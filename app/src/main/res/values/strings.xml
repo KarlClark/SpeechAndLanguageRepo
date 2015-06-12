@@ -108,5 +108,14 @@
     <string name="no_sdcard">No SD card installed.  You will not be able to record audio.</string>
     <string name="want_to_continue">Do you want to continue?</string>
     <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="neuro_underscore_leap">/Neuro_Leap/</string>
+    <string name="cant_make_dir">Couldn\'t make directory for audio recording. Can\'t record audio</string>
+    <string name="cant_prepare">Couldn\'t prepare media recorder.  Can\'t record audio.</string>
+    <string name="program_will_record">Program will record audio while in question mode.  Do not go away and leave program in question mode because it will continue to record until the memory is full.</string>
+    <string name="ok">OK</string>
+    <string name="audio_files">Audio Files</string>
+    <string name="no_audio_files">No Audio Files</string>
+    <string name="audio_unavailable">No SD Card installed. Audio files are unavailable</string>
 
 </resources>
