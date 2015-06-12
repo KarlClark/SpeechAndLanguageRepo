@@ -106,33 +106,38 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
 
     private void loadLists(){
         Cursor screeningCategoriesCursor = DbCRUD.getScreeningCategories();
-        while (screeningCategoriesCursor.moveToNext()){
-            int screeningCategoryId = screeningCategoriesCursor.getInt(0);
-            Cursor studentAnswerCursor = DbCRUD.getStudentAnswersForScreeningCategoryId(mScreeningId, screeningCategoryId);
-            float rightAnswers = 0;
-            int totalAnswers= 0;
-            boolean isCompleted= false;
-            while (studentAnswerCursor.moveToNext()){
-                if (studentAnswerCursor.getInt(0) == 1){
-                    rightAnswers++;
-                    mTotalCorrectAnswers++;
+        while (screeningCategoriesCursor.moveToNext()) {
+            if (mAge >= screeningCategoriesCursor.getInt(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.CUT_OFF_AGE))) {
+                int screeningCategoryId = screeningCategoriesCursor.getInt(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry._ID));
+                Cursor studentAnswerCursor = DbCRUD.getStudentAnswersForScreeningCategoryId(mScreeningId, screeningCategoryId);
+                float rightAnswers = 0;
+                int totalAnswers = 0;
+                boolean isCompleted = false;
+                while (studentAnswerCursor.moveToNext()) {
+                    if (studentAnswerCursor.getInt(studentAnswerCursor.getColumnIndex(StudentAnswersEntry.CORRECT)) == 1) {
+                        rightAnswers++;
+                        mTotalCorrectAnswers++;
+                    }
+                    totalAnswers++;
+                    mTotalAnswers++;
                 }
-                totalAnswers++;
-                mTotalAnswers++;
+                studentAnswerCursor.close();
+                int totalQuestions = DbCRUD.getNumberOfQuestionsForScreeningCategoryId(screeningCategoryId);
+                mTotalQuestions += totalQuestions;
+                isCompleted = totalAnswers == totalQuestions;
+                ScreeningCategoryResult scr = new ScreeningCategoryResult(
+                        screeningCategoriesCursor.getString(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.NAME_EG)),
+                        screeningCategoriesCursor.getString(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.NAME_SP)),
+                        isCompleted, rightAnswers, totalQuestions);
+                mScreeningCategoriesResults.add(scr);
             }
-            studentAnswerCursor.close();
-            int totalQuestions = DbCRUD.getNumberOfQuestionsForScreeningCategoryId(screeningCategoryId);
-            mTotalQuestions += totalQuestions;
-            isCompleted = totalAnswers == totalQuestions;
-            ScreeningCategoryResult scr = new ScreeningCategoryResult(screeningCategoriesCursor.getString(1),
-                    screeningCategoriesCursor.getString(2), isCompleted, rightAnswers, totalQuestions);
-            mScreeningCategoriesResults.add(scr);
         }
         screeningCategoriesCursor.close();
         boolean totallyCompleted = mTotalAnswers == mTotalQuestions;
         ScreeningCategoryResult scr = new ScreeningCategoryResult(getString(R.string.total), getString(R.string.total),
                 totallyCompleted, mTotalAnswers, mTotalQuestions);
         mScreeningCategoriesResults.add(scr);
+
 
         if (mTestMode == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT &&
                ! Utilities.externalStorageIsReadable()) {

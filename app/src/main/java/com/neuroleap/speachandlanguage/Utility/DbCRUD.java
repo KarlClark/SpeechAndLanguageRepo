@@ -161,7 +161,8 @@ public class DbCRUD {
     public static Cursor getScreeningCategories(){
         String[] columns = new String[] {ScreeningCategoriesEntry._ID,
                                          ScreeningCategoriesEntry.NAME_EG,
-                                         ScreeningCategoriesEntry.NAME_SP};
+                                         ScreeningCategoriesEntry.NAME_SP,
+                                         ScreeningCategoriesEntry.CUT_OFF_AGE};
         return mDB.query(ScreeningCategoriesEntry.TABLE_NAME, columns, null, null, null, null, null);
     }
 

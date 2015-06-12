@@ -72,7 +72,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_SCREENING_CATEGORIES_TABEL = "CREATE TABLE " + ScreeningContract.ScreeningCategoriesEntry.TABLE_NAME + " (" +
                 ScreeningCategoriesEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ScreeningCategoriesEntry.NAME_EG + " TEXT NOT NULL, " +
-                ScreeningCategoriesEntry.NAME_SP + " TEXT " +
+                ScreeningCategoriesEntry.NAME_SP + " TEXT, " +
+                ScreeningCategoriesEntry.CUT_OFF_AGE + " INTEGER NOT NULL " +
                 " );";
 
         final String SQL_CREATE_QUESTION_CATEGORIES_TABLE = "CREATE TABLE " + QuestionCategoriesEntry.TABLE_NAME + " (" +
@@ -214,9 +215,10 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
 
                         if ( ! row[0].equals("")) { //First column has something in it so this must be screening category row
                             cv.put(ScreeningCategoriesEntry.NAME_EG , row[0]);
-                            if (row.length > 1 ){
+                            if ( ! row[1].equals("") ){
                                 cv.put(ScreeningCategoriesEntry.NAME_SP , row[1]);
                             }
+                            cv.put(ScreeningCategoriesEntry.CUT_OFF_AGE, Long.parseLong(row[2]));
                             screening_Category_Id = db.insert(ScreeningCategoriesEntry.TABLE_NAME, null, cv);
                             continue whileLoop;
                         }

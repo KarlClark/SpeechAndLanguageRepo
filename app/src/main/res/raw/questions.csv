@@ -1,5 +1,5 @@
 %Screenings categories start in column A  followed by Question categories  in column B followed by Questions starting in column C.  Each question is followed by English answers in coloum D  followed by Spanish answers in column E which are followed by picture filenames in column  F followed by icon answer filenames in column G.,,,,,,,
-Semantics,,,,,,,
+Semantics,,0,,,,,
 ,Semantics/Body parts,,SemanticsBodyPartsFragment,0,,,
 ,,Name the body part.,spanish,audio EN,audio SP,nose,nariz
 ,,,nose,,ans sp,,
@@ -525,7 +525,7 @@ Semantics,,,,,,,
 ,,,,,,screwdriver,screwdriver
 ,,,,,,hammer,hammer
 ,,,,,,pliers,pliers
-Processing,,,,,,,
+Processing,,0,,,,,
 ,Processing/Situational,,ProcessingSituationalFragment,0,,,
 ,,You are riding your bicycle and are a long way from home.  You hear a hissing sound. What do you think happened?,,,,riding bike,
 ,,,flat tire,,,,
@@ -567,7 +567,7 @@ Processing,,,,,,,
 ,,Why won't everyone in an accident have to go to the hosipital?,,,,go to hosipital,
 ,,,some aren't hurt,,,,
 ,,,some are dead,,,,
-Inferences,,,,,,,
+Inferences,,0,,,,,
 ,Inferences,,InferencesFragment,0,,,
 ,,,,,ambulance,,
 ,,,,,,some_arent_hurt,Some aren't hurt
@@ -590,7 +590,7 @@ Inferences,,,,,,,
 ,,,,,pain,,
 ,,,,,,crying,Child is crying
 ,,,,,,bleeding,Child is bleeding
-Idioms,,,,,,,
+Idioms,,72,,,,,
 ,Idioms,,IdiomsFragment,72,,,
 ,,What does 'quiet as a mouse' mean,,,,quite as a mouse,
 ,,,very quiet,,,,
@@ -605,7 +605,7 @@ Idioms,,,,,,,
 ,,,Wish a performer good luck,,,,
 ,,,,,broken_leg,,
 ,,,,,,wish_actor_luck,wish a performer good luck
-Syntax,,,,,,,
+Syntax,,0,,,,,
 ,Syntax/Sentence repetition,,SentenceRepetitionFragment,0,,,
 ,,Repeat:  Their horses are under the trees.,,,,horses under trees,
 ,,,Their horses are under the trees.,,,,

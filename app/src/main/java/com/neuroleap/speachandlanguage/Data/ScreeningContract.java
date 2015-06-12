@@ -72,6 +72,7 @@ public class ScreeningContract {
 
         public static final String NAME_EG ="name_eg";
         public static final String NAME_SP = "name_sp";
+        public static final String CUT_OFF_AGE = "cut_off_age";
     }
 
     public static final class QuestionCategoriesEntry implements BaseColumns{
