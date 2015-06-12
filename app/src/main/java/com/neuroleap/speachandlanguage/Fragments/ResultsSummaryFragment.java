@@ -74,6 +74,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
 
     private void getTestModeAndAge(){
         Cursor c = DbCRUD.getTestModeAndAge(mScreeningId);
+        c.moveToNext();
         mTestMode = c.getInt(c.getColumnIndex(ScreeningsEntry.TEST_MODE));
         mAge = c.getInt(c.getColumnIndex(ScreeningsEntry.AGE));
         c.close();
