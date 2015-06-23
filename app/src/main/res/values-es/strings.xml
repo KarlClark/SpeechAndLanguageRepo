@@ -63,6 +63,8 @@
     <string name="audio_files">Audio Files</string>
     <string name="no_audio_files">No Audio Files</string>
     <string name="audio_unavailable">No SD Card installed. Audio files are unavailable</string>
+    <string name="y_axis_label">Percentage Correct Answers</string>
+    <string name="x_axis_label">Question Categories</string>
 
     <string-array name="languages">
         <item>English/Ingles</item>

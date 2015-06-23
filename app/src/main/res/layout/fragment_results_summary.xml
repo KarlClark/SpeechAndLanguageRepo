@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -91,7 +92,9 @@
                 android:id="@+id/lvResultsSummary"
                 android:footerDividersEnabled="true"
                 android:headerDividersEnabled="false"
-                android:layout_alignParentTop="true"/>
+                android:dividerHeight="2dp"
+                android:layout_alignParentTop="true"
+                />
 
             <View
                 android:layout_width="fill_parent"
@@ -102,11 +105,34 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="30dp"/>
 
+            <com.neuroleap.speachandlanguage.CustomViews.BarChart
+                android:layout_below="@+id/line2"
+                android:id="@+id/bcQuestionResults"
+                android:layout_width="fill_parent"
+                android:layout_height="600dp"
+                android:layout_marginLeft="18dp"
+                custom:yAxisLabel="@string/y_axis_label"
+                custom:xAxisLabel="@string/x_axis_label"
+                custom:axisLabelTextSize="22dp"
+                custom:barLabelTextsize="18dp"
+                custom:barTextAngle="45"
+                custom:barColor="@color/grey"
+                custom:axisColor="@color/dark_grey"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_grey"
+                android:layout_below="@+id/bcQuestionResults"
+                android:id="@+id/line4"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_below="@+id/line2"
+                android:layout_below="@+id/line4"
                 android:text="@string/audio_files"
                 android:layout_centerHorizontal="true"
                 style = "@style/TextColor"
@@ -127,6 +153,7 @@
                 android:id="@+id/lvFileNames"
                 android:footerDividersEnabled="true"
                 android:headerDividersEnabled="false"
+                android:dividerHeight="2dp"
                 android:layout_below="@+id/line3"/>
         </RelativeLayout>
     </ScrollView>

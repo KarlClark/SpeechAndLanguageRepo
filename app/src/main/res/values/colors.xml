@@ -15,4 +15,5 @@
     <color name="light_red">#ffffa3a3</color>
     <color name="dark_grey">#ff676767</color>
     <color name="light_grey">#ffbbbbbb</color>
+    <color name="grey">#ff888888</color>
 </resources>

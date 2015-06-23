@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BarChart">
+        <attr name="axisLabelTextSize" format="string"/>
+        <attr name="tickMarkTextSize" format="string"/>
+        <attr name="barLabelTextsize" format="string"/>
+        <attr name="textColor" format="color"/>
+        <attr name="axisColor" format="color"/>
+        <attr name="barColor" format="color"/>
+        <attr name="barTextAngle" format="integer"/>
+        <attr name="yAxisLabel" format="string"/>
+        <attr name="xAxisLabel" format="string"/>
+    </declare-styleable>
+</resources>

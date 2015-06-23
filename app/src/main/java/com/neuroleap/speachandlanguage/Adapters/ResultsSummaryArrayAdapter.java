@@ -1,7 +1,6 @@
 package com.neuroleap.speachandlanguage.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class ResultsSummaryArrayAdapter extends ArrayAdapter<ScreeningCategoryRe
 
         ScreeningCategoryResult scr = mScreeningCategoryResults.get(position);
         if (Utilities.getAppLanguage() == Utilities.ENGLISH) {
-            Log.i(TAG, "ResultSummaryArrayAdapter position = " + position);
+            //Log.i(TAG, "ResultSummaryArrayAdapter position = " + position);
             tvCategory.setText(scr.getScreeningCategoryNameEg());
         }else{
             tvCategory.setText(scr.getScreeningCategoryNameSp());

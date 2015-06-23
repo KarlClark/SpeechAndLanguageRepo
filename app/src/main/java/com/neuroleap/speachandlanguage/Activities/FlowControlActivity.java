@@ -463,7 +463,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private void setGroupColor(int position){
-        //Group color is set to one color if no questions have be answered.
+        //Group color is set to one color if no questions have been answered.
         //If some questions in the group have been answered the color is set
         //depending on whether the student is passing or not.
         ArrayList<Question> al = mDrawerQuestions.get(position);

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.neuroleap.speachandlanguage.Adapters.FileNamesArrayAdapter;
 import com.neuroleap.speachandlanguage.Adapters.ResultsSummaryArrayAdapter;
+import com.neuroleap.speachandlanguage.CustomViews.BarChart;
 import com.neuroleap.speachandlanguage.CustomViews.NonScrollListView;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
 import com.neuroleap.speachandlanguage.Listeners.OnAlertDialogListener;
@@ -34,8 +35,11 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     private TextView mTvStudentName, mTvAudioFiles;
     private Button mBtnProfile, mBtnScreenings, mBtnOverview, mBtnQuestions;
     private NonScrollListView mLvResultsSummary, mLvFileNames;
+    private BarChart mBcQuestionResults;
     private String mStudentName;
     private File[] mAudioFiles;
+    private float[] mBarValues;
+    private String[] mBarLabels;
     int mTestMode, mAge;
     private float mTotalCorrectAnswers, mTotalAnswers, mTotalQuestions;
     private ResultsSummaryArrayAdapter mResultsSummaryArrayAdapter;
@@ -66,6 +70,8 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         getViews(v);
         mTvStudentName.setText(mStudentName);
         loadLists();
+        mBcQuestionResults.setBarLables(mBarLabels);
+        mBcQuestionResults.setBarValues(mBarValues);
         setAdapters();
         setUpListViewListeners();
         setUpButtonListeners();
@@ -132,10 +138,16 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                 mScreeningCategoriesResults.add(scr);
             }
         }
+        mBarLabels = new String[mScreeningCategoriesResults.size()];
+        mBarValues = new float[mScreeningCategoriesResults.size()];
+        for (int i = 0; i < mBarValues.length; i++){
+            mBarValues[i] = mScreeningCategoriesResults.get(i).getPercentCorrect();
+            mBarLabels[i] = mScreeningCategoriesResults.get(i).getScreeningCategoryNameEg();
+        }
         screeningCategoriesCursor.close();
         boolean totallyCompleted = mTotalAnswers == mTotalQuestions;
         ScreeningCategoryResult scr = new ScreeningCategoryResult(getString(R.string.total), getString(R.string.total),
-                totallyCompleted, mTotalAnswers, mTotalQuestions);
+                totallyCompleted, mTotalCorrectAnswers, mTotalQuestions);
         mScreeningCategoriesResults.add(scr);
 
 
@@ -199,6 +211,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         mBtnScreenings=(Button)v.findViewById(R.id.btnScreenings);
         mLvResultsSummary = (NonScrollListView)v.findViewById(R.id.lvResultsSummary);
         mLvFileNames = (NonScrollListView)v.findViewById(R.id.lvFileNames);
+        mBcQuestionResults = (BarChart)v.findViewById(R.id.bcQuestionResults);
     }
 
     @Override
