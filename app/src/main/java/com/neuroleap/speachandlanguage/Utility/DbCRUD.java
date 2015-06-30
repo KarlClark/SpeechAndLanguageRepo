@@ -82,6 +82,19 @@ public class DbCRUD {
         return mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry.STUDENT_ID + "=" + studentId, null, null, null, null);
     }
 
+    public static Cursor getScreeningInfo(long screeningId){
+        String[] columns = new String[]{    ScreeningsEntry.STUDENT_ID,
+                                            ScreeningsEntry.TEST_DATE,
+                                            ScreeningsEntry.AGE,
+                                            ScreeningsEntry.ROOM,
+                                            ScreeningsEntry.TEACHER,
+                                            ScreeningsEntry.GRADE,
+                                            ScreeningsEntry.TEST_MODE,
+                                            ScreeningsEntry.LANGUAGE,
+                                            ScreeningsEntry.COMPLETION_STATE};
+        return mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry._ID + "=" + screeningId, null, null, null, null);
+    }
+
     public static long getLongScreeningDate(long screeningId){
         String[] columns = new String [] {ScreeningsEntry.TEST_DATE};
         Cursor c = mDB.query(ScreeningsEntry.TABLE_NAME, columns, ScreeningsEntry._ID + "=" + screeningId, null, null, null, null);

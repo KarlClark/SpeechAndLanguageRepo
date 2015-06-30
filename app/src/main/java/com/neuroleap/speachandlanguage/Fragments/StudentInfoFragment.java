@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
 import com.neuroleap.speachandlanguage.Listeners.OnCustomDateDialogClickedListener;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
@@ -198,18 +199,18 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     private void fillInFields(){
         Cursor c = DbCRUD.getStudentInfo(mStudentId);
         c.moveToNext();
-        mEtFirstName.setText(c.getString(0));
-        mEtLastName.setText(c.getString(1));
+        mEtFirstName.setText(c.getString(c.getColumnIndex(StudentsEntry.FIRST_NAME)));
+        mEtLastName.setText(c.getString(c.getColumnIndex(StudentsEntry.LAST_NAME)));
         //mField.setText(mDateFormatter.format(pickedDate.getTime()));
-        mEtDateOfBirth.setText(mDateFormatter.format(c.getLong(2)));
-        mEtHearingDate.setText(mDateFormatter.format(c.getLong(3)));
-        if (c.getLong(4) == 1){
+        mEtDateOfBirth.setText(mDateFormatter.format(c.getLong(c.getColumnIndex(StudentsEntry.BIRTHDAY))));
+        mEtHearingDate.setText(mDateFormatter.format(c.getLong(c.getColumnIndex(StudentsEntry.HEARING_TEST_DATE))));
+        if (c.getLong(c.getColumnIndex(StudentsEntry.HEARING_PASS)) == 1){
             mSpnHearing.setSelection(0);
         }else{
             mSpnHearing.setSelection(1);
         }
-        mEtVisionDate.setText(mDateFormatter.format(c.getLong(5)));
-        if (c.getLong(6) == 1){
+        mEtVisionDate.setText(mDateFormatter.format(c.getLong(c.getColumnIndex(StudentsEntry.VISION_TEST_DATE))));
+        if (c.getLong(c.getColumnIndex(StudentsEntry.VISION_PASS)) == 1){
             mSpnVision.setSelection(0);
         }else{
             mSpnVision.setSelection(1);
@@ -217,12 +218,12 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         c.close();
         c = DbCRUD.getScreeningStudentInfo(mStudentId);
         c.moveToNext();
-        mEtScreeningDate.setText(mDateFormatter.format(c.getLong(0)));
-        mEtAgeYears.setText("" + c.getLong(1)/12);
-        mEtAgeMonths.setText(("" + c.getLong(1)%12));
-        mEtRoom.setText(c.getString(2));
-        mEtTeacher.setText(c.getString(3));
-        mEtGrade.setText(c.getString(4));
+        mEtScreeningDate.setText(mDateFormatter.format(c.getLong(c.getColumnIndex(ScreeningsEntry.TEST_DATE))));
+        mEtAgeYears.setText("" + c.getLong(c.getColumnIndex(ScreeningsEntry.AGE))/12);
+        mEtAgeMonths.setText(("" + c.getLong(c.getColumnIndex(ScreeningsEntry.AGE))%12));
+        mEtRoom.setText(c.getString(c.getColumnIndex(ScreeningsEntry.ROOM)));
+        mEtTeacher.setText(c.getString(c.getColumnIndex(ScreeningsEntry.TEACHER)));
+        mEtGrade.setText(c.getString(c.getColumnIndex(ScreeningsEntry.GRADE)));
         c.close();
     }
 

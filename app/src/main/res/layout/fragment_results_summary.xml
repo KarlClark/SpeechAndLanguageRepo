@@ -158,6 +158,15 @@
         </RelativeLayout>
     </ScrollView>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email_report"
+        android:id="@+id/btnEmailReport"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        style = "@style/TextColor"/>
 
 
 </RelativeLayout>

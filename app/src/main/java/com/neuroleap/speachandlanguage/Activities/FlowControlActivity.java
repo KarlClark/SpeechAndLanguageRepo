@@ -174,6 +174,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        checkCompletionState();
+        super.onBackPressed();
+    }
+
     private void setupViewPager(){
         mQuestionFragmentPagerAdapter = new QuestionFragmentPagerAdapter(getSupportFragmentManager(), mScreeningId, mViewPagerQuestions);
         mViewPager = (ViewPager)findViewById(R.id.pager);
@@ -417,6 +423,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 i.putExtra(SCREENING_STUDENT_NAME_TAG, name);
                 setResult(RESULT_OK, i);
                 lowerKeyboard();
+                checkCompletionState();
                 finish();
                 break;
             case QuestionsBaseFragment.RESULTS_BUTTON_CLICKED:
@@ -428,6 +435,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 intent.putExtra(SCREENING_STUDENT_NAME_TAG, studentName);
                 setResult(RESULT_OK, intent);
                 lowerKeyboard();
+                checkCompletionState();
                 finish();
                 break;
             case QuestionsBaseFragment.SCREENINGS_BUTTON_CLICKED:
@@ -442,6 +450,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         i.putExtra(REQUESTED_ACTION_KEY, nextAction);
         setResult(RESULT_OK, i);
         lowerKeyboard();
+        checkCompletionState();
         finish();
     }
 
@@ -553,6 +562,15 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
             }
         }
         return(aq.get(0));
+    }
+
+    private void checkCompletionState(){
+        for (Question question : mViewPagerQuestions) {
+            if ( ! question.isDone()){
+                return;
+            }
+        }
+        DbCRUD.updateScreeningCompletionState(mScreeningId, Utilities.SCREENING_COMPLETED);
     }
 
     @Override

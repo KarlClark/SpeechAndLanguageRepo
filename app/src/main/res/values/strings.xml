@@ -119,5 +119,17 @@
     <string name="audio_unavailable">No SD Card installed. Audio files are unavailable</string>
     <string name="y_axis_label">Percentage Correct Answers</string>
     <string name="x_axis_label">Question Categories</string>
+    <string name="email_report">Email\nReport</string>
+    <string name="can_not_generate_report">No SD card installed. Can\'t generate report.</string>
+    <string name="Screening_report">Speach and Language Screening Report</string>
+    <string name="test_date">"Test Date: "</string>
+    <string name="age_at_time">"Age at time of screening: "</string>
+    <string name="grade_at_time">"Grade at time of screening: "</string>
+    <string name="Date_of_bitth_colon">"Date of Birth: "</string>
+    <string name="date_of_hearing">"Date of Hearing Screen: "</string>
+    <string name="date_of_vison">"Date of Vision Screen: "</string>
+    <string name="screening_not_satrted">Screening hasn\'t been started yet</string>
+    <string name="screening_not_complete">Screening is not completed</string>
+    <string name="screening_complete">Screening is complete</string>
 
 </resources>

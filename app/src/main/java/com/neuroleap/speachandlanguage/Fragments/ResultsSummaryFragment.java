@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,21 @@ import com.neuroleap.speachandlanguage.Adapters.FileNamesArrayAdapter;
 import com.neuroleap.speachandlanguage.Adapters.ResultsSummaryArrayAdapter;
 import com.neuroleap.speachandlanguage.CustomViews.BarChart;
 import com.neuroleap.speachandlanguage.CustomViews.NonScrollListView;
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningCategoriesEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
 import com.neuroleap.speachandlanguage.Listeners.OnAlertDialogListener;
 import com.neuroleap.speachandlanguage.Models.ScreeningCategoryResult;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +41,7 @@ import java.util.ArrayList;
 public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialogListener{
     private int mScreeningId;
     private TextView mTvStudentName, mTvAudioFiles;
-    private Button mBtnProfile, mBtnScreenings, mBtnOverview, mBtnQuestions;
+    private Button mBtnProfile, mBtnScreenings, mBtnOverview, mBtnQuestions, mBtnEmailReport;
     private NonScrollListView mLvResultsSummary, mLvFileNames;
     private BarChart mBcQuestionResults;
     private String mStudentName;
@@ -41,6 +49,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     private float[] mBarValues;
     private String[] mBarLabels;
     int mTestMode, mAge;
+    DecimalFormat mRound0 = new DecimalFormat("#");
     private float mTotalCorrectAnswers, mTotalAnswers, mTotalQuestions;
     private ResultsSummaryArrayAdapter mResultsSummaryArrayAdapter;
     private FileNamesArrayAdapter mFileNamesArrayAdapter;
@@ -192,9 +201,137 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                 mOnFragmentInteractionListener.onFragmentInteraction(mId, Utilities.OVERVIEW, mScreeningId, mStudentName);
             }
         });
+
+        mBtnEmailReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emailReport();
+            }
+        });
     }
 
+    private void emailReport(){
+        Log.i(TAG, "emailReport called");
+        if ( ! Utilities.externalStorageIsWritable()){
+            AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.can_not_generate_report, 0, R.string.ok, 0, NO_SD_CARD_TAG);
+            return;
+        }
+        Cursor screeningCursor = DbCRUD.getScreeningInfo(mScreeningId);
+        screeningCursor.moveToNext();
+        Cursor studentCursor = DbCRUD.getStudentInfo(screeningCursor.getLong(screeningCursor.getColumnIndex(ScreeningsEntry.STUDENT_ID)));
+        studentCursor.moveToNext();
 
+        StringBuilder builder = new StringBuilder();
+        builder.append("<!DOCTYPE html>\n");
+        builder.append("<html lang=\"en\">\n");
+        builder.append("<head>\n");
+        builder.append("<style>\n");
+        builder.append("table, th, tr {\nborder: 1px solid black;\nborder-collapse: collapse;\npadding: 10px;\n}\n");
+        builder.append("</style>\n");
+        builder.append("</head>\n");
+        builder.append("<body>\n<h1>" + mContext.getString(R.string.Screening_report) +"</h1>\n");
+        builder.append("<h3>" + studentCursor.getString(studentCursor.getColumnIndex(StudentsEntry.FIRST_NAME)));
+        builder.append(" " + studentCursor.getString(studentCursor.getColumnIndex(StudentsEntry.LAST_NAME)) + "</h3>\n");
+        builder.append("<pre>\n");
+        builder.append(mContext.getString(R.string.test_date) + Utilities.getDisplayDate(screeningCursor.getLong(screeningCursor.getColumnIndex(ScreeningsEntry.TEST_DATE))) + "\n");
+        int ageMonths = screeningCursor.getInt(screeningCursor.getColumnIndex(ScreeningsEntry.AGE));
+        builder.append(mContext.getString(R.string.age_at_time) + ageMonths/12 + " " + mContext.getString(R.string.years) + " "+ ageMonths%12 + " " + mContext.getString(R.string.months) + ".\n");
+        int grade = screeningCursor.getInt(screeningCursor.getColumnIndex(ScreeningsEntry.GRADE));
+        builder.append(mContext.getString(R.string.grade_at_time) + grade );
+        switch (grade) {
+            case 0: builder.append("\n");
+                    break;
+            case 1: builder.append("st\n");
+                    break;
+            case 2: builder.append("nd\n");
+                    break;
+            default: builder.append("rd\n");
+        }
+        builder.append(mContext.getString(R.string.Date_of_bitth_colon) + Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.BIRTHDAY))) + "\n");
+        builder.append(mContext.getString(R.string.date_of_hearing) + Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.HEARING_TEST_DATE))));
+        boolean passed = studentCursor.getInt(studentCursor.getColumnIndex(StudentsEntry.HEARING_PASS)) == 1;
+        if (passed){
+            builder.append("  " + mContext.getString(R.string.passed) + "\n");
+        }else{
+            builder.append("<b>" + "  " + mContext.getString(R.string.failed) + "</b>\n");
+        }
+        builder.append(mContext.getString(R.string.date_of_vison) + Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.VISION_TEST_DATE))));
+        passed = studentCursor.getInt(studentCursor.getColumnIndex(StudentsEntry.VISION_PASS)) == 1;
+        if (passed){
+            builder.append( "  " + mContext.getString(R.string.passed) + "\n");
+        }else{
+            builder.append("<b>" + "  " + mContext.getString(R.string.failed) + "</b>\n");
+        }
+        builder.append(mContext.getString(R.string.teacher) + ": " + screeningCursor.getString(screeningCursor.getColumnIndex(ScreeningsEntry.TEACHER)) + "\n");
+        builder.append(mContext.getString(R.string.room) + ": " + screeningCursor.getString(screeningCursor.getColumnIndex(ScreeningsEntry.ROOM)) +"\n");
+        switch (screeningCursor.getInt(screeningCursor.getColumnIndex(ScreeningsEntry.COMPLETION_STATE))){
+            case Utilities.SCREENING_NOT_STARTED:
+                builder.append(mContext.getString(R.string.screening_not_satrted) +"\n");
+                break;
+            case Utilities.SCREENING_NOT_COMPLETE:
+                builder.append(mContext.getString(R.string.screening_not_complete) + "\n");
+                break;
+            case Utilities.SCREENING_COMPLETED:
+                builder.append(mContext.getString(R.string.screening_complete) + "\n");
+        }
+
+        builder.append("</pre>\n");
+        builder.append("<table style=\"width:100%\"\n");
+        builder.append("<caption>" + mContext.getString(R.string.results_summary) +"</caption>\n");
+        for (ScreeningCategoryResult scr : mScreeningCategoriesResults){
+            builder.append("<tr>\n");
+            String categoryName;
+            if (Utilities.getQuestionsLanguage() == Utilities.SPANISH || Utilities.getAppLanguage() == Utilities.SPANISH){
+                categoryName = scr.getScreeningCategoryNameSp();
+            }else{
+                categoryName = scr.getScreeningCategoryNameEg();
+            }
+            builder.append("<td>" + categoryName + "</td>\n" );
+            if (scr.isCompleted()){
+                builder.append("<td>" + mContext.getString(R.string.completed) + "</td>\n");
+            }else{
+                builder.append("<td>" + mContext.getString(R.string.not_completed)+ "</td>\n");
+            }
+            builder.append("<td>" + mRound0.format(scr.getNumberCorrectAnswers()) +"/" + mRound0.format(scr.getNumberOfQuestions()) +"</td>\n");
+            builder.append("<td>" + mRound0.format(scr.getPercentCorrect()) +"%" + "</td>\n");
+            if (scr.isPassed()) {
+                builder.append("<td>" + mContext.getString(R.string.passed) + "</td>\n");
+            }else{
+                builder.append("<td>" + mContext.getString(R.string.failed) + "</td>\n");
+            }
+            builder.append("</tr>\n");
+        }
+        builder.append("</table>\n");
+
+        builder.append("</body>\n");
+        builder.append("</html>");
+        String report = builder.toString();
+
+        screeningCursor.close();
+        studentCursor.close();
+
+        File reportFile = new File(Environment.getExternalStorageDirectory(), getString(R.string.neuro_underscore_leap) + "/" + "tmp_report.htm");
+        FileWriter fw;
+        try {
+            fw = new FileWriter(reportFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(report.toString());
+            bw.flush();
+            bw.close();
+            fw.flush();
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Intent i = new Intent(Intent.ACTION_SENDTO);
+        i.setData(Uri.parse("mailto:"));
+        //i.setType("*/*");
+        i.putExtra(Intent.EXTRA_SUBJECT, "test");
+        i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(reportFile));
+        startActivity(i);
+        Log.i(TAG, "activity started");
+    }
 
     private void getTheArguments(){
         mId = getArguments().getInt(ID_TAG);
@@ -209,6 +346,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         mBtnProfile = (Button)v.findViewById(R.id.btnProfile);
         mBtnQuestions =(Button)v.findViewById(R.id.btnQuestions);
         mBtnScreenings=(Button)v.findViewById(R.id.btnScreenings);
+        mBtnEmailReport = (Button)v.findViewById(R.id.btnEmailReport);
         mLvResultsSummary = (NonScrollListView)v.findViewById(R.id.lvResultsSummary);
         mLvFileNames = (NonScrollListView)v.findViewById(R.id.lvFileNames);
         mBcQuestionResults = (BarChart)v.findViewById(R.id.bcQuestionResults);
