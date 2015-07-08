@@ -90,7 +90,7 @@ public class IconAnswersGridViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (((AnswerIcon)v.getTag()).isClicked()){
-                    //Button was clicked before do un-click it
+                    //Button was clicked before so un-click it
                     ((RelativeLayout)v.getParent()).setBackgroundDrawable(mDefaultBackground);
                     ((AnswerIcon)v.getTag()).setClicked(false);
                 }else {

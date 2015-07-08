@@ -131,5 +131,10 @@
     <string name="screening_not_satrted">Screening hasn\'t been started yet</string>
     <string name="screening_not_complete">Screening is not completed</string>
     <string name="screening_complete">Screening is complete</string>
+    <string name="category">Category</string>
+    <string name="completion_state">Completion State</string>
+    <string name="number_correct">Number Correct</string>
+    <string name="percent_correct">Percentage Correct</string>
+    <string name="pass_fail">Pass/Fail</string>
 
 </resources>

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -42,13 +44,15 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     protected ArrayList<EditText> mEtAnswers = new ArrayList<EditText>();
     protected ArrayList<TextView> mTvAnswerPrompts = new ArrayList<TextView>();
     protected ArrayList<AnswerIcon> mAnswerIcons = new ArrayList<AnswerIcon>();
-    protected ArrayList<Long> mPressedIconIds = new ArrayList<>();
+    //protected ArrayList<Long> mPressedIconIds = new ArrayList<>();
     protected ArrayList<PressedIcon> mPressedIcons = new ArrayList<PressedIcon>();
+    protected ArrayList<PressedIcon> mOriginalPressedIcons = new ArrayList<PressedIcon>();
     protected GridView mGvIconAnswers;
     protected boolean[] mOriginalClicked = new boolean[20];
-    protected String[] mOriginalAnswers = new String[] {"", "", ""};
-    protected long[] mOriginalPressedIconIds = new long [20];
-    protected int mOriginalPressedIconIdsCount = 0;
+    protected String[] mOriginalTextAnswers = new String[] {"", "", ""};
+    protected int[] mOriginalTextAnswerNumbers = new int[3];
+    //protected long[] mOriginalPressedIconIds = new long [20];
+    //protected int mOriginalPressedIconIdsCount = 0;
     protected IconAnswersGridViewAdapter mIconAnswersGridViewAdapter;
     protected Resources mResources;
     protected static final String QUESTION_ID_KEY = "question_id_key";
@@ -110,7 +114,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             if ( ! mCommitted)  {// The user swiped the screen without committing an answer so
                                  // set things back to the way they were before user interacted with UI
                 for(int i =0; i < mEtAnswers.size(); i++){
-                    mEtAnswers.get(i).setText(mOriginalAnswers[i]);
+                    mEtAnswers.get(i).setText(mOriginalTextAnswers[i]);
+                    mEtAnswers.get(i).setTag(mOriginalTextAnswerNumbers[i]);
                 }
 
                 for (int i = 0; i < mAnswerIcons.size(); i++) {
@@ -118,9 +123,9 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                     mAnswerIcons.get(i).setClicked(mOriginalClicked[i]);
                 }
 
-                mPressedIconIds.clear();
-                for (int i = 0; i < mOriginalPressedIconIdsCount; i++){
-                    mPressedIconIds.add(mOriginalPressedIconIds[i]);
+                mPressedIcons.clear();
+                for (PressedIcon opi : mOriginalPressedIcons){
+                    mPressedIcons.add(opi);
                 }
 
                 if (mIconAnswersGridViewAdapter != null) {
@@ -152,8 +157,6 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mBtnOverview = (Button)v.findViewById(R.id.btnOverview);
         mBtnResults = (Button)v.findViewById(R.id.btnResults);
         mBtnScreenings = (Button)v.findViewById(R.id.btnScreenings);
-        mEtAnswers.add((EditText)v.findViewById(R.id.etAnswer1));  //All questions have at least
-        mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther1)); //one view for a text answer.
 
         //Get question from database and put it in text view.
         Cursor questionCursor = DbCRUD.getQuestionData(mQuestionId);
@@ -161,14 +164,84 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         mTvQuestion.setText(questionCursor.getString(1));
         questionCursor.close();
 
+        //All questions have at least one view for a text answer.
+        mEtAnswers.add((EditText) v.findViewById(R.id.etAnswer1));
+        mTvAnswerPrompts.add((TextView) v.findViewById(R.id.tvOther1));
+        mEtAnswers.get(0).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0){
+                    mEtAnswers.get(0).setTag(null);
+                }else{
+                    if(s.length() == 1){
+                        mEtAnswers.get(0).setTag(mAnswerNumber++);
+                    }
+                }
+            }
+        });
+
         //Add extra text answer fields if question has more than one answer
         if (numberOfAnswers > 1) {
             mEtAnswers.add((EditText)v.findViewById(R.id.etAnswer2));
             mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther2));
+            mEtAnswers.get(1).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() == 0){
+                        mEtAnswers.get(1).setTag(null);
+                    }else{
+                        if(s.length() == 1){
+                            mEtAnswers.get(1).setTag(mAnswerNumber++);
+                        }
+                    }
+                }
+            });
         }
         if(numberOfAnswers > 2){
             mEtAnswers.add((EditText)v.findViewById(R.id.etAnswer3));
             mTvAnswerPrompts.add((TextView)v.findViewById(R.id.tvOther3));
+            mEtAnswers.get(2).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() == 0){
+                        mEtAnswers.get(2).setTag(null);
+                    }else{
+                        if(s.length() == 1){
+                            mEtAnswers.get(2).setTag(mAnswerNumber++);
+                        }
+                    }
+                }
+            });
         }
 
         //If user has gone back to a previously answered question fill in the
@@ -182,7 +255,9 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             int i=0;
             while (c_text.moveToNext()){
                 mEtAnswers.get(i).setText(c_text.getString(1));
-                mOriginalAnswers[i]  = c_text.getString(1);
+                mEtAnswers.get(i).setTag(c_text.getInt(0));
+                mOriginalTextAnswers[i]  = c_text.getString(1);
+                mOriginalTextAnswerNumbers[i] = c_text.getInt(0);
                 i++;
             }
             c_text.close();
@@ -191,9 +266,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
             //Log.i(TAG,"c_answersIcons size= " + c_answerIcons.getCount());
             while (c_answerIcons.moveToNext()){
                 Log.i(TAG, "answerIconsId= " + c_answerIcons.getLong(1));
-                mPressedIconIds.add(c_answerIcons.getLong(1));
-                mOriginalPressedIconIds[i] = c_answerIcons.getLong(1);
-                mOriginalPressedIconIdsCount++;
+                mPressedIcons.add(new PressedIcon(c_answerIcons.getLong(1) , c_answerIcons.getInt(0)));
+                mOriginalPressedIcons.add(new PressedIcon(c_answerIcons.getLong(1) , c_answerIcons.getInt(0)));
             }
             c_answerIcons.close();
         }
@@ -293,8 +367,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
 
     private boolean idIsaPressedIcon(long iconId){
         //Search the list of pressed icons to see if this icon is in it.
-        for (long id : mPressedIconIds){
-            if (id == iconId){
+        for (PressedIcon pi : mPressedIcons){
+            if (pi.getAnswerIconId() == iconId){
                 return true;
             }
         }
@@ -302,14 +376,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
     }
 
     public void enterIconAnswers(long studentAnswerId){
-        //Enter icon answers into data base, including the order they were pressed in.
-        //Keep track of how many icons were pressed.
-        mAnswerNumber= 1;
-        for (long id : mPressedIconIds){
-            mPressedIcons.add(new PressedIcon(id , mAnswerNumber++));
-        }
         DbCRUD.insertAnswerIconsPressed(studentAnswerId, mPressedIcons);
-        mAnswerNumber--;
     }
 
     public void enterTextAnswers(long studentAnswerId){
@@ -318,7 +385,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         for (EditText et : mEtAnswers){
             String s = et.getText().toString();
             if ( ! s.equals("")){
-                sat.add(new StudentAnswerText(++mAnswerNumber, s));
+                sat.add(new StudentAnswerText((Integer)et.getTag(), s));
             }
         }
         if (sat.size() > 0) {
@@ -379,16 +446,16 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         // If an icon has been pressed then add it to the list. If an
         //already pressed icons has been re-pressed then delete it from the list.
         if (answerIcon.isClicked()){
-            mPressedIconIds.add(answerIcon.getAnswerIconId());
+            mPressedIcons.add(new PressedIcon(answerIcon.getAnswerIconId() , mAnswerNumber++));
         }else {
             deleteIdFromList(answerIcon.getAnswerIconId());
         }
     }
 
     private void deleteIdFromList(long answerIconId){
-        for (int i = 0; i < mPressedIconIds.size(); i++){
-            if (mPressedIconIds.get(i) == answerIconId){
-                mPressedIconIds.remove(i);
+        for (int i = 0; i < mPressedIcons.size(); i++){
+            if (mPressedIcons.get(i).getAnswerIconId() == answerIconId){
+                mPressedIcons.remove(i);
                 return;
             }
         }

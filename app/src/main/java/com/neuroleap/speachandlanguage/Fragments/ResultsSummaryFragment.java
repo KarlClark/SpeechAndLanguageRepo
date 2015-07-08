@@ -226,18 +226,36 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         builder.append("<html lang=\"en\">\n");
         builder.append("<head>\n");
         builder.append("<style>\n");
-        builder.append("table, th, tr {\nborder: 1px solid black;\nborder-collapse: collapse;\npadding: 10px;\n}\n");
+        builder.append("table, tr {\nborder: 1px solid black;\nborder-collapse: collapse;\n}\n");
+        builder.append("th, td {padding: 10px;\ntext-align: left;\n}\n");
+        builder.append("caption {font-size: 160%;\nfont-weight: bold;}\n");
         builder.append("</style>\n");
         builder.append("</head>\n");
-        builder.append("<body>\n<h1>" + mContext.getString(R.string.Screening_report) +"</h1>\n");
-        builder.append("<h3>" + studentCursor.getString(studentCursor.getColumnIndex(StudentsEntry.FIRST_NAME)));
-        builder.append(" " + studentCursor.getString(studentCursor.getColumnIndex(StudentsEntry.LAST_NAME)) + "</h3>\n");
+        builder.append("<body>\n<h1>");
+        builder.append( mContext.getString(R.string.Screening_report));
+        builder.append("</h1>\n");
+        builder.append("<h3>");
+        builder.append( studentCursor.getString(studentCursor.getColumnIndex(StudentsEntry.FIRST_NAME)));
+        builder.append(" ");
+        builder.append( studentCursor.getString(studentCursor.getColumnIndex(StudentsEntry.LAST_NAME)));
+        builder.append( "</h3>\n");
         builder.append("<pre>\n");
-        builder.append(mContext.getString(R.string.test_date) + Utilities.getDisplayDate(screeningCursor.getLong(screeningCursor.getColumnIndex(ScreeningsEntry.TEST_DATE))) + "\n");
+        builder.append(mContext.getString(R.string.test_date));
+        builder.append( Utilities.getDisplayDate(screeningCursor.getLong(screeningCursor.getColumnIndex(ScreeningsEntry.TEST_DATE))));
+        builder.append( "\n");
         int ageMonths = screeningCursor.getInt(screeningCursor.getColumnIndex(ScreeningsEntry.AGE));
-        builder.append(mContext.getString(R.string.age_at_time) + ageMonths/12 + " " + mContext.getString(R.string.years) + " "+ ageMonths%12 + " " + mContext.getString(R.string.months) + ".\n");
+        builder.append(mContext.getString(R.string.age_at_time));
+        builder.append( ageMonths/12);
+        builder.append( " ");
+        builder.append( mContext.getString(R.string.years));
+        builder.append( " ");
+        builder.append( ageMonths%12);
+        builder.append( " ");
+        builder.append( mContext.getString(R.string.months));
+        builder.append( ".\n");
         int grade = screeningCursor.getInt(screeningCursor.getColumnIndex(ScreeningsEntry.GRADE));
-        builder.append(mContext.getString(R.string.grade_at_time) + grade );
+        builder.append(mContext.getString(R.string.grade_at_time));
+        builder.append( grade );
         switch (grade) {
             case 0: builder.append("\n");
                     break;
@@ -247,37 +265,71 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                     break;
             default: builder.append("rd\n");
         }
-        builder.append(mContext.getString(R.string.Date_of_bitth_colon) + Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.BIRTHDAY))) + "\n");
-        builder.append(mContext.getString(R.string.date_of_hearing) + Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.HEARING_TEST_DATE))));
+        builder.append(mContext.getString(R.string.Date_of_bitth_colon));
+        builder.append( Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.BIRTHDAY))));
+        builder.append( "\n");
+        builder.append(mContext.getString(R.string.date_of_hearing));
+        builder.append( Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.HEARING_TEST_DATE))));
         boolean passed = studentCursor.getInt(studentCursor.getColumnIndex(StudentsEntry.HEARING_PASS)) == 1;
         if (passed){
-            builder.append("  " + mContext.getString(R.string.passed) + "\n");
+            builder.append("  ");
+            builder.append( mContext.getString(R.string.passed));
+            builder.append( "\n");
         }else{
-            builder.append("<b>" + "  " + mContext.getString(R.string.failed) + "</b>\n");
+            builder.append("<b>  ");
+            builder.append( mContext.getString(R.string.failed));
+            builder.append( "</b>\n");
         }
-        builder.append(mContext.getString(R.string.date_of_vison) + Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.VISION_TEST_DATE))));
+        builder.append(mContext.getString(R.string.date_of_vison));
+        builder.append( Utilities.getDisplayDate(studentCursor.getLong(studentCursor.getColumnIndex(StudentsEntry.VISION_TEST_DATE))));
         passed = studentCursor.getInt(studentCursor.getColumnIndex(StudentsEntry.VISION_PASS)) == 1;
         if (passed){
-            builder.append( "  " + mContext.getString(R.string.passed) + "\n");
+            builder.append( "  ");
+            builder.append( mContext.getString(R.string.passed));
+            builder.append( "\n");
         }else{
-            builder.append("<b>" + "  " + mContext.getString(R.string.failed) + "</b>\n");
+            builder.append("<b>  ");
+            builder.append( mContext.getString(R.string.failed));
+            builder.append( "</b>\n");
         }
-        builder.append(mContext.getString(R.string.teacher) + ": " + screeningCursor.getString(screeningCursor.getColumnIndex(ScreeningsEntry.TEACHER)) + "\n");
-        builder.append(mContext.getString(R.string.room) + ": " + screeningCursor.getString(screeningCursor.getColumnIndex(ScreeningsEntry.ROOM)) +"\n");
+        builder.append(mContext.getString(R.string.teacher));
+        builder.append( ": ");
+        builder.append( screeningCursor.getString(screeningCursor.getColumnIndex(ScreeningsEntry.TEACHER)));
+        builder.append("\n");
+        builder.append(mContext.getString(R.string.room));
+        builder.append( ": ");
+        builder.append( screeningCursor.getString(screeningCursor.getColumnIndex(ScreeningsEntry.ROOM)));
+        builder.append("\n");
         switch (screeningCursor.getInt(screeningCursor.getColumnIndex(ScreeningsEntry.COMPLETION_STATE))){
             case Utilities.SCREENING_NOT_STARTED:
-                builder.append(mContext.getString(R.string.screening_not_satrted) +"\n");
+                builder.append(mContext.getString(R.string.screening_not_satrted));
+                builder.append("\n");
                 break;
             case Utilities.SCREENING_NOT_COMPLETE:
-                builder.append(mContext.getString(R.string.screening_not_complete) + "\n");
+                builder.append(mContext.getString(R.string.screening_not_complete));
+                builder.append( "\n");
                 break;
             case Utilities.SCREENING_COMPLETED:
-                builder.append(mContext.getString(R.string.screening_complete) + "\n");
+                builder.append(mContext.getString(R.string.screening_complete));
+                builder.append( "\n");
         }
 
         builder.append("</pre>\n");
-        builder.append("<table style=\"width:100%\"\n");
-        builder.append("<caption>" + mContext.getString(R.string.results_summary) +"</caption>\n");
+        builder.append("<table style=\"width:100%\">\n");
+        builder.append("<caption>");
+        builder.append( mContext.getString(R.string.results_summary));
+        builder.append("</caption>\n");
+        builder.append("<tr>\n<th>");
+        builder.append(mContext.getString(R.string.category));
+        builder.append("</th>\n<th>");
+        builder.append(mContext.getString(R.string.completion_state));
+        builder.append("</th>\n<th>");
+        builder.append(mContext.getString(R.string.number_correct));
+        builder.append("</th>\n<th>");
+        builder.append(mContext.getString(R.string.percent_correct));
+        builder.append("</th>\n<th>");
+        builder.append(mContext.getString(R.string.pass_fail));
+        builder.append("</th>\n</tr>\n");
         for (ScreeningCategoryResult scr : mScreeningCategoriesResults){
             builder.append("<tr>\n");
             String categoryName;
@@ -286,18 +338,35 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
             }else{
                 categoryName = scr.getScreeningCategoryNameEg();
             }
-            builder.append("<td>" + categoryName + "</td>\n" );
+            builder.append("<td>");
+            builder.append( categoryName);
+            builder.append( "</td>\n" );
             if (scr.isCompleted()){
-                builder.append("<td>" + mContext.getString(R.string.completed) + "</td>\n");
+                builder.append("<td>");
+                builder.append( mContext.getString(R.string.completed));
+                builder.append( "</td>\n");
             }else{
-                builder.append("<td>" + mContext.getString(R.string.not_completed)+ "</td>\n");
+                builder.append("<td>");
+                builder.append( mContext.getString(R.string.not_completed));
+                builder.append( "</td>\n");
             }
-            builder.append("<td>" + mRound0.format(scr.getNumberCorrectAnswers()) +"/" + mRound0.format(scr.getNumberOfQuestions()) +"</td>\n");
-            builder.append("<td>" + mRound0.format(scr.getPercentCorrect()) +"%" + "</td>\n");
+            builder.append("<td>");
+            builder.append( mRound0.format(scr.getNumberCorrectAnswers()));
+            builder.append("/");
+            builder.append( mRound0.format(scr.getNumberOfQuestions()));
+            builder.append("</td>\n");
+            builder.append("<td>");
+            builder.append( mRound0.format(scr.getPercentCorrect()));
+            builder.append("%");
+            builder.append( "</td>\n");
             if (scr.isPassed()) {
-                builder.append("<td>" + mContext.getString(R.string.passed) + "</td>\n");
+                builder.append("<td>");
+                builder.append( mContext.getString(R.string.passed));
+                builder.append("</td>\n");
             }else{
-                builder.append("<td>" + mContext.getString(R.string.failed) + "</td>\n");
+                builder.append("<td>");
+                builder.append( mContext.getString(R.string.failed));
+                builder.append( "</td>\n");
             }
             builder.append("</tr>\n");
         }
@@ -315,7 +384,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         try {
             fw = new FileWriter(reportFile);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(report.toString());
+            bw.write(report);
             bw.flush();
             bw.close();
             fw.flush();
