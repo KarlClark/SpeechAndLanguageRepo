@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.neuroleap.speachandlanguage.Adapters.IconAnswersGridViewAdapter;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
 import com.neuroleap.speachandlanguage.Listeners.OnIconButtonClickedListener;
 import com.neuroleap.speachandlanguage.Models.AnswerIcon;
 import com.neuroleap.speachandlanguage.Models.PressedIcon;
@@ -161,7 +162,11 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         //Get question from database and put it in text view.
         Cursor questionCursor = DbCRUD.getQuestionData(mQuestionId);
         questionCursor.moveToNext();
-        mTvQuestion.setText(questionCursor.getString(1));
+        if (Utilities.getAppLanguage() == Utilities.SPANISH || Utilities.getQuestionsLanguage() == Utilities.SPANISH){
+            mTvQuestion.setText(questionCursor.getString(questionCursor.getColumnIndex(QuestionsEntry.TEXT_SPANISH)));
+        }else {
+            mTvQuestion.setText(questionCursor.getString(questionCursor.getColumnIndex(QuestionsEntry.TEXT_ENGLISH)));
+        }
         questionCursor.close();
 
         //All questions have at least one view for a text answer.
@@ -251,23 +256,35 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         if (c_answer.getCount() > 0) {
 
             c_answer.moveToNext();
-            Cursor c_text = DbCRUD.getStudentAnswersText(c_answer.getLong(0));
+            long studentAnswersId = c_answer.getLong(c_answer.getColumnIndex(StudentAnswersEntry._ID));
+
+            Cursor c_text = DbCRUD.getStudentAnswersText(studentAnswersId);
             int i=0;
             while (c_text.moveToNext()){
-                mEtAnswers.get(i).setText(c_text.getString(1));
-                mEtAnswers.get(i).setTag(c_text.getInt(0));
-                mOriginalTextAnswers[i]  = c_text.getString(1);
-                mOriginalTextAnswerNumbers[i] = c_text.getInt(0);
+                String answerText = c_text.getString(c_text.getColumnIndex(StudentAnswersTextEntry.TEXT));
+                int answerNumber = c_text.getInt(c_text.getColumnIndex(StudentAnswersTextEntry.ANSWER_NUMBER));
+                mEtAnswers.get(i).setText(answerText);
+                mEtAnswers.get(i).setTag(answerNumber);
+                mOriginalTextAnswers[i]  = answerText;
+                mOriginalTextAnswerNumbers[i] = answerNumber;
+                if (mAnswerNumber <= answerNumber){
+                    mAnswerNumber = answerNumber + 1;
+                }
                 i++;
             }
             c_text.close();
 
-            Cursor c_answerIcons = DbCRUD.getStudentAnswersIcons(c_answer.getLong(0));
+            Cursor c_answerIcons = DbCRUD.getStudentAnswersIcons(studentAnswersId);
             //Log.i(TAG,"c_answersIcons size= " + c_answerIcons.getCount());
             while (c_answerIcons.moveToNext()){
                 Log.i(TAG, "answerIconsId= " + c_answerIcons.getLong(1));
-                mPressedIcons.add(new PressedIcon(c_answerIcons.getLong(1) , c_answerIcons.getInt(0)));
-                mOriginalPressedIcons.add(new PressedIcon(c_answerIcons.getLong(1) , c_answerIcons.getInt(0)));
+                long answerIconId = c_answerIcons.getLong(c_answerIcons.getColumnIndex(AnswerButtonsPressedEntry.ANSWER_ICONS_ID));
+                int answerNumber = c_answerIcons.getInt(c_answerIcons.getColumnIndex(AnswerButtonsPressedEntry.ANSWER_NUMBER));
+                mPressedIcons.add(new PressedIcon(answerIconId , answerNumber));
+                mOriginalPressedIcons.add(new PressedIcon(answerIconId , answerNumber));
+                if (mAnswerNumber <= answerNumber){
+                    mAnswerNumber = answerNumber + 1;
+                }
             }
             c_answerIcons.close();
         }
@@ -279,7 +296,8 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
         if (ic_Cursor.getCount() > 0 && Utilities.getTestMode() == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT) {
             // Need answer icon buttons.  Make a list of AnswerIcon models to use with the grid view adapter.
             while (ic_Cursor.moveToNext()) {
-                ai = new AnswerIcon(ic_Cursor.getLong(0), ic_Cursor.getString(1));
+                ai = new AnswerIcon(ic_Cursor.getLong(ic_Cursor.getColumnIndex(AnswerIconEntry._ID)),
+                        ic_Cursor.getString(ic_Cursor.getColumnIndex(AnswerIconEntry.FILENAME)));
                 if (idIsaPressedIcon(ai.getAnswerIconId())) {
                     //Log.i(TAG, "setting clicked true for id " + ai.getAnswerIconId());
                     ai.setClicked(true);
