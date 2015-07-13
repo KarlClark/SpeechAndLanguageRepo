@@ -6,6 +6,7 @@ import com.neuroleap.speachandlanguage.Utility.Utilities;
  * Created by Karl on 5/12/2015.
  */
 public class ScreeningCategoryResult {
+    private long mScreeningCategoryId;
     private String mScreeningCategoryNameEg;
     private String mScreeningCategoryNameSp;
     private boolean mIsCompleted;
@@ -14,8 +15,9 @@ public class ScreeningCategoryResult {
     private float mPercentCorrect;
     private boolean mPassed;
 
-    public ScreeningCategoryResult (String screeningCategoryNameEg, String screeningCategoryNameSp, boolean isCompleted,
-                                    float numberCorrectAnswers, float numberOfQuestions){
+    public ScreeningCategoryResult (long screeningCategoryId, String screeningCategoryNameEg, String screeningCategoryNameSp,
+                                    boolean isCompleted, float numberCorrectAnswers, float numberOfQuestions){
+        mScreeningCategoryId = screeningCategoryId;
         mScreeningCategoryNameEg = screeningCategoryNameEg;
         mScreeningCategoryNameSp = screeningCategoryNameSp;
         mIsCompleted = isCompleted;
@@ -51,5 +53,9 @@ public class ScreeningCategoryResult {
 
     public boolean isPassed() {
         return mPassed;
+    }
+
+    public long getScreeningCategoryId() {
+        return mScreeningCategoryId;
     }
 }

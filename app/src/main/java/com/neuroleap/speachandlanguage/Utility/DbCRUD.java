@@ -163,7 +163,8 @@ public class DbCRUD {
     public static Cursor getStudentAnswersForScreeningCategoryId(long screening_id, long screeningCategoryId){
         String sql =  "SELECT "
                 + StudentAnswersEntry.CORRECT + " , "
-                + StudentAnswersEntry.SCREENING_CATEGORY_ID
+                + StudentAnswersEntry.SCREENING_CATEGORY_ID + " , "
+                + StudentAnswersEntry._ID
                 + " FROM " + StudentAnswersEntry.TABLE_NAME
                 + " WHERE " + StudentAnswersEntry.SCREENING_CATEGORY_ID + "=" + screeningCategoryId
                 + " AND " + StudentAnswersEntry.SCREENING_ID + "=" + screening_id;

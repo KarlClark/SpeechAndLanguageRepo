@@ -49,10 +49,11 @@ public class Utilities {
     public static final int CHILD_COMPLETED_COLOR = R.color.light_blue;
     public static final int CHILD_HIGHLIGHT_COLOR = R.color.yellow;
     public static final int SCREENINGS = 20;
-    public static final int RESULTS = 21;
+    public static final int SUMMARY_RESULTS = 21;
     public static final int PROFILE = 22;
     public static final int OVERVIEW = 23;
     public static final int QUESTIONS = 24;
+    public static final int DETAIL_RESULTS = 25;
     public static final float PASSING_FRACTION = 0.8f;
     private static final String TAG = "## My Info ##";
 

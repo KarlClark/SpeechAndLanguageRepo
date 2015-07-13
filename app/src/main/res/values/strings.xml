@@ -140,5 +140,6 @@
     <string name="question">Question</string>
     <string name="the_answer">Answer</string>
     <string name="score">Score</string>
+    <string name="results_detail">Results Detail</string>
 
 </resources>

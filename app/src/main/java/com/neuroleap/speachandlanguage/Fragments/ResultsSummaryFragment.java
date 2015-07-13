@@ -72,13 +72,23 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_results_summary, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i(TAG, "ResultsSummaryFragment onCreate called");
         getTheArguments();
+        getTestModeAndAge();
+        loadLists();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i(TAG, "ResultsSummaryFragment onCreateView called");
+        View v = inflater.inflate(R.layout.fragment_results_summary, container, false);
+
         getTestModeAndAge();
         getViews(v);
         mTvStudentName.setText(mStudentName);
-        loadLists();
+
         mBcQuestionResults.setBarLables(mBarLabels);
         mBcQuestionResults.setBarValues(mBarValues);
         setAdapters();
@@ -104,6 +114,17 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                 i.setDataAndType(Uri.fromFile(mAudioFiles[position]), "audio/*");
                 //i.setData(Uri.fromFile(mAudioFiles[position]));
                 startActivity(i);
+            }
+        });
+
+        mLvResultsSummary.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int screeningCategoryId = (int)(mScreeningCategoriesResults.get(position).getScreeningCategoryId());
+                if (screeningCategoryId != -1 ) {
+                    mOnFragmentInteractionListener.onFragmentInteraction(mId, Utilities.DETAIL_RESULTS,
+                            screeningCategoryId, mScreeningId, mStudentName);
+                }
             }
         });
     }
@@ -141,6 +162,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                 mTotalQuestions += totalQuestions;
                 isCompleted = totalAnswers == totalQuestions;
                 ScreeningCategoryResult scr = new ScreeningCategoryResult(
+                        screeningCategoriesCursor.getLong(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry._ID)),
                         screeningCategoriesCursor.getString(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.NAME_EG)),
                         screeningCategoriesCursor.getString(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.NAME_SP)),
                         isCompleted, rightAnswers, totalQuestions);
@@ -155,7 +177,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         }
         screeningCategoriesCursor.close();
         boolean totallyCompleted = mTotalAnswers == mTotalQuestions;
-        ScreeningCategoryResult scr = new ScreeningCategoryResult(getString(R.string.total), getString(R.string.total),
+        ScreeningCategoryResult scr = new ScreeningCategoryResult(-1, getString(R.string.total), getString(R.string.total),
                 totallyCompleted, mTotalCorrectAnswers, mTotalQuestions);
         mScreeningCategoriesResults.add(scr);
 

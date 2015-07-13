@@ -79,7 +79,7 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         mBtnResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnFragmentInteractionListener.onFragmentInteraction(mId, mScreeningId, Utilities.RESULTS, mStudentName);
+                mOnFragmentInteractionListener.onFragmentInteraction(mId, mScreeningId, Utilities.SUMMARY_RESULTS, mStudentName);
             }
         });
         //setupButtons();
