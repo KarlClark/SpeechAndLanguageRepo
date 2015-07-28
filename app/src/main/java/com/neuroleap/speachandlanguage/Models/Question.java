@@ -22,6 +22,10 @@ public class Question {
         return mCorrect;
     }
 
+    public void setCorrect(boolean correct) {
+        mCorrect = correct;
+    }
+
     public int getColor() {
         return mColor;
     }

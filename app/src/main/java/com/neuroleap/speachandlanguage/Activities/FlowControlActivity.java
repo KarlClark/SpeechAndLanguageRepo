@@ -239,7 +239,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
 
         //Build a list of completed questions, and a matching list of whether the answer was correct.
         //Log.i(TAG,"mCompletionState= " + mCompletionState);
-        if (mCompletionState == Utilities.SCREENING_NOT_COMPLETE) {
+        //if (mCompletionState == Utilities.SCREENING_NOT_COMPLETE) {
             Cursor allCompletedCursor = DbCRUD.getAllCompletedQuestionsIds(mScreeningId);
             //Log.i(TAG, "allCompletedCursor size= " + allCompletedCursor.getCount());
             while (allCompletedCursor.moveToNext()) {
@@ -247,7 +247,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 mAllCompletedQuestionIsCorrect.add(allCompletedCursor.getInt(allCompletedCursor.getColumnIndex(StudentAnswersEntry.CORRECT)) != 0);
                 //Log.i(TAG, "add completed id " + allCompletedCursor.getInt(allCompletedCursor.getColumnIndex(StudentAnswersEntry.QUESTION_ID)));
             }
-        }
+        //}
 
         // build the mQuestionCategories, mDrawQuestions, and mViewPagerQuestions lists.
         int categoryId;
@@ -314,7 +314,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.test_1,R.string.test_2){
             @Override
             public void onDrawerOpened(View drawerView) {
-                //When the drawer is opened we want to expand the depending on which question category
+                //When the drawer is opened we want to expand the list depending on which question category
                 //the user is currently working on.  We want to set the colors of the drawer items
                 //depending on which questions have been answered and which categories have been completed.
 
@@ -406,9 +406,12 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         switch ((int)args[0]) {
             case QuestionsBaseFragment.SHOW_NEXT_FRAGMENT:
                 //args[1] = ViewPager position, args[2] = group position
+                //args[3] = answer correct true/false
                 mViewPagerQuestions.get((int) args[1]).setDone(true);  //Question has been answered
+                mViewPagerQuestions.get((int)args[1]).setCorrect((boolean)args[3]);
                 if (groupIsCompleted((int) args[2])) {  //Check id all questions in group are answered
                     mQuestionCategories.get((int) args[2]).setDone(true);
+                    setGroupColor((int)args[2]);
                 }
                 if ((int) args[0] + 1 < mViewPagerQuestions.size()) {
                     mViewPager.setCurrentItem((int) args[1] + 1); //Display fragment for next question
@@ -488,6 +491,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                 }
             }
         }
+        Log.i(TAG, "%%%%%%  position= " + position +"  doneCount= " + doneCount + "  correctCount= " + correctCount +"  total= " + total +"  correctCount/total= " + correctCount/total);
         if (doneCount == 0) {
             mQuestionCategories.get(position).setColor(Utilities.GROUP_UNTOUCHED_COLOR);
             return;
@@ -567,9 +571,11 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private void checkCompletionState(){
         for (Question question : mViewPagerQuestions) {
             if ( ! question.isDone()){
+                Log.i(TAG, "Question '" + question.getText() +"'  at position " + question.getViewPagerPosition() +  " is not answered.");
                 return;
             }
         }
+        Log.i(TAG, "update DB with Screening completed");
         DbCRUD.updateScreeningCompletionState(mScreeningId, Utilities.SCREENING_COMPLETED);
     }
 

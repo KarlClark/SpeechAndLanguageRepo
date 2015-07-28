@@ -335,7 +335,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                 enterIconAnswers(answerId);
                 enterTextAnswers(answerId);
                 mCommitted = true;
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition, false);
             }
         });
 
@@ -346,7 +346,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                 enterIconAnswers(answerId);
                 enterTextAnswers(answerId);
                 mCommitted=true;
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition, true);
             }
         });
 
@@ -357,7 +357,7 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
                 long answerId = DbCRUD.enterAnswer(mQuestionId, mScreeningId, isCorrect, mScreeningCategoryId);
                 enterTextAnswers(answerId);
                 mCommitted=true;
-                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition);
+                mOnFragmentInteractionListener.onFragmentInteraction(mQuestionId, SHOW_NEXT_FRAGMENT, mViewPagerPosition, mGroupPosition, isCorrect);
             }
         });
 

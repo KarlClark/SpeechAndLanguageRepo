@@ -80,11 +80,12 @@
     <string name="number_correct">Number Correct</string>
     <string name="percent_correct">Percentage Correct</string>
     <string name="pass_fail">Pass/Fail</string>
-    <string name="answer_type">Answer Type</string>
+    <string name="answer_type">Type</string>
     <string name="question">Question</string>
     <string name="the_answer">Answer</string>
     <string name="score">Score</string>
     <string name="results_detail">Results Detail</string>
+    <string name="icon">Icon</string>
 
 
     <string-array name="languages">

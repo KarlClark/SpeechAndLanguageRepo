@@ -54,6 +54,7 @@ public class FileNamesArrayAdapter extends ArrayAdapter {
         }
         sDuration = sDuration + secs;
         tvDuration.setText(sDuration);
+        mp.reset();
         mp.release();
         mp=null;
 

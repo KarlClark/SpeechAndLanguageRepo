@@ -86,22 +86,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                style = "@style/TextColor"
-                android:id="@+id/tvCategpryName"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="15dp"/>
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/tvCategpryName"
-                android:id="@+id/llTopView">
+                android:id="@+id/llCategoryLevel">
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
