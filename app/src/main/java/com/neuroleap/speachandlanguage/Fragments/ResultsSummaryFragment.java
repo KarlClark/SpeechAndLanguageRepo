@@ -18,12 +18,15 @@ import com.neuroleap.speachandlanguage.Adapters.FileNamesArrayAdapter;
 import com.neuroleap.speachandlanguage.Adapters.ResultsSummaryArrayAdapter;
 import com.neuroleap.speachandlanguage.CustomViews.BarChart;
 import com.neuroleap.speachandlanguage.CustomViews.NonScrollListView;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.QuestionCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningCategoriesEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentAnswersEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
 import com.neuroleap.speachandlanguage.Listeners.OnAlertDialogListener;
 import com.neuroleap.speachandlanguage.Models.ScreeningCategoryResult;
+import com.neuroleap.speachandlanguage.Models.StudentDisplayAnswer;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
@@ -34,6 +37,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Karl on 5/12/2015.
@@ -117,11 +121,17 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
             }
         });
 
+        mLvFileNames.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                return true;
+            }
+        });
         mLvResultsSummary.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int screeningCategoryId = (int)(mScreeningCategoriesResults.get(position).getScreeningCategoryId());
-                if (screeningCategoryId != -1 ) {
+                int screeningCategoryId = (int) (mScreeningCategoriesResults.get(position).getScreeningCategoryId());
+                if (screeningCategoryId != -1) {
                     mOnFragmentInteractionListener.onFragmentInteraction(mId, Utilities.DETAIL_RESULTS,
                             screeningCategoryId, mScreeningId, mStudentName);
                 }
@@ -248,9 +258,15 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         builder.append("<html lang=\"en\">\n");
         builder.append("<head>\n");
         builder.append("<style>\n");
-        builder.append("table, tr {\nborder: 1px solid black;\nborder-collapse: collapse;\n}\n");
-        builder.append("th, td {padding: 10px;\ntext-align: left;\n}\n");
-        builder.append("caption {font-size: 160%;\nfont-weight: bold;}\n");
+        builder.append("table.table1 {\nborder: 1px solid black;\nborder-collapse: collapse;\n}\n");
+        builder.append("table.table1 tr {\nborder: 1px solid black;\nborder-collapse: collapse;\n}\n");
+        builder.append("table.table1 th {padding: 10px;\ntext-align: left;\nborder: 1px solid black;\nborder-collapse: collapse;\nbackground-color: #ccc;\n}\n");
+        builder.append("table.table1 td {padding: 10px;\ntext-align: left;\nborder: 1px solid black;\nborder-collapse: collapse;\n}\n");
+        builder.append("table.table1 {margin-top: 50px;}\n");
+        builder.append("table.table1 caption {font-size: 160%;\nfont-weight: bold;}\n");
+        builder.append("table.table2 {border: 0px;}\n");
+        builder.append("table.table2 tr {border: 0px;\npadding: 2px;\n}\n");
+        builder.append("table.table2 td {border: 0px;\npadding: 2px;\n}\n");
         builder.append("</style>\n");
         builder.append("</head>\n");
         builder.append("<body>\n<h1>");
@@ -335,9 +351,9 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                 builder.append(mContext.getString(R.string.screening_complete));
                 builder.append( "\n");
         }
-
         builder.append("</pre>\n");
-        builder.append("<table style=\"width:100%\">\n");
+
+        builder.append("<table style=\"width:100%\" class=\"table1\">\n");
         builder.append("<caption>");
         builder.append( mContext.getString(R.string.results_summary));
         builder.append("</caption>\n");
@@ -393,6 +409,101 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
             builder.append("</tr>\n");
         }
         builder.append("</table>\n");
+
+        builder.append("<h1>");
+        builder.append(mContext.getString(R.string.detailed_reports));
+        builder.append( "</h1>\n");
+
+        Cursor c_questionCategories = DbCRUD.getQuestionCategories();
+        while(c_questionCategories.moveToNext()){
+            if(mAge >= c_questionCategories.getInt(c_questionCategories.getColumnIndex(QuestionCategoriesEntry.CUTOFF_AGE))){
+                builder.append("<table style=\"width:100%\" class=\"table1\">\n");
+                builder.append("<caption>");
+                builder.append(c_questionCategories.getString(1)); //1 will be category name in either English or Spanish
+                builder.append("</caption>\n");
+                builder.append("<tr>\n<th>");
+                builder.append(mContext.getString(R.string.question));
+                builder.append("</th>\n<th>");
+                builder.append(mContext.getString(R.string.answer));
+                builder.append("</th>\n<th>");
+                builder.append(mContext.getString(R.string.answer_type));
+                builder.append("</th>\n<th>");
+                builder.append(mContext.getString(R.string.score));
+                builder.append("</th>\n</tr>\n");
+                Cursor c_questions = DbCRUD.getQuestionsForQuestionCategory(c_questionCategories.getLong(c_questionCategories.getColumnIndex(QuestionCategoriesEntry._ID)));
+                while (c_questions.moveToNext()){
+                    ArrayList<StudentDisplayAnswer> studentDisplayAnswers = new ArrayList<>();
+                    Cursor c_studentAnswer = DbCRUD.getStudentAnswer(c_questions.getLong(c_questions.getColumnIndex(ScreeningContract.QuestionsEntry._ID)), mScreeningId);
+                    if (c_studentAnswer.getCount() == 0) {
+                        studentDisplayAnswers.add(new StudentDisplayAnswer());
+                    }else {
+                        c_studentAnswer.moveToNext();
+
+                        Cursor c_answerIcons = DbCRUD.getStudentAnswersIcons(c_studentAnswer.getLong(c_studentAnswer.getColumnIndex(StudentAnswersEntry._ID)));
+                        while (c_answerIcons.moveToNext()) {
+                            studentDisplayAnswers.add(new StudentDisplayAnswer(c_answerIcons.getLong(c_answerIcons.getColumnIndex(ScreeningContract.AnswerButtonsPressedEntry.ANSWER_ICONS_ID)),
+                                    c_answerIcons.getInt(c_answerIcons.getColumnIndex(ScreeningContract.AnswerButtonsPressedEntry.ANSWER_NUMBER))));
+                        }
+                        c_answerIcons.close();
+
+                        Cursor c_answersText = DbCRUD.getStudentAnswersText(c_studentAnswer.getLong(c_studentAnswer.getColumnIndex(StudentAnswersEntry._ID)));
+                        while (c_answersText.moveToNext()) {
+                            studentDisplayAnswers.add(new StudentDisplayAnswer(c_answersText.getString(c_answersText.getColumnIndex(ScreeningContract.StudentAnswersTextEntry.TEXT)),
+                                    c_answersText.getInt(c_answersText.getColumnIndex(ScreeningContract.StudentAnswersTextEntry.ANSWER_NUMBER))));
+                        }
+                        c_answersText.close();
+
+                        Collections.sort(studentDisplayAnswers);
+                    }
+                    builder.append("<tr>\n");
+                    builder.append("<td style=\"width:40%\">");
+                    builder.append(c_questions.getString(1));
+                    builder.append("</td>\n");
+
+                    builder.append("<td style=\"width:40%\">\n");
+                    builder.append("<table class=\"table2\">\n");
+                    for (StudentDisplayAnswer sda : studentDisplayAnswers){
+                        builder.append("<tr>");
+                        builder.append("<td>");
+                        builder.append(sda.getAnswerText());
+                        builder.append("</td>\n</tr>\n");
+                    }
+                    builder.append("</table>\n");
+                    builder.append("</td>\n");
+
+                    builder.append("<td style=\"width:10%\">");
+                    builder.append("<table class=\"table2\">\n");
+                    for (StudentDisplayAnswer sda : studentDisplayAnswers){
+                        builder.append("<tr>");
+                        builder.append("<td>");
+                        if (sda.getAnswerType() == StudentDisplayAnswer.ICON) {
+                            builder.append(mContext.getString(R.string.icon));
+                        }else{
+                            if (sda.getAnswerType() == StudentDisplayAnswer.TEXT){
+                                builder.append(mContext.getString(R.string.text));
+                            }
+                        }
+                        builder.append("</td>\n</tr>\n");
+                    }
+                    builder.append("</table>\n");
+                    builder.append("</td>\n");
+
+                    builder.append("<td style=\"width:10%\">");
+                    if (c_studentAnswer.getCount() > 0) {
+                        c_studentAnswer.moveToFirst();
+                        builder.append(c_studentAnswer.getString(c_studentAnswer.getColumnIndex(StudentAnswersEntry.CORRECT)));
+                    }
+                    builder.append("</td>\n");
+                    builder.append("</tr>\n");
+
+
+                    c_studentAnswer.close();
+                }
+                c_questions.close();
+                builder.append("</table>\n");
+            }
+        }
+        c_questionCategories.close();
 
         builder.append("</body>\n");
         builder.append("</html>");
