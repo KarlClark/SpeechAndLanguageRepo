@@ -12,17 +12,18 @@ import android.widget.TextView;
 import com.neuroleap.speachandlanguage.R;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Karl on 6/9/2015.
  */
-public class FileNamesArrayAdapter extends ArrayAdapter {
+public class FileNamesArrayAdapter extends ArrayAdapter<File> {
 
     private Context mContext;
-    private File[] mFiles;
+    private ArrayList<File> mFiles;
     private static final String TAG = "## My Info ##";
 
-    public FileNamesArrayAdapter (Context context, File[] files){
+    public FileNamesArrayAdapter (Context context, ArrayList<File> files){
         super(context, R.layout.list_item_audio_files, files);
         mContext = context;
         mFiles = files;
@@ -37,8 +38,8 @@ public class FileNamesArrayAdapter extends ArrayAdapter {
         TextView tvFileName = (TextView)convertView.findViewById(R.id.tvFileName);
         TextView tvDuration = (TextView)convertView.findViewById((R.id.tvDuration));
 
-        tvFileName.setText(mFiles[position].getName());
-        MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(mFiles[position].getAbsolutePath()));
+        tvFileName.setText(mFiles.get(position).getName());
+        MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(mFiles.get(position).getAbsolutePath()));
         int iDuration = mp.getDuration()/1000;  //seconds
         int hours = iDuration/3600;
         int mins = (iDuration/60) % 60;

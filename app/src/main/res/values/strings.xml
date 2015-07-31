@@ -145,5 +145,6 @@
     <string name="icon">Icon</string>
     <string name="text">Text</string>
     <string name="detailed_reports">Detailed Reports</string>
+    <string name="delete_file">Delete File?</string>
 
 </resources>

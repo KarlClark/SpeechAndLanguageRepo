@@ -50,6 +50,8 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     private BarChart mBcQuestionResults;
     private String mStudentName;
     private File[] mAudioFiles;
+    private ArrayList<File> mAlAudioFiles = new ArrayList<>();
+    private File mFileToDelete;
     private float[] mBarValues;
     private String[] mBarLabels;
     int mTestMode, mAge;
@@ -62,6 +64,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     private static final String SCREENING_ID_TAG = "screening_id_tag";
     private static final String STUDENT_NAME_TAG = "student_name_tag";
     private static final int NO_SD_CARD_TAG = 0;
+    private static final int DELETE_FILE_TAG = 1;
 
     private static final String TAG = "## My Info ##";
 
@@ -124,6 +127,10 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         mLvFileNames.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                mFileToDelete = mAudioFiles[position];
+                AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.delete_file, 0, R.string.yes, R.string.no, DELETE_FILE_TAG);
+                diaFrag.setTargetFragment(ResultsSummaryFragment.this,0);
+                diaFrag.show(getActivity().getSupportFragmentManager(), "dialog");
                 return true;
             }
         });
@@ -142,8 +149,8 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     private void setAdapters(){
         mResultsSummaryArrayAdapter = new ResultsSummaryArrayAdapter(mContext , mScreeningCategoriesResults);
         mLvResultsSummary.setAdapter(mResultsSummaryArrayAdapter);
-        if(mAudioFiles != null){
-            mFileNamesArrayAdapter = new FileNamesArrayAdapter(mContext, mAudioFiles);
+        if(mAudioFiles.length != 0){
+            mFileNamesArrayAdapter = new FileNamesArrayAdapter(mContext, mAlAudioFiles);
             mLvFileNames.setAdapter(mFileNamesArrayAdapter);
         }else{
             mTvAudioFiles.setText(mContext.getString(R.string.no_audio_files));
@@ -191,15 +198,24 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                 totallyCompleted, mTotalCorrectAnswers, mTotalQuestions);
         mScreeningCategoriesResults.add(scr);
 
+        loadFileList();
+    }
 
+    private void loadFileList(){
         if (mTestMode == Utilities.BOTH_SCORING_BUTTONS_AND_TEXT &&
-               ! Utilities.externalStorageIsReadable()) {
+                ! Utilities.externalStorageIsReadable()) {
             AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.audio_unavailable, 0, R.string.ok, 0, NO_SD_CARD_TAG);
+            diaFrag.setTargetFragment(ResultsSummaryFragment.this,0);
+            diaFrag.show(getActivity().getSupportFragmentManager(), "dialog");
         }else {
             String underscoreName = new String(mStudentName);
             underscoreName = underscoreName.replace(" ", "_");
             File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), getString(R.string.neuro_underscore_leap) + "/" + underscoreName);
             mAudioFiles = mediaStorageDir.listFiles();
+            mAlAudioFiles.clear();
+            for (File f : mAudioFiles){
+                mAlAudioFiles.add(f);
+            }
         }
     }
 
@@ -246,6 +262,8 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
         Log.i(TAG, "emailReport called");
         if ( ! Utilities.externalStorageIsWritable()){
             AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.can_not_generate_report, 0, R.string.ok, 0, NO_SD_CARD_TAG);
+            diaFrag.setTargetFragment(ResultsSummaryFragment.this, 0);
+            diaFrag.show(getActivity().getSupportFragmentManager(), "dialog");
             return;
         }
         Cursor screeningCursor = DbCRUD.getScreeningInfo(mScreeningId);
@@ -555,8 +573,20 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     }
 
     @Override
-    public void onAlertDialogPositiveClick(int tag){}
+    public void onAlertDialogPositiveClick(int tag){
+        Log.i(TAG,"onAlertDIalogPositiveClick called. tag=" + tag);
+        if (tag == DELETE_FILE_TAG){
+            mFileToDelete.delete();
+            loadFileList();
+            mFileNamesArrayAdapter.notifyDataSetChanged();
+            if (mAudioFiles.length == 0){
+                mTvAudioFiles.setText(mContext.getString(R.string.no_audio_files));
+            }
+        }
+    }
 
     @Override
-    public void onAlertDialogNegativeClick(int tag) {}
+    public void onAlertDialogNegativeClick(int tag) {
+        Log.i(TAG,"onAlertDIalogNegativeClick called. tag=" + tag);
+    }
 }

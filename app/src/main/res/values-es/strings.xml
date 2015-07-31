@@ -88,6 +88,7 @@
     <string name="results_detail">Results Detail</string>
     <string name="icon">Icon</string>
     <string name="detailed_reports">Detailed Reports</string>
+    <string name="delete_file">Delete File?</string>
 
 
     <string-array name="languages">

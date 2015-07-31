@@ -40,11 +40,16 @@ public class AlertDialogFragment extends DialogFragment{
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mOnAlertDialogListener = (OnAlertDialogListener)getActivity();
+        mOnAlertDialogListener = (OnAlertDialogListener)getTargetFragment();
+        if (mOnAlertDialogListener == null) {
+            mOnAlertDialogListener = (OnAlertDialogListener) getActivity();
+        }
         View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_alert_dialog,null);
         Bundle args = getArguments();
         mTag = args.getInt(TAG_KEY);
-        ((TextView)v.findViewById(R.id.tvStatement)).setText(args.getInt(STATEMENT_KEY));
+        if (args.getInt(STATEMENT_KEY) != 0) {
+            ((TextView) v.findViewById(R.id.tvStatement)).setText(args.getInt(STATEMENT_KEY));
+        }
         if (args.getInt(QUESTION_KEY) != 0) {
             ((TextView) v.findViewById(R.id.tvQuestion)).setText(args.getInt(QUESTION_KEY));
         }
