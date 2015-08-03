@@ -544,11 +544,17 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
             e.printStackTrace();
         }
 
-        Intent i = new Intent(Intent.ACTION_SENDTO);
-        i.setData(Uri.parse("mailto:"));
+        Intent i = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        //i.setData(Uri.parse("mailto:"));
+        i.setType("text/xml");
         //i.setType("*/*");
         i.putExtra(Intent.EXTRA_SUBJECT, "test");
-        i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(reportFile));
+        ArrayList<Uri> uris = new ArrayList<>();
+        uris.add(Uri.fromFile(reportFile));
+        for (File f : mAlAudioFiles){
+            uris.add(Uri.fromFile(f));
+        }
+        i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
         startActivity(i);
         Log.i(TAG, "activity started");
     }
