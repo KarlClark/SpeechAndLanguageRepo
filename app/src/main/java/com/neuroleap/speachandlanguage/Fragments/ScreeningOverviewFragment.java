@@ -12,6 +12,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningCategoriesEntry;
 import com.neuroleap.speachandlanguage.Models.ScreeningCategory;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
@@ -32,14 +33,6 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
     private static final String ID_TAG = "id_tag";
     private static final String SCREENING_ID_TAG = "screening_id_tag";
     private static final String STUDENT_NAME_TAG = "student_name_tag";
-    /*private int[] mCategoryTypes = new int[] {ScreeningContract.QuestionCategoriesEntry.SEMANTICS,
-                                              ScreeningContract.QuestionCategoriesEntry.PROCESSING,
-                                              ScreeningContract.QuestionCategoriesEntry.INFERENCES,
-                                              ScreeningContract.QuestionCategoriesEntry.IDIOMS,
-                                              ScreeningContract.QuestionCategoriesEntry.SYNTAX,
-                                              ScreeningContract.QuestionCategoriesEntry.AUDITORY_PROCESSING,
-                                              ScreeningContract.QuestionCategoriesEntry.AUDITORY_MEMORY,
-                                              ScreeningContract.QuestionCategoriesEntry.UNKNOWN};*/
     private static final String TAG = "## My Info ##";
 
     public static ScreeningOverviewFragment newInstance(int id, int screeningId, String studentName){
@@ -96,7 +89,9 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
     private void getScreeningCategories(){
         Cursor c = DbCRUD.getScreeningCategories();
         while(c.moveToNext()){
-            mScreeningCategories.add(new ScreeningCategory(c.getLong(0), c.getString(1), c.getString(2)));
+            mScreeningCategories.add(new ScreeningCategory(c.getLong(c.getColumnIndex(ScreeningCategoriesEntry._ID)),
+                                                           c.getString(c.getColumnIndex(ScreeningCategoriesEntry.NAME_EG)),
+                                                           c.getString(c.getColumnIndex(ScreeningCategoriesEntry.NAME_SP))));
         }
         c.close();
     }

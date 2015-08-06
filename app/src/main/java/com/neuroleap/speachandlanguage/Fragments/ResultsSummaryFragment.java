@@ -160,7 +160,8 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     private void loadLists(){
         Cursor screeningCategoriesCursor = DbCRUD.getScreeningCategories();
         while (screeningCategoriesCursor.moveToNext()) {
-            if (mAge >= screeningCategoriesCursor.getInt(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.CUT_OFF_AGE))) {
+            if (mAge >= screeningCategoriesCursor.getInt(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.LOW_CUT_OFF_AGE)) &&
+                    mAge <= screeningCategoriesCursor.getInt(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry.HIGH_CUT_OFF_AGE))) {
                 int screeningCategoryId = screeningCategoriesCursor.getInt(screeningCategoriesCursor.getColumnIndex(ScreeningCategoriesEntry._ID));
                 Cursor studentAnswerCursor = DbCRUD.getStudentAnswersForScreeningCategoryId(mScreeningId, screeningCategoryId);
                 float rightAnswers = 0;
@@ -434,7 +435,8 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
 
         Cursor c_questionCategories = DbCRUD.getQuestionCategories();
         while(c_questionCategories.moveToNext()){
-            if(mAge >= c_questionCategories.getInt(c_questionCategories.getColumnIndex(QuestionCategoriesEntry.CUTOFF_AGE))){
+            if(mAge >= c_questionCategories.getInt(c_questionCategories.getColumnIndex(QuestionCategoriesEntry.LOW_CUTOFF_AGE)) &&
+                    mAge <= c_questionCategories.getInt(c_questionCategories.getColumnIndex(QuestionCategoriesEntry.HIGH_CUTOFF_AGE))){
                 builder.append("<table style=\"width:100%\" class=\"table1\">\n");
                 builder.append("<caption>");
                 builder.append(c_questionCategories.getString(1)); //1 will be category name in either English or Spanish
@@ -476,6 +478,10 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                     builder.append("<tr>\n");
                     builder.append("<td style=\"width:40%\">");
                     builder.append(c_questions.getString(1));
+                    if (c_questions.getString(2) != null){
+                        builder.append("  ");
+                        builder.append(c_questions.getString(2));
+                    }
                     builder.append("</td>\n");
 
                     builder.append("<td style=\"width:40%\">\n");

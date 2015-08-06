@@ -85,7 +85,7 @@ public class ResultsDetailFragment extends BaseFragment {
     private void setScreenTitle(){
         Cursor c = DbCRUD.getScreeningCategory(mScreeningCategoryId);
         c.moveToNext();
-        String categoryName = c.getString(2);
+        String categoryName = c.getString(3);  // 3 is category name in either English or Spanish
         c.close();
         mTvResultsDetail.setText(getString(R.string.results_detail) +": " + categoryName);
     }
@@ -135,7 +135,11 @@ public class ResultsDetailFragment extends BaseFragment {
                 View questionView = inflater.inflate(R.layout.fragment_results_detail_questions, null);
                 TextView tvQuestion = (TextView)questionView.findViewById(R.id.tvQuestion);
                 TextView tvScore = (TextView)questionView.findViewById(R.id.tvScore);
-                tvQuestion.setText(c_questions.getString(1)); // 1 will be question in either English or Spanish
+                String q = c_questions.getString(1);  // 1 will be question in either English or Spanish
+                if (  c_questions.getString(2) != null){  // 2 will be unique text in either English or Spanish
+                    q = q + "  " + c_questions.getString(2);
+                }
+                tvQuestion.setText(q);
                 mStudentDisplayAnswers.clear();
                 Cursor c_studentAnswer = DbCRUD.getStudentAnswer(c_questions.getLong(c_questions.getColumnIndex(QuestionsEntry._ID)), mScreeningId);
                 if (c_studentAnswer.getCount() == 0) {

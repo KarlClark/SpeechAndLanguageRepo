@@ -73,7 +73,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 ScreeningCategoriesEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ScreeningCategoriesEntry.NAME_EG + " TEXT NOT NULL, " +
                 ScreeningCategoriesEntry.NAME_SP + " TEXT, " +
-                ScreeningCategoriesEntry.CUT_OFF_AGE + " INTEGER NOT NULL " +
+                ScreeningCategoriesEntry.LOW_CUT_OFF_AGE + " INTEGER NOT NULL, " +
+                ScreeningCategoriesEntry.HIGH_CUT_OFF_AGE + " INTEGER NOT NULL " +
                 " );";
 
         final String SQL_CREATE_QUESTION_CATEGORIES_TABLE = "CREATE TABLE " + QuestionCategoriesEntry.TABLE_NAME + " (" +
@@ -82,7 +83,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 QuestionCategoriesEntry.CATEGORY_NAME_EG + " TEXT NOT NULL, " +
                 QuestionCategoriesEntry.CATEGORY_NAME_SP + " TEXT, " +
                 QuestionCategoriesEntry.FRAGMENT_NAME + " TEXT NOT NULL, " +
-                QuestionCategoriesEntry.CUTOFF_AGE + " INTEGER NOT NULL, " +
+                QuestionCategoriesEntry.LOW_CUTOFF_AGE + " INTEGER NOT NULL, " +
+                QuestionCategoriesEntry.HIGH_CUTOFF_AGE + " INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + QuestionCategoriesEntry.SCREENING_CATEGORY_ID + ") REFERENCES " +
                 ScreeningCategoriesEntry.TABLE_NAME + " (" + ScreeningCategoriesEntry._ID + ")" +
                 " );";
@@ -96,6 +98,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                 QuestionsEntry.AUDIO_SPANISH + " TEXT, " +
                 QuestionsEntry.PROMPT_ENGLISH + " TEXT NOT NULL, " +
                 QuestionsEntry.PROMPT_SPANISH + " TEXT, " +
+                QuestionsEntry.UNIQUE_TEXT_ENGLISH + " TEXT, " +
+                QuestionsEntry.UNIQUE_TEXT_SPANISH + " TEXT, " +
                 " FOREIGN KEY (" + QuestionsEntry.CATEGORY_ID +") REFERENCES " +
                 QuestionCategoriesEntry.TABLE_NAME + " (" + QuestionCategoriesEntry._ID + ")" +
                 " );";
@@ -218,7 +222,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                             if ( ! row[1].equals("") ){
                                 cv.put(ScreeningCategoriesEntry.NAME_SP , row[1]);
                             }
-                            cv.put(ScreeningCategoriesEntry.CUT_OFF_AGE, Long.parseLong(row[2]));
+                            cv.put(ScreeningCategoriesEntry.LOW_CUT_OFF_AGE, Long.parseLong(row[2]));
+                            cv.put(ScreeningCategoriesEntry.HIGH_CUT_OFF_AGE, Long.parseLong(row[3]));
                             screening_Category_Id = db.insert(ScreeningCategoriesEntry.TABLE_NAME, null, cv);
                             continue whileLoop;
                         }
@@ -230,7 +235,8 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
                                 cv.put(QuestionCategoriesEntry.CATEGORY_NAME_SP , row[2]);
                             }
                             cv.put(QuestionCategoriesEntry.FRAGMENT_NAME , row[3]);
-                            cv.put(QuestionCategoriesEntry.CUTOFF_AGE, Long.parseLong(row[4]));
+                            cv.put(QuestionCategoriesEntry.LOW_CUTOFF_AGE, Long.parseLong(row[4]));
+                            cv.put(QuestionCategoriesEntry.HIGH_CUTOFF_AGE, Long.parseLong(row[5]));
                             categoryId = db.insert(QuestionCategoriesEntry.TABLE_NAME , null, cv);
                             continue whileLoop;
                         }
@@ -251,9 +257,16 @@ public class ScreeningDbHelper extends SQLiteOpenHelper {
 
                             cv.put(QuestionsEntry.PROMPT_ENGLISH, row[6]);
 
-                            if (row.length > 7 ){
+                            if (row.length > 7 && ! row[7].equals("") ){
                                 cv.put(QuestionsEntry.PROMPT_SPANISH, row[7]);
                             }
+                            if (row.length > 8 && ! row[8].equals("") ){
+                                cv.put(QuestionsEntry.UNIQUE_TEXT_ENGLISH, row[8]);
+                            }
+                            if (row.length > 9){
+                                cv.put(QuestionsEntry.UNIQUE_TEXT_SPANISH, row[9]);
+                            }
+
 
                             quetionId = db.insert(QuestionsEntry.TABLE_NAME, null, cv);
                             continue whileLoop;

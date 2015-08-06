@@ -72,23 +72,11 @@ public class ScreeningContract {
 
         public static final String NAME_EG ="name_eg";
         public static final String NAME_SP = "name_sp";
-        public static final String CUT_OFF_AGE = "cut_off_age";
+        public static final String LOW_CUT_OFF_AGE = "low_cut_off_age";
+        public static final String HIGH_CUT_OFF_AGE = "high_cut_off_age";
     }
 
     public static final class QuestionCategoriesEntry implements BaseColumns{
-
-       /* public static final int SEMANTICS = 0;
-        public static final int PROCESSING = 1;
-        public static final int INFERENCES = 2;
-        public static final int IDIOMS = 3;
-        public static final int  SYNTAX = 4;
-        public static final int AUDITORY_PROCESSING = 5;
-        public static final int AUDITORY_MEMORY = 6;
-        public static final int UNKNOWN = 7;
-
-        public static final String[] categoryNames= new String[] {"Semantics" , "Processing" , "Inferences" ,
-                                                                  "Idioms" , "Syntax" , "Auditory Processing" ,
-                                                                  "Auditory Memory" , "Unknown" , "Unknown"};*/
 
         public static final String TABLE_NAME = "question_categories";
 
@@ -96,7 +84,8 @@ public class ScreeningContract {
         public static final String CATEGORY_NAME_EG = "category_name_eg";
         public static final String CATEGORY_NAME_SP = "category_name_sp";
         public static final String FRAGMENT_NAME ="fragment_name";
-        public static final String CUTOFF_AGE = "cutoff_age";
+        public static final String LOW_CUTOFF_AGE = "low_cutoff_age";
+        public static final String HIGH_CUTOFF_AGE = "high_cutoff_age";
     }
 
     public static final class QuestionsEntry implements BaseColumns {
@@ -110,6 +99,8 @@ public class ScreeningContract {
         public static final String AUDIO_SPANISH = "audio_spanish";
         public static final String PROMPT_ENGLISH = "prompt_english";
         public static final String PROMPT_SPANISH = "prompt_spanish";
+        public static final String UNIQUE_TEXT_ENGLISH = "unique_text_english";
+        public static final String UNIQUE_TEXT_SPANISH = "unique_text_spanish";
     }
 
     public static final class ValidAnswersEgEntry implements BaseColumns {

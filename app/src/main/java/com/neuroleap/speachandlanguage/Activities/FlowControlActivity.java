@@ -261,7 +261,8 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         while (categoryCursor.moveToNext()){
             //Log.i(TAG, "categoryCursor . movetoNext");
             //Log.i(TAG , "mAge = " + mAge + "  cursor age = " + categoryCursor.getInt(2));
-            if (mAge >= categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.CUTOFF_AGE))) {
+            if (mAge >= categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.LOW_CUTOFF_AGE)) &&
+                    mAge <= categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.HIGH_CUTOFF_AGE))) {
                 categoryDone = true;
                 categoryId = categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry._ID));
                 QuestionCategory qc = new QuestionCategory(categoryId,

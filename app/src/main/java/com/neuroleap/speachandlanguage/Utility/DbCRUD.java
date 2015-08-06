@@ -42,10 +42,12 @@ public class DbCRUD {
     public static  Cursor getQuestionCategories(){
         String[] categoryColumns;
         if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH) {
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG, QuestionCategoriesEntry.CUTOFF_AGE,
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG, QuestionCategoriesEntry.LOW_CUTOFF_AGE,
+                                           QuestionCategoriesEntry.HIGH_CUTOFF_AGE,
                                            QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.SCREENING_CATEGORY_ID};
         }else{
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP, QuestionCategoriesEntry.CUTOFF_AGE,
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP, QuestionCategoriesEntry.HIGH_CUTOFF_AGE,
+                                           QuestionCategoriesEntry.HIGH_CUTOFF_AGE,
                                            QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.SCREENING_CATEGORY_ID};
         }
 
@@ -55,10 +57,12 @@ public class DbCRUD {
     public static  Cursor getQuestionCategories(long screeningCategoryId){
         String[] categoryColumns;
         if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH) {
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG, QuestionCategoriesEntry.CUTOFF_AGE,
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_EG, QuestionCategoriesEntry.LOW_CUTOFF_AGE,
+                    QuestionCategoriesEntry.HIGH_CUTOFF_AGE,
                     QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.SCREENING_CATEGORY_ID};
         }else{
-            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP, QuestionCategoriesEntry.CUTOFF_AGE,
+            categoryColumns = new String[]{"_ID", QuestionCategoriesEntry.CATEGORY_NAME_SP, QuestionCategoriesEntry.LOW_CUTOFF_AGE,
+                    QuestionCategoriesEntry.HIGH_CUTOFF_AGE,
                     QuestionCategoriesEntry.FRAGMENT_NAME, QuestionCategoriesEntry.SCREENING_CATEGORY_ID};
         }
 
@@ -68,11 +72,11 @@ public class DbCRUD {
     public static Cursor getScreeningCategory(long screeningCategoryId){
         String[] categoryColumns;
         if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH){
-            categoryColumns = new String[]{ScreeningCategoriesEntry._ID, ScreeningCategoriesEntry.CUT_OFF_AGE,
-                                           ScreeningCategoriesEntry.NAME_EG};
+            categoryColumns = new String[]{ScreeningCategoriesEntry._ID, ScreeningCategoriesEntry.LOW_CUT_OFF_AGE,
+                                           ScreeningCategoriesEntry.HIGH_CUT_OFF_AGE, ScreeningCategoriesEntry.NAME_EG};
         }else{
-            categoryColumns = new String[]{ScreeningCategoriesEntry._ID, ScreeningCategoriesEntry.CUT_OFF_AGE,
-                    ScreeningCategoriesEntry.NAME_SP};
+            categoryColumns = new String[]{ScreeningCategoriesEntry._ID, ScreeningCategoriesEntry.LOW_CUT_OFF_AGE,
+                    ScreeningCategoriesEntry.HIGH_CUT_OFF_AGE, ScreeningCategoriesEntry.NAME_SP};
         }
 
         return mDB.query(ScreeningCategoriesEntry.TABLE_NAME, categoryColumns, ScreeningCategoriesEntry._ID + " = " + screeningCategoryId, null, null, null, null);
@@ -202,7 +206,8 @@ public class DbCRUD {
         String[] columns = new String[] {ScreeningCategoriesEntry._ID,
                                          ScreeningCategoriesEntry.NAME_EG,
                                          ScreeningCategoriesEntry.NAME_SP,
-                                         ScreeningCategoriesEntry.CUT_OFF_AGE};
+                                         ScreeningCategoriesEntry.LOW_CUT_OFF_AGE,
+                                         ScreeningCategoriesEntry.HIGH_CUT_OFF_AGE};
         return mDB.query(ScreeningCategoriesEntry.TABLE_NAME, columns, null, null, null, null, null);
     }
 
@@ -352,9 +357,9 @@ public class DbCRUD {
     public static Cursor getQuestionsForQuestionCategory(long questionCategoryId){
         String[] columns;
         if (Utilities.getQuestionsLanguage() == Utilities.ENGLISH){
-            columns = new String[] {QuestionsEntry._ID, QuestionsEntry.TEXT_ENGLISH};
+            columns = new String[] {QuestionsEntry._ID, QuestionsEntry.TEXT_ENGLISH, QuestionsEntry.UNIQUE_TEXT_ENGLISH};
         }else{
-            columns = new String[] {QuestionsEntry._ID, QuestionsEntry.TEXT_SPANISH};
+            columns = new String[] {QuestionsEntry._ID, QuestionsEntry.TEXT_SPANISH, QuestionsEntry.UNIQUE_TEXT_SPANISH};
         }
 
         return mDB.query(QuestionsEntry.TABLE_NAME, columns, QuestionsEntry.CATEGORY_ID + " = " + questionCategoryId, null, null, null, null);
