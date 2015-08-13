@@ -184,26 +184,6 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         mQuestionFragmentPagerAdapter = new QuestionFragmentPagerAdapter(getSupportFragmentManager(), mScreeningId, mViewPagerQuestions);
         mViewPager = (ViewPager)findViewById(R.id.pager);
         mViewPager.setAdapter(mQuestionFragmentPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (Utilities.getTestMode() == Utilities.TEXT_INPUT_ONLY ){
-                    raiseKeyBoard();
-                }else {
-                    lowerKeyboard();
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     private void setUpRootViewListener(){
@@ -219,12 +199,14 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     }
 
     private void lowerKeyboard() {
+        Log.i(TAG, "lowerKeyBoard called. mKeyboardUp= " + mKeyboardUp);
         if (mKeyboardUp) {
             mInputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
         }
     }
 
     private void raiseKeyBoard(){
+        Log.i(TAG, "raiseKeyBoard called. mKeyboardUp= " + mKeyboardUp);
         if ( ! mKeyboardUp) {
             mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
@@ -260,7 +242,8 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
         Cursor categoryCursor = DbCRUD.getQuestionCategories();
         while (categoryCursor.moveToNext()){
             //Log.i(TAG, "categoryCursor . movetoNext");
-            //Log.i(TAG , "mAge = " + mAge + "  cursor age = " + categoryCursor.getInt(2));
+            Log.i(TAG , "mAge = " + mAge + " low cursor age = " + categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.LOW_CUTOFF_AGE)) +
+                    "   high cursor age= " + categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.HIGH_CUTOFF_AGE)) );
             if (mAge >= categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.LOW_CUTOFF_AGE)) &&
                     mAge <= categoryCursor.getInt(categoryCursor.getColumnIndex(QuestionCategoriesEntry.HIGH_CUTOFF_AGE))) {
                 categoryDone = true;

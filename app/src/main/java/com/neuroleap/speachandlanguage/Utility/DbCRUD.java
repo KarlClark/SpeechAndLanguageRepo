@@ -377,7 +377,7 @@ public class DbCRUD {
         int total = 0;
         String sql;
         String[] columns = new String[] {"_ID"};
-        Cursor categoryIds = mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, QuestionCategoriesEntry.SCREENING_CATEGORY_ID + "=" + screeningCategoryId, null, null, null,null);
+        Cursor categoryIds = mDB.query(QuestionCategoriesEntry.TABLE_NAME, columns, QuestionCategoriesEntry.SCREENING_CATEGORY_ID + "=" + screeningCategoryId, null, null, null, null);
         while (categoryIds.moveToNext()){
             sql = "SELECT COUNT(*) FROM " + QuestionsEntry.TABLE_NAME + " WHERE " + QuestionsEntry.CATEGORY_ID + " = " + categoryIds.getInt(0);
             Cursor count = mDB.rawQuery(sql , null);
@@ -518,8 +518,19 @@ public class DbCRUD {
         cv.put(ScreeningsEntry.COMPLETION_STATE, completion_state);
 
         mDB.update(ScreeningsEntry.TABLE_NAME, cv, "_ID=" + screening_id, null);
+    }
 
-
+    public static void deleteScreening(long screeningId, long studentId){
+        String[] columns = new String[] {StudentAnswersEntry._ID};
+        Cursor c = mDB.query(StudentAnswersEntry.TABLE_NAME, columns, StudentAnswersEntry.SCREENING_ID + " = " + screeningId , null, null, null, null);
+        while (c.moveToNext()){
+            mDB.delete(StudentAnswersTextEntry.TABLE_NAME, StudentAnswersTextEntry.ANSWER_ID + " = " + c.getLong(0), null);
+            mDB.delete(AnswerButtonsPressedEntry.TABLE_NAME, AnswerButtonsPressedEntry.ANSWER_ID + " = " + c.getLong(0), null);
+        }
+        c.close();
+        mDB.delete(StudentAnswersEntry.TABLE_NAME, StudentAnswersEntry.SCREENING_ID + " = " + screeningId, null);
+        mDB.delete(StudentsEntry.TABLE_NAME, StudentsEntry._ID + " = " + studentId,   null);
+        mDB.delete(ScreeningsEntry.TABLE_NAME, ScreeningsEntry._ID + " = " + screeningId, null);
     }
 }
 

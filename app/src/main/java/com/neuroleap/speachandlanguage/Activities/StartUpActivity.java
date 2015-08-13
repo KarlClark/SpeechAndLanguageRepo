@@ -54,6 +54,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private static final int RESULTS_DETAIL_FRAGMENT_ID = 1006;
     private static final int FLOW_CONTROL_ACTIVITY_TAG = 0;
     private static final int SETTINGS_ACTIVITY_TAG = 1;
+    private static final String SHOW_NEW_OPTION_TAG = "show_new_option_tag";
+    private static final String SHOW_SETTING_OPTION_TAG = "show_setting_option_tag";
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -70,6 +72,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         Utilities.setPackageName(getPackageName());
         if(savedInstanceState == null) {
             displayFirstSplashScreen();
+        }else{
+            mShowSettingOption = savedInstanceState.getBoolean(SHOW_SETTING_OPTION_TAG);
+            mShowNewOption = savedInstanceState.getBoolean(SHOW_NEW_OPTION_TAG);
         }
     }
 
@@ -86,11 +91,19 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     }
 
     @Override
+    public void onSaveInstanceState(Bundle saveInstanceState){
+        saveInstanceState.putBoolean(SHOW_NEW_OPTION_TAG, mShowNewOption);
+        saveInstanceState.putBoolean(SHOW_SETTING_OPTION_TAG, mShowSettingOption);
+        super.onSaveInstanceState(saveInstanceState);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Show Settings and NEW on action bar depending on values
         //of mShowSettingsOption and mShowNewOption which are
         //changed through out the activity depending on what
         //fragment is being displayed.
+        Log.i(TAG,"onCreateOptionMenu called.  mShowSetttingsOption= " + mShowSettingOption);
         getMenuInflater().inflate(R.menu.menu_start_up, menu);
         MenuItem settingsItem = menu.findItem(R.id.action_settings);
         MenuItem newItem = menu.findItem(R.id.new_screening);
@@ -130,7 +143,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     }
 
     public void onFragmentInteraction(int id, Object ... args){
-        //Fragment use this method to call back to this activity.
+        //Fragments use this method to call back to this activity.
+        Log.i(TAG,"onFragmentInteraction called, id= " + id);
         switch (id){
             case SPLASH_FRAGMENT_1_ID:  //Splash screen is done. Show Screenings fragment
                 displayShowScreeningsFragment();
@@ -211,8 +225,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         ActionBar ab = getSupportActionBar();
         ab.setTitle(getString(R.string.student_info_title));
         invalidateOptionsMenu();
-        mStudentInfoFragment = StudentInfoFragment.newInstance(studentId);
-        mStudentInfoFragment.setId(STUDENT_INFO_FRAGMENT_ID);
+        mStudentInfoFragment = StudentInfoFragment.newInstance(STUDENT_INFO_FRAGMENT_ID, studentId);
         mFragmentManager.beginTransaction().replace(frContainerId,mStudentInfoFragment, "TAG").commit();
         mShowScreeningsFragment = null;
         mResultsSummaryFragment = null;

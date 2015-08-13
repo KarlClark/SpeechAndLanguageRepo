@@ -311,6 +311,16 @@ public abstract class QuestionsBaseFragment extends BaseFragment implements OnIc
 
             mIconAnswersGridViewAdapter = new IconAnswersGridViewAdapter(mContext, this, mAnswerIcons);
             mGvIconAnswers.setAdapter(mIconAnswersGridViewAdapter);
+            mEtAnswers.get(0).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        Log.i(TAG, "Hide keyboard");
+                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(mEtAnswers.get(0).getWindowToken(), 0);
+                    }
+                }
+            });
         }else{
             //In this mode we don't display icon answer button, so hide the gridview frame. Answers
             // have to be entered manually, so raise the virtual keyboard.

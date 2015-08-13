@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +19,8 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.neuroleap.speachandlanguage.Data.ScreeningContract.*;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.StudentsEntry;
 import com.neuroleap.speachandlanguage.Listeners.OnCustomDateDialogClickedListener;
 import com.neuroleap.speachandlanguage.R;
 import com.neuroleap.speachandlanguage.Utility.DbCRUD;
@@ -53,11 +53,13 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     private static final int CUT_OFF_DATE = 3 * 365;
     public static final String DATE_FORMAT_STRING = "MMM dd, yyyy";
     private static final String STUDENT_ID_KEY = "student_id_key";
+    private static final String ID_KEY = "id_key";
     private static final String TAG = "## My Info ##";
 
-    public static StudentInfoFragment newInstance(long studentId){
+    public static StudentInfoFragment newInstance(int id, long studentId){
         Bundle args = new Bundle();
         args.putLong(STUDENT_ID_KEY , studentId);
+        args.putInt(ID_KEY, id);
         StudentInfoFragment fragment = new StudentInfoFragment();
         fragment.setArguments(args);
         return fragment;
@@ -66,8 +68,10 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mId = getArguments().getInt(ID_KEY);
         mStudentId = getArguments().getLong(STUDENT_ID_KEY);
         mDateFormatter = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.US);
+        mInputMethodManager = (InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -84,8 +88,16 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         setupDoneButton();
         setupCancelButton();
         setUpRootViewListener();
-        raiseKeyBoard();
+        if (savedInstanceState == null) {
+            raiseKeyBoard();
+        }
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "StudentInfoFragment onResume called");
     }
 
     private void setUpListeners(){
@@ -141,7 +153,7 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mEtAgeYears.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
+                if (hasFocus) {
                     raiseKeyBoard();
                 }
             }
@@ -159,14 +171,16 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
     }
 
     private void lowerKeyboard() {
-        mInputMethodManager =(InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
+        Log.i(TAG,"lowerKeyboard, mKeyboardUp= " + mKeyboardUp);
+        //mInputMethodManager =(InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
         if (mKeyboardUp) {
             mInputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
         }
     }
 
     private void raiseKeyBoard(){
-        mInputMethodManager =(InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
+        Log.i(TAG,"raiseKeyboard, mKeyboardUp= " + mKeyboardUp);
+        //mInputMethodManager =(InputMethodManager)mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
         if ( ! mKeyboardUp) {
             mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
@@ -231,38 +245,10 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         ArrayAdapter<CharSequence> hearingAdapter = ArrayAdapter.createFromResource(mContext, R.array.pass_fail, R.layout.custom_spinner_layout);
         hearingAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
         mSpnHearing.setAdapter(hearingAdapter);
-        mSpnHearing.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if ((TextView)parent.getChildAt(0) != null) {
-                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.dark_grey));
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         ArrayAdapter<CharSequence> visionAdapter = ArrayAdapter.createFromResource(mContext, R.array.pass_fail, R.layout.custom_spinner_layout);
         visionAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
         mSpnVision.setAdapter(visionAdapter);
-        mSpnVision.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if ((TextView)parent.getChildAt(0) != null) {
-                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.dark_grey));
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private void showDatePickerDialog(String title, int titleColor, EditText et){
@@ -317,11 +303,11 @@ public class StudentInfoFragment extends BaseFragment implements OnCustomDateDia
         mSvStudentInfo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                //Log.i(TAG,"OnGlobalLayout called#################3##");
+                Log.i(TAG,"OnGlobalLayout called#################3##");
 
                 int heightDiff = mSvStudentInfo.getRootView().getHeight() - mSvStudentInfo.getHeight();
                 mKeyboardUp = (heightDiff > 400);
-                //Log.i(TAG,"height diff= " +heightDiff);
+                Log.i(TAG,"height diff= " +heightDiff);
             }
         });
     }

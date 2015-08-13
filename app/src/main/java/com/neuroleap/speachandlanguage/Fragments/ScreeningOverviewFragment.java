@@ -12,6 +12,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningsEntry;
 import com.neuroleap.speachandlanguage.Data.ScreeningContract.ScreeningCategoriesEntry;
 import com.neuroleap.speachandlanguage.Models.ScreeningCategory;
 import com.neuroleap.speachandlanguage.R;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class ScreeningOverviewFragment extends BaseFragment implements View.OnClickListener{
 
     private TableLayout mTblMainMenu;
-    private int mScreeningId;
+    private int mScreeningId, mAge;
     private String mStudentName;
     private Button mBtnScreenings, mBtnResults;
     private ArrayList<ScreeningCategory> mScreeningCategories = new ArrayList<>();
@@ -56,6 +57,10 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         View v = inflater.inflate(R.layout.fragment_screening_overview, container, false);
         mId = getArguments().getInt(ID_TAG);
         mScreeningId = getArguments().getInt(SCREENING_ID_TAG);
+        Cursor c = DbCRUD.getTestModeAndAge(mScreeningId);
+        c.moveToNext();
+        mAge=c.getInt(c.getColumnIndex(ScreeningsEntry.AGE));
+        c.close();
         TextView tvStudentName = (TextView)v.findViewById(R.id.tvStudentName);
         mStudentName = getArguments().getString(STUDENT_NAME_TAG);
         tvStudentName.setText(mStudentName);
@@ -91,7 +96,9 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
         while(c.moveToNext()){
             mScreeningCategories.add(new ScreeningCategory(c.getLong(c.getColumnIndex(ScreeningCategoriesEntry._ID)),
                                                            c.getString(c.getColumnIndex(ScreeningCategoriesEntry.NAME_EG)),
-                                                           c.getString(c.getColumnIndex(ScreeningCategoriesEntry.NAME_SP))));
+                                                           c.getString(c.getColumnIndex(ScreeningCategoriesEntry.NAME_SP)),
+                                                           c.getInt(c.getColumnIndex(ScreeningCategoriesEntry.LOW_CUT_OFF_AGE)),
+                                                           c.getInt(c.getColumnIndex(ScreeningCategoriesEntry.HIGH_CUT_OFF_AGE))));
         }
         c.close();
     }
@@ -105,26 +112,32 @@ public class ScreeningOverviewFragment extends BaseFragment implements View.OnCl
             for (int column = 0; column <=2; column++){
                 b= (Button)((TableRow)mTblMainMenu.getChildAt(row)).getChildAt(column);
                 if (buttonCnt < mScreeningCategories.size()) {
-                    long screeningCategoryId = mScreeningCategories.get(buttonCnt).getScreeningCategoryId();
-                    Cursor c = DbCRUD.getStudentAnswersForScreeningCategoryId(mScreeningId, screeningCategoryId);
-                    if (c.getCount() > 0) {
-                        if (checkAnswer(c, screeningCategoryId)) {
-                            b.setBackgroundResource(R.drawable.button_green_shadowed);
-                        } else {
-                            b.setBackgroundResource(R.drawable.button_red_shadowed);
-                        }
-                    }
-                    c.close();
-                    b.setTag(screeningCategoryId);
-                    b.setOnClickListener(this);
                     if (Utilities.getAppLanguage() == Utilities.ENGLISH) {
                         b.setText(mScreeningCategories.get(buttonCnt).getName_Eg());
                     }else{
                         b.setText(mScreeningCategories.get(buttonCnt).getName_Sp());
                     }
+                    if(mAge >= mScreeningCategories.get(buttonCnt).getLowCutoffAge() &&
+                            mAge <= mScreeningCategories.get(buttonCnt).getHighCutoffAge()) {
+                        long screeningCategoryId = mScreeningCategories.get(buttonCnt).getScreeningCategoryId();
+                        Cursor c = DbCRUD.getStudentAnswersForScreeningCategoryId(mScreeningId, screeningCategoryId);
+                        if (c.getCount() > 0) {
+                            if (checkAnswer(c, screeningCategoryId)) {
+                                b.setBackgroundResource(R.drawable.button_green_shadowed);
+                            } else {
+                                b.setBackgroundResource(R.drawable.button_red_shadowed);
+                            }
+                        }
+                        c.close();
+                        b.setTag(screeningCategoryId);
+                        b.setOnClickListener(this);
+                    }else{
+                        b.setBackgroundResource(R.drawable.button_grey_shadowed);
+                    }
                 }else{
-                    b.setTag(-1);
+                    //b.setTag(-1);
                     b.setText("Unknown");
+                    b.setBackgroundResource(R.drawable.button_grey_shadowed);
                 }
                 buttonCnt++;
             }

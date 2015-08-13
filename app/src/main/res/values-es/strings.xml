@@ -89,6 +89,7 @@
     <string name="icon">Icon</string>
     <string name="detailed_reports">Detailed Reports</string>
     <string name="delete_file">Delete File?</string>
+    <string name="delete_screening">Delete Screening?</string>
 
 
     <string-array name="languages">

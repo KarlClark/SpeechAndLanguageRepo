@@ -146,5 +146,6 @@
     <string name="text">Text</string>
     <string name="detailed_reports">Detailed Reports</string>
     <string name="delete_file">Delete File?</string>
+    <string name="delete_screening">Delete Screening?</string>
 
 </resources>

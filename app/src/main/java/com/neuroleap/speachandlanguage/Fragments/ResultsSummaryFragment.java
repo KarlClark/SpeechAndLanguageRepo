@@ -149,7 +149,7 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
     private void setAdapters(){
         mResultsSummaryArrayAdapter = new ResultsSummaryArrayAdapter(mContext , mScreeningCategoriesResults);
         mLvResultsSummary.setAdapter(mResultsSummaryArrayAdapter);
-        if(mAudioFiles.length != 0){
+        if(mAudioFiles != null){
             mFileNamesArrayAdapter = new FileNamesArrayAdapter(mContext, mAlAudioFiles);
             mLvFileNames.setAdapter(mFileNamesArrayAdapter);
         }else{
@@ -214,8 +214,10 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
             File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), getString(R.string.neuro_underscore_leap) + "/" + underscoreName);
             mAudioFiles = mediaStorageDir.listFiles();
             mAlAudioFiles.clear();
-            for (File f : mAudioFiles){
-                mAlAudioFiles.add(f);
+            if (mAudioFiles != null) {
+                for (File f : mAudioFiles) {
+                    mAlAudioFiles.add(f);
+                }
             }
         }
     }
@@ -477,8 +479,8 @@ public class ResultsSummaryFragment extends BaseFragment implements OnAlertDialo
                     }
                     builder.append("<tr>\n");
                     builder.append("<td style=\"width:40%\">");
-                    builder.append(c_questions.getString(1));
-                    if (c_questions.getString(2) != null){
+                    builder.append(c_questions.getString(1));  // 1 will be the question in either English or Spanish
+                    if (c_questions.getString(2) != null){  // 2 will be the unique text in either English or Spanish
                         builder.append("  ");
                         builder.append(c_questions.getString(2));
                     }
