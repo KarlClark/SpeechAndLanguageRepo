@@ -20,7 +20,7 @@
     <string name="screenings">Date of Screenings</string>
     <string name="hearing">Hearing</string>
     <string name="vision">Visiion</string>
-    <string name="speach"><![CDATA[Speach & Language]]></string>
+    <string name="speach"><![CDATA[Speech & Language]]></string>
     <string name="next">Next</string>
     <string name="error_first_name">Error: Require first name.</string>
     <string name="error_date_of_birth">Error: Require date of birth.</string>
@@ -28,7 +28,7 @@
     <string name="error_hearing_to_old">Error: Hearing screen was to long ago.</string>
     <string name="error_hearing_required">Date of hearing screen is required.</string>
     <string name="error_vision_required">Error: Date of vision screen is required.</string>
-    <string name="error_speach_required"><![CDATA[Error Date of speach & language screen is required.]]></string>
+    <string name="error_speach_required"><![CDATA[Error Date of speech & language screen is required.]]></string>
     <string name="scoring_only">Scoring Buttons Only</string>
     <string name="text_only">Text Input Only</string>
     <string name="new_screening">New screening</string>
@@ -67,7 +67,7 @@
     <string name="x_axis_label">Question Categories</string>
     <string name="email_report">Email\nReport</string>
     <string name="can_not_generate_report">No SD card installed. Can\'t generate report.</string>
-    <string name="Screening_report">Speach and Language Screening Report</string>
+    <string name="Screening_report">Speech and Language Screening Report</string>
     <string name="test_date">"Test Date: "</string>
     <string name="age_at_time">"Age at time of screening: "</string>
     <string name="grade_at_time">"Grade at time of screening: "</string>

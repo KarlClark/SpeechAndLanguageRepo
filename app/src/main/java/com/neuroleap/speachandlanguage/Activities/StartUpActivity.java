@@ -45,6 +45,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private boolean mShowNewOption = false;
     private boolean mReturningWithResult = false;
     private boolean mNeedScreeningsFragment= false;
+    private String mActionBarTitle = "";
     private Intent mResultIntent= null;
     private static final int SPLASH_FRAGMENT_1_ID = 1000;
     private static final int SHOW_SCREENINGS_FRAGMENT_ID = 1002;
@@ -56,6 +57,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private static final int SETTINGS_ACTIVITY_TAG = 1;
     private static final String SHOW_NEW_OPTION_TAG = "show_new_option_tag";
     private static final String SHOW_SETTING_OPTION_TAG = "show_setting_option_tag";
+    private static final String ACTIONBAR_TITLE_TAG = "actionbar_title_tag";
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -75,6 +77,9 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         }else{
             mShowSettingOption = savedInstanceState.getBoolean(SHOW_SETTING_OPTION_TAG);
             mShowNewOption = savedInstanceState.getBoolean(SHOW_NEW_OPTION_TAG);
+            mActionBarTitle = savedInstanceState.getString(ACTIONBAR_TITLE_TAG);
+            ActionBar ab = getSupportActionBar();
+            ab.setTitle(mActionBarTitle);
         }
     }
 
@@ -94,6 +99,7 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     public void onSaveInstanceState(Bundle saveInstanceState){
         saveInstanceState.putBoolean(SHOW_NEW_OPTION_TAG, mShowNewOption);
         saveInstanceState.putBoolean(SHOW_SETTING_OPTION_TAG, mShowSettingOption);
+        saveInstanceState.putString(ACTIONBAR_TITLE_TAG, mActionBarTitle);
         super.onSaveInstanceState(saveInstanceState);
     }
 
@@ -203,7 +209,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
         mShowNewOption = true;
         mShowSettingOption = true;
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(getString(R.string.screenings_title));
+        mActionBarTitle = getString(R.string.screenings_title);
+        ab.setTitle(mActionBarTitle);
         invalidateOptionsMenu();
 
         mShowScreeningsFragment = new ShowScreeningsFragment();
@@ -223,7 +230,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private void displayStudentInfoFragment(long studentId) {
         mShowNewOption = false;
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(getString(R.string.student_info_title));
+        mActionBarTitle = getString(R.string.student_info_title);
+        ab.setTitle(mActionBarTitle);
         invalidateOptionsMenu();
         mStudentInfoFragment = StudentInfoFragment.newInstance(STUDENT_INFO_FRAGMENT_ID, studentId);
         mFragmentManager.beginTransaction().replace(frContainerId,mStudentInfoFragment, "TAG").commit();
@@ -235,7 +243,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private void displayScreeningOverviewFragment(int screeningId, String studentName) {
         mShowNewOption = false;
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(getString(R.string.main_menu));
+        mActionBarTitle = getString(R.string.main_menu);
+        ab.setTitle(mActionBarTitle);
         invalidateOptionsMenu();
         mScreeningOverviewFragment = ScreeningOverviewFragment.newInstance(SCREENING_OVERVIEW_FRAGMENT_ID, screeningId, studentName);
         //mScreeningOverviewFragment.setId(SCREENING_OVERVIEW_FRAGMENT_ID);
@@ -248,7 +257,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private void displayResultsSummaryFragment(int screeningId, String studentName){
         mShowNewOption = false;
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(getString(R.string.results_summary));
+        mActionBarTitle = getString(R.string.results_summary);
+        ab.setTitle(mActionBarTitle);
         invalidateOptionsMenu();
         mResultsSummaryFragment = ResultsSummaryFragment.newInstance(RESULTS_SUMMARY_FRAGMENT_ID, screeningId, studentName);
         mFragmentManager.beginTransaction().replace(frContainerId, mResultsSummaryFragment, "TAG").commit();
@@ -260,7 +270,8 @@ public class StartUpActivity extends ActionBarActivity implements OnFragmentInte
     private void displayResultsDetailFragment(int screeningCategoryId, int screeningId, String studentName){
         mShowNewOption = false;
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(getString(R.string.results_detail));
+        mActionBarTitle = getString(R.string.results_detail);
+        ab.setTitle(mActionBarTitle);
         invalidateOptionsMenu();
         mResultsDetailFragment = ResultsDetailFragment.newInstance(RESULTS_DETAIL_FRAGMENT_ID, screeningCategoryId, screeningId, studentName);
         mFragmentManager.beginTransaction().replace(frContainerId, mResultsDetailFragment, "TAG").addToBackStack("").commit();
