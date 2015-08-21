@@ -80,6 +80,7 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
     private static final int CANT_CREATE_DIRECTORY_TAG = 1;
     private static final int CANT_PREPARE_MEDIA_RECORDER_TAG = 2;
     private static final int RECORD_AUDIO_WARNING_TAG = 3;
+    private static final int LAST_QUESTION_TAG = 4;
     private static final String TAG = "## My Info ##";
 
     @Override
@@ -397,8 +398,13 @@ public class FlowControlActivity extends ActionBarActivity implements OnFragment
                     mQuestionCategories.get((int) args[2]).setDone(true);
                     setGroupColor((int)args[2]);
                 }
-                if ((int) args[0] + 1 < mViewPagerQuestions.size()) {
+                if ((int) args[1] + 1 < mViewPagerQuestions.size()) {
                     mViewPager.setCurrentItem((int) args[1] + 1); //Display fragment for next question
+                }else{
+                    Log.i(TAG,"last question");
+                    AlertDialogFragment diaFrag = AlertDialogFragment.newInstance(R.string.last_question, 0,
+                            R.string.ok, 0, LAST_QUESTION_TAG);
+                    diaFrag.show(getSupportFragmentManager(), "dialog");
                 }
                 break;
             case QuestionsBaseFragment.OVERVIEW_BUTTON_CLICKED:

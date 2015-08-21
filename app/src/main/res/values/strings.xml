@@ -147,5 +147,6 @@
     <string name="detailed_reports">Detailed Reports</string>
     <string name="delete_file">Delete File?</string>
     <string name="delete_screening">Delete Screening?</string>
+    <string name="last_question">This is the last question.</string>
 
 </resources>
