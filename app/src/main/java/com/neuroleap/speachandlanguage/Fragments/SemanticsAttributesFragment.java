@@ -81,4 +81,5 @@ public class SemanticsAttributesFragment extends  QuestionsBaseFragment {
     protected boolean answerCorrect(){
         return false;
     }
+
 }

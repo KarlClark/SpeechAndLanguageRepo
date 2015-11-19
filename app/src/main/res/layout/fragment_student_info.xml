@@ -116,12 +116,13 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/age"
                 android:id="@+id/textView10"
                 style = "@style/TextColor"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:gravity="center_vertical"/>
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -139,7 +140,8 @@
                     android:layout_alignBottom="@+id/etAgeMonths"
                     android:gravity="right"
                     style = "@style/TextColor"
-                    android:minWidth="35sp"/>
+                    android:minWidth="35sp"
+                    android:text="9"/>
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -166,7 +168,8 @@
                     android:layout_toRightOf="@+id/etAgeYears"
                     android:layout_toEndOf="@+id/etAgeYears"
                     style = "@style/TextColor"
-                    android:paddingTop="4sp"/>
+                    android:paddingTop="4sp"
+                    android:gravity="center_vertical"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -179,7 +182,8 @@
                     android:layout_toEndOf="@+id/etAgeMonths"
                     android:text="@string/months"
                     style = "@style/TextColor"
-                    android:paddingTop="4sp"/>
+                    android:paddingTop="4sp"
+                    android:gravity="center_vertical"/>
 
             </RelativeLayout>
         </LinearLayout>
