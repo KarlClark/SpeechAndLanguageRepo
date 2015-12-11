@@ -47,8 +47,10 @@ public class SplashFragment_1 extends BaseFragment {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Log.i(TAG,"SpoashFragment_1 calling listener");
-                mOnFragmentInteractionListener.onFragmentInteraction(mId);
+                Log.i(TAG, "SpoashFragment_1 calling listener");
+                if (mOnFragmentInteractionListener != null) {
+                    mOnFragmentInteractionListener.onFragmentInteraction(mId);
+                }
             }
         }, DISPLAY_TIME*1000);
     }
