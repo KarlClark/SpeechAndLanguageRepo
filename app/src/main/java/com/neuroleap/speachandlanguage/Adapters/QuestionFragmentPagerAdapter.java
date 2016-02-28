@@ -2,7 +2,6 @@ package com.neuroleap.speachandlanguage.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.neuroleap.speachandlanguage.Models.Question;
 import com.neuroleap.speachandlanguage.Utility.Utilities;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
  * Created by Karl on 4/7/2015.
  * Adapter used by the fragment PageViewer.
  */
-public class QuestionFragmentPagerAdapter extends FragmentStatePagerAdapter {
+public class QuestionFragmentPagerAdapter extends FragmentNoSavedStatePagerAdapter {
 
     private int mScreeningId;
     private ArrayList<Question> mQuestions;
